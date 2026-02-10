@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11.6
+    container_name: memos-mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: memos
+      MYSQL_USER: memos
+      MYSQL_PASSWORD: ${DB_PASSWORD:-memospassword}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - memos-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  memos:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile
+      args:
+        VERSION: ${VERSION:-0.26.1}
+        COMMIT: ${COMMIT:-local}
+    container_name: memos-app
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      MEMOS_DSN: mysql://memos:${DB_PASSWORD:-memospassword}@mariadb:3306/memos?charset=utf8mb4&parseTime=True&loc=Local
+      MEMOS_PORT: 5230
+      MEMOS_MODE: prod
+      MEMOS_ADDR: :5230
+    volumes:
+      - memos_data:/var/opt/memos
+      - ./data/uploads:/var/opt/memos/uploads
+    ports:
+      - "${MEMOS_PORT:-5230}:5230"
+    networks:
+      - memos-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5230/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+networks:
+  memos-network:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+    driver: local
+  memos_data:
+    driver: local
