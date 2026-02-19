@@ -19,6 +19,7 @@ const (
 	IdentityProviderNamePrefix = "identity-providers/"
 	ActivityNamePrefix         = "activities/"
 	WebhookNamePrefix          = "webhooks/"
+	ClassNamePrefix            = "classes/"
 )
 
 // GetNameParentTokens returns the tokens from a resource name.

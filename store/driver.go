@@ -67,4 +67,28 @@ type Driver interface {
 	ListReactions(ctx context.Context, find *FindReaction) ([]*Reaction, error)
 	GetReaction(ctx context.Context, find *FindReaction) (*Reaction, error)
 	DeleteReaction(ctx context.Context, delete *DeleteReaction) error
+
+	// Class model related methods.
+	CreateClass(ctx context.Context, create *Class) (*Class, error)
+	ListClasses(ctx context.Context, find *FindClass) ([]*Class, error)
+	UpdateClass(ctx context.Context, update *UpdateClass) error
+	DeleteClass(ctx context.Context, delete *DeleteClass) error
+
+	// ClassMember model related methods.
+	CreateClassMember(ctx context.Context, create *ClassMember) (*ClassMember, error)
+	ListClassMembers(ctx context.Context, find *FindClassMember) ([]*ClassMember, error)
+	UpdateClassMember(ctx context.Context, update *UpdateClassMember) error
+	DeleteClassMember(ctx context.Context, delete *DeleteClassMember) error
+
+	// ClassMemoVisibility model related methods.
+	CreateClassMemoVisibility(ctx context.Context, create *ClassMemoVisibility) (*ClassMemoVisibility, error)
+	ListClassMemoVisibilities(ctx context.Context, find *FindClassMemoVisibility) ([]*ClassMemoVisibility, error)
+	UpdateClassMemoVisibility(ctx context.Context, update *UpdateClassMemoVisibility) error
+	DeleteClassMemoVisibility(ctx context.Context, delete *DeleteClassMemoVisibility) error
+
+	// ClassTagTemplate model related methods.
+	CreateClassTagTemplate(ctx context.Context, create *ClassTagTemplate) (*ClassTagTemplate, error)
+	ListClassTagTemplates(ctx context.Context, find *FindClassTagTemplate) ([]*ClassTagTemplate, error)
+	UpdateClassTagTemplate(ctx context.Context, update *UpdateClassTagTemplate) error
+	DeleteClassTagTemplate(ctx context.Context, delete *DeleteClassTagTemplate) error
 }
