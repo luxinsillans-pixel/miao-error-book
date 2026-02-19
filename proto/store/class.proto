@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package memos.store;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "gen/store";
+
+// ClassSettings contains configuration and settings for a class.
+// This can be extended with specific fields as needed.
+message ClassSettings {
+  // Optional JSON-structured settings for future extensibility.
+  google.protobuf.Struct settings = 1;
+}

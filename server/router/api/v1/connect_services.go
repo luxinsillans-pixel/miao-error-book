@@ -488,3 +488,45 @@ func (s *ConnectServiceHandler) DeleteIdentityProvider(ctx context.Context, req 
 	}
 	return connect.NewResponse(resp), nil
 }
+
+// ClassService
+
+func (s *ConnectServiceHandler) CreateClass(ctx context.Context, req *connect.Request[v1pb.CreateClassRequest]) (*connect.Response[v1pb.Class], error) {
+	resp, err := s.APIV1Service.CreateClass(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) GetClass(ctx context.Context, req *connect.Request[v1pb.GetClassRequest]) (*connect.Response[v1pb.Class], error) {
+	resp, err := s.APIV1Service.GetClass(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ListClasses(ctx context.Context, req *connect.Request[v1pb.ListClassesRequest]) (*connect.Response[v1pb.ListClassesResponse], error) {
+	resp, err := s.APIV1Service.ListClasses(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) UpdateClass(ctx context.Context, req *connect.Request[v1pb.UpdateClassRequest]) (*connect.Response[v1pb.Class], error) {
+	resp, err := s.APIV1Service.UpdateClass(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) DeleteClass(ctx context.Context, req *connect.Request[v1pb.DeleteClassRequest]) (*connect.Response[emptypb.Empty], error) {
+	resp, err := s.APIV1Service.DeleteClass(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}

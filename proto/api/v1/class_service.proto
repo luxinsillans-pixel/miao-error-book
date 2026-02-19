@@ -10,16 +10,16 @@ import "google/api/resource.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/gen/store/store.pb.proto";
+
 
 option go_package = "gen/api/v1";
 
 // Class visibility level.
 enum ClassVisibility {
   CLASS_VISIBILITY_UNSPECIFIED = 0;
-  PUBLIC = 1;
-  PROTECTED = 2;
-  PRIVATE = 3;
+  CLASS_PUBLIC = 1;
+  CLASS_PROTECTED = 2;
+  CLASS_PRIVATE = 3;
 }
 
 // Role of a member in a class.
@@ -29,6 +29,27 @@ enum ClassMemberRole {
   ASSISTANT = 2;
   STUDENT = 3;
   PARENT = 4;
+}
+
+// Class settings for configuration.
+message ClassSettings {
+  // Whether students can see each other's memos.
+  optional bool student_memo_visibility = 1;
+  
+  // Whether to allow anonymous submissions.
+  optional bool allow_anonymous = 2;
+  
+  // Default visibility for student memos.
+  ClassVisibility default_student_visibility = 3;
+  
+  // Whether to enable class tag templates.
+  optional bool enable_tag_templates = 4;
+  
+  // Maximum number of members allowed (0 for unlimited).
+  optional int32 max_members = 5;
+  
+  // Whether to require approval for new members.
+  optional bool require_member_approval = 6;
 }
 
 // Class represents a classroom for error book.
@@ -74,7 +95,7 @@ message Class {
   optional string invite_code = 9 [(google.api.field_behavior) = OPTIONAL];
 
   // Optional class settings.
-  memos.store.ClassSettings settings = 10 [(google.api.field_behavior) = OPTIONAL];
+  ClassSettings settings = 10 [(google.api.field_behavior) = OPTIONAL];
 }
 
 // ClassMember represents membership of a user in a class.
@@ -117,4 +138,107 @@ message ClassMember {
     (google.api.field_behavior) = OPTIONAL,
     (google.api.resource_reference) = {type: "memos.api.v1/User"}
   ];
+}
+
+// Messages for ClassService
+
+message CreateClassRequest {
+  // Optional class ID (slug). If not provided, will be generated.
+  optional string class_id = 1 [(google.api.field_behavior) = OPTIONAL];
+  
+  // The class to create.
+  Class class = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetClassRequest {
+  // The resource name of the class.
+  // Format: classes/{class}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+}
+
+message ListClassesRequest {
+  // Optional filter string.
+  string filter = 1 [(google.api.field_behavior) = OPTIONAL];
+  
+  // Optional page size.
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+  
+  // Optional page token.
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListClassesResponse {
+  // The list of classes.
+  repeated Class classes = 1;
+  
+  // Next page token.
+  string next_page_token = 2;
+}
+
+message UpdateClassRequest {
+  // The class to update.
+  // The class's `name` field is used to identify the class to update.
+  // Format: classes/{class}
+  Class class = 1 [(google.api.field_behavior) = REQUIRED];
+  
+  // The list of fields to update.
+  google.protobuf.FieldMask update_mask = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message DeleteClassRequest {
+  // The resource name of the class to delete.
+  // Format: classes/{class}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+}
+
+// ClassService provides API for managing classes.
+service ClassService {
+  option (google.api.default_host) = "api.memos.com";
+  
+  // CreateClass creates a new class.
+  rpc CreateClass(CreateClassRequest) returns (Class) {
+    option (google.api.http) = {
+      post: "/v1/classes"
+      body: "*"
+    };
+    option (google.api.method_signature) = "class";
+  }
+  
+  // GetClass retrieves a class by name.
+  rpc GetClass(GetClassRequest) returns (Class) {
+    option (google.api.http) = {
+      get: "/v1/{name=classes/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  
+  // ListClasses lists classes based on filters.
+  rpc ListClasses(ListClassesRequest) returns (ListClassesResponse) {
+    option (google.api.http) = {
+      get: "/v1/classes"
+    };
+  }
+  
+  // UpdateClass updates a class.
+  rpc UpdateClass(UpdateClassRequest) returns (Class) {
+    option (google.api.http) = {
+      patch: "/v1/{class.name=classes/*}"
+      body: "*"
+    };
+    option (google.api.method_signature) = "class,update_mask";
+  }
+  
+  // DeleteClass deletes a class.
+  rpc DeleteClass(DeleteClassRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/{name=classes/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
 }

@@ -5,6 +5,8 @@ openapi: 3.0.3
 info:
     title: ""
     version: 0.0.1
+servers:
+    - url: https://api.memos.com
 paths:
     /api/v1/activities:
         get:
@@ -1925,6 +1927,145 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1/classes:
+        get:
+            tags:
+                - ClassService
+            description: ListClasses lists classes based on filters.
+            operationId: ClassService_ListClasses
+            parameters:
+                - name: filter
+                  in: query
+                  description: Optional filter string.
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  description: Optional page size.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  description: Optional page token.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListClassesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - ClassService
+            description: CreateClass creates a new class.
+            operationId: ClassService_CreateClass
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateClassRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Class'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}:
+        get:
+            tags:
+                - ClassService
+            description: GetClass retrieves a class by name.
+            operationId: ClassService_GetClass
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Class'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - ClassService
+            description: DeleteClass deletes a class.
+            operationId: ClassService_DeleteClass
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - ClassService
+            description: UpdateClass updates a class.
+            operationId: ClassService_UpdateClass
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateClassRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Class'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
         Activity:
@@ -2030,6 +2171,101 @@ components:
                     description: |-
                         Optional. The related memo. Refer to `Memo.name`.
                          Format: memos/{memo}
+        Class:
+            required:
+                - uid
+                - displayName
+                - visibility
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        The resource name of the class.
+                         Format: classes/{class}
+                uid:
+                    type: string
+                    description: The unique identifier (slug) of the class.
+                displayName:
+                    type: string
+                    description: The display name of the class.
+                description:
+                    type: string
+                    description: Optional description of the class.
+                creator:
+                    readOnly: true
+                    type: string
+                    description: |-
+                        The resource name of the creator.
+                         Format: users/{user}
+                createTime:
+                    readOnly: true
+                    type: string
+                    description: Output only. The creation timestamp.
+                    format: date-time
+                updateTime:
+                    readOnly: true
+                    type: string
+                    description: Output only. The last update timestamp.
+                    format: date-time
+                visibility:
+                    enum:
+                        - CLASS_VISIBILITY_UNSPECIFIED
+                        - CLASS_PUBLIC
+                        - CLASS_PROTECTED
+                        - CLASS_PRIVATE
+                    type: string
+                    description: The visibility of the class.
+                    format: enum
+                inviteCode:
+                    type: string
+                    description: Optional invite code for joining the class.
+                settings:
+                    allOf:
+                        - $ref: '#/components/schemas/ClassSettings'
+                    description: Optional class settings.
+            description: Class represents a classroom for error book.
+        ClassSettings:
+            type: object
+            properties:
+                studentMemoVisibility:
+                    type: boolean
+                    description: Whether students can see each other's memos.
+                allowAnonymous:
+                    type: boolean
+                    description: Whether to allow anonymous submissions.
+                defaultStudentVisibility:
+                    enum:
+                        - CLASS_VISIBILITY_UNSPECIFIED
+                        - CLASS_PUBLIC
+                        - CLASS_PROTECTED
+                        - CLASS_PRIVATE
+                    type: string
+                    description: Default visibility for student memos.
+                    format: enum
+                enableTagTemplates:
+                    type: boolean
+                    description: Whether to enable class tag templates.
+                maxMembers:
+                    type: integer
+                    description: Maximum number of members allowed (0 for unlimited).
+                    format: int32
+                requireMemberApproval:
+                    type: boolean
+                    description: Whether to require approval for new members.
+            description: Class settings for configuration.
+        CreateClassRequest:
+            required:
+                - class
+            type: object
+            properties:
+                classId:
+                    type: string
+                    description: Optional class ID (slug). If not provided, will be generated.
+                class:
+                    allOf:
+                        - $ref: '#/components/schemas/Class'
+                    description: The class to create.
         CreatePersonalAccessTokenRequest:
             required:
                 - parent
@@ -2282,6 +2518,17 @@ components:
                     type: integer
                     description: The total count of attachments (may be approximate).
                     format: int32
+        ListClassesResponse:
+            type: object
+            properties:
+                classes:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Class'
+                    description: The list of classes.
+                nextPageToken:
+                    type: string
+                    description: Next page token.
         ListIdentityProvidersResponse:
             type: object
             properties:
@@ -2830,6 +3077,23 @@ components:
             description: |-
                 S3 configuration for cloud storage backend.
                  Reference: https://developers.cloudflare.com/r2/examples/aws/aws-sdk-go/
+        UpdateClassRequest:
+            required:
+                - class
+                - updateMask
+            type: object
+            properties:
+                class:
+                    allOf:
+                        - $ref: '#/components/schemas/Class'
+                    description: |-
+                        The class to update.
+                         The class's `name` field is used to identify the class to update.
+                         Format: classes/{class}
+                updateMask:
+                    type: string
+                    description: The list of fields to update.
+                    format: field-mask
         UpsertMemoReactionRequest:
             required:
                 - name
@@ -3060,6 +3324,8 @@ tags:
     - name: ActivityService
     - name: AttachmentService
     - name: AuthService
+    - name: ClassService
+      description: ClassService provides API for managing classes.
     - name: IdentityProviderService
     - name: InstanceService
     - name: MemoService
