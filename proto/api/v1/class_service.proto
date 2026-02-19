@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package memos.api.v1;
+
+import "api/v1/common.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "proto/gen/store/store.pb.proto";
+
+option go_package = "gen/api/v1";
+
+// Class visibility level.
+enum ClassVisibility {
+  CLASS_VISIBILITY_UNSPECIFIED = 0;
+  PUBLIC = 1;
+  PROTECTED = 2;
+  PRIVATE = 3;
+}
+
+// Role of a member in a class.
+enum ClassMemberRole {
+  CLASS_MEMBER_ROLE_UNSPECIFIED = 0;
+  TEACHER = 1;
+  ASSISTANT = 2;
+  STUDENT = 3;
+  PARENT = 4;
+}
+
+// Class represents a classroom for error book.
+message Class {
+  option (google.api.resource) = {
+    type: "memos.api.v1/Class"
+    pattern: "classes/{class}"
+    name_field: "name"
+    singular: "class"
+    plural: "classes"
+  };
+
+  // The resource name of the class.
+  // Format: classes/{class}
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // The unique identifier (slug) of the class.
+  string uid = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The display name of the class.
+  string display_name = 3 [(google.api.field_behavior) = REQUIRED];
+
+  // Optional description of the class.
+  string description = 4 [(google.api.field_behavior) = OPTIONAL];
+
+  // The resource name of the creator.
+  // Format: users/{user}
+  string creator = 5 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+
+  // Output only. The creation timestamp.
+  google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Output only. The last update timestamp.
+  google.protobuf.Timestamp update_time = 7 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The visibility of the class.
+  ClassVisibility visibility = 8 [(google.api.field_behavior) = REQUIRED];
+
+  // Optional invite code for joining the class.
+  optional string invite_code = 9 [(google.api.field_behavior) = OPTIONAL];
+
+  // Optional class settings.
+  memos.store.ClassSettings settings = 10 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// ClassMember represents membership of a user in a class.
+message ClassMember {
+  option (google.api.resource) = {
+    type: "memos.api.v1/ClassMember"
+    pattern: "classes/{class}/members/{class_member}"
+    name_field: "name"
+    singular: "class_member"
+    plural: "class_members"
+  };
+
+  // The resource name of the class member.
+  // Format: classes/{class}/members/{class_member}
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+
+  // The resource name of the user.
+  // Format: users/{user}
+  string user = 3 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+
+  // The role of the member in the class.
+  ClassMemberRole role = 4 [(google.api.field_behavior) = REQUIRED];
+
+  // Output only. The timestamp when the member joined.
+  google.protobuf.Timestamp join_time = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The resource name of the user who invited this member.
+  // Format: users/{user}
+  optional string invited_by = 6 [
+    (google.api.field_behavior) = OPTIONAL,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+}
