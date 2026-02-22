@@ -359,12 +359,11 @@ func TestClassVisibilityPermissions(t *testing.T) {
 	require.NotNil(t, protectedClass)
 
 	// Regular user should NOT be able to view PROTECTED class (not a member)
-	protectedClassView, err := ts.Service.GetClass(regularCtx, &apiv1.GetClassRequest{
+	_, err = ts.Service.GetClass(regularCtx, &apiv1.GetClassRequest{
 		Name: protectedClass.GetName(),
 	})
 	// This depends on permission logic - currently may allow or deny
 	// require.Error(t, err)
-	// require.Nil(t, protectedClassView)
 
 	// Test 3: PRIVATE class - should only be visible to creator/admin
 	privateClass, err := ts.Service.CreateClass(adminCtx, &apiv1.CreateClassRequest{
@@ -378,10 +377,9 @@ func TestClassVisibilityPermissions(t *testing.T) {
 	require.NotNil(t, privateClass)
 
 	// Regular user should NOT be able to view PRIVATE class
-	privateClassView, err := ts.Service.GetClass(regularCtx, &apiv1.GetClassRequest{
+	_, err = ts.Service.GetClass(regularCtx, &apiv1.GetClassRequest{
 		Name: privateClass.GetName(),
 	})
 	// This depends on permission logic - currently may allow or deny
 	// require.Error(t, err)
-	// require.Nil(t, privateClassView)
 }
