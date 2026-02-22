@@ -222,7 +222,7 @@ func TestUpdateClass(t *testing.T) {
 			Name:        createdClass.GetName(),
 			DisplayName: "Updated Name",
 		},
-		UpdateMask: &apiv1.FieldMask{Paths: updateMask},
+		UpdateMask: &fieldmaskpb.FieldMask{Paths: updateMask},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, updatedClass)
@@ -242,7 +242,7 @@ func TestUpdateClass(t *testing.T) {
 				StudentMemoVisibility: &studentMemoVisibility,
 			},
 		},
-		UpdateMask: &apiv1.FieldMask{Paths: updateMask2},
+		UpdateMask: &fieldmaskpb.FieldMask{Paths: updateMask2},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, updatedClass2)
@@ -260,7 +260,7 @@ func TestUpdateClass(t *testing.T) {
 			Name:       createdClass.GetName(),
 			InviteCode: &newInviteCode,
 		},
-		UpdateMask: &apiv1.FieldMask{Paths: updateMask3},
+		UpdateMask: &fieldmaskpb.FieldMask{Paths: updateMask3},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, updatedClass3)
