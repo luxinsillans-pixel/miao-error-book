@@ -16,6 +16,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/usememos/memos/internal/base"
+	"github.com/usememos/memos/internal/util"
 	"github.com/usememos/memos/plugin/filter"
 	v1pb "github.com/usememos/memos/proto/gen/api/v1"
 	storepb "github.com/usememos/memos/proto/gen/store"
@@ -698,55 +699,1198 @@ func (s *APIV1Service) validateClassFilter(ctx context.Context, filterStr string
 
 // AddClassMember adds a user to a class as a member.
 func (s *APIV1Service) AddClassMember(ctx context.Context, request *v1pb.AddClassMemberRequest) (*v1pb.ClassMember, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddClassMember not implemented")
+	// Extract class UID from class resource name
+	classUID, err := ExtractClassUIDFromName(request.Class)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class name: %v", err)
+	}
+	
+	// Extract user ID from user resource name
+	userID, err := ExtractUserIDFromName(request.User)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid user name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{UID: &classUID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check permissions: only class teachers/admins can add members
+	if !s.canManageClass(currentUser, class) {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: only class teachers and administrators can add members")
+	}
+	
+	// Check if user is already a member (including as creator)
+	isMember, err := s.isClassMember(ctx, userID, class.ID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check membership: %v", err)
+	}
+	if isMember {
+		return nil, status.Errorf(codes.AlreadyExists, "user is already a member of this class")
+	}
+	
+	// Convert role
+	role, err := convertClassMemberRoleToStore(request.Role)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid role: %v", err)
+	}
+	
+	// Create class member
+	now := time.Now().Unix()
+	classMember := &store.ClassMember{
+		ClassID:   class.ID,
+		UserID:    userID,
+		Role:      role,
+		JoinedTs:  now,
+		InvitedBy: &currentUser.ID,
+	}
+	
+	createdMember, err := s.Store.CreateClassMember(ctx, classMember)
+	if err != nil {
+		// Check for duplicate
+		if strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "UNIQUE") {
+			return nil, status.Errorf(codes.AlreadyExists, "user is already a member of this class")
+		}
+		return nil, status.Errorf(codes.Internal, "failed to add class member: %v", err)
+	}
+	
+	// Convert to protobuf response
+	memberMessage, err := s.convertClassMemberFromStore(ctx, createdMember)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert class member")
+	}
+	
+	slog.Info("Class member added", 
+		slog.String("class", class.UID), 
+		slog.Int("user_id", int(userID)),
+		slog.String("role", string(role)))
+	
+	return memberMessage, nil
 }
 
 // RemoveClassMember removes a member from a class.
 func (s *APIV1Service) RemoveClassMember(ctx context.Context, request *v1pb.RemoveClassMemberRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemoveClassMember not implemented")
+	// Extract class member ID from resource name
+	memberID, err := ExtractClassMemberIDFromName(request.Name)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class member name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class member
+	classMember, err := s.Store.GetClassMember(ctx, &store.FindClassMember{ID: &memberID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class member: %v", err)
+	}
+	if classMember == nil {
+		return nil, status.Errorf(codes.NotFound, "class member not found")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &classMember.ClassID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check permissions: only class teachers/admins can remove members
+	if !s.canManageClass(currentUser, class) {
+		// Also allow users to remove themselves
+		if currentUser.ID != classMember.UserID {
+			return nil, status.Errorf(codes.PermissionDenied, "permission denied: only class teachers, administrators, or the member themselves can remove members")
+		}
+	}
+	
+	// Check if trying to remove class creator (shouldn't happen through class_member table)
+	if class.CreatorID == classMember.UserID {
+		return nil, status.Errorf(codes.FailedPrecondition, "cannot remove class creator from class")
+	}
+	
+	// Delete class member
+	if err = s.Store.DeleteClassMember(ctx, &store.DeleteClassMember{ID: classMember.ID}); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to remove class member: %v", err)
+	}
+	
+	slog.Info("Class member removed", 
+		slog.String("class", class.UID), 
+		slog.Int("user_id", int(classMember.UserID)),
+		slog.Int("member_id", int(memberID)))
+	
+	return &emptypb.Empty{}, nil
 }
 
 // ListClassMembers lists members of a class.
 func (s *APIV1Service) ListClassMembers(ctx context.Context, request *v1pb.ListClassMembersRequest) (*v1pb.ListClassMembersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListClassMembers not implemented")
+	// Extract class UID from class resource name
+	classUID, err := ExtractClassUIDFromName(request.Class)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{UID: &classUID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check if user can view the class
+	canView, err := s.canViewClass(ctx, currentUser, class)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check view permissions: %v", err)
+	}
+	if !canView {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: cannot view this class")
+	}
+	
+	// Handle pagination
+	var limit, offset int
+	if request.PageToken != "" {
+		var pageToken v1pb.PageToken
+		if err := unmarshalPageToken(request.PageToken, &pageToken); err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid page token: %v", err)
+		}
+		limit = int(pageToken.Limit)
+		offset = int(pageToken.Offset)
+	} else {
+		limit = int(request.PageSize)
+	}
+	if limit <= 0 {
+		limit = DefaultPageSize
+	}
+	if limit > MaxPageSize {
+		limit = MaxPageSize
+	}
+	limitPlusOne := limit + 1
+	
+	// Find class members
+	classMemberFind := &store.FindClassMember{
+		ClassID: &class.ID,
+		Limit:   &limitPlusOne,
+		Offset:  &offset,
+	}
+	
+	members, err := s.Store.ListClassMembers(ctx, classMemberFind)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list class members: %v", err)
+	}
+	
+	// Convert to protobuf messages
+	memberMessages := []*v1pb.ClassMember{}
+	nextPageToken := ""
+	if len(members) == limitPlusOne {
+		members = members[:limit]
+		nextPageToken, err = getPageToken(limit, offset+limit)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get next page token, error: %v", err)
+		}
+	}
+	
+	for _, member := range members {
+		memberMessage, err := s.convertClassMemberFromStore(ctx, member)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to convert class member")
+		}
+		memberMessages = append(memberMessages, memberMessage)
+	}
+	
+	response := &v1pb.ListClassMembersResponse{
+		Members:       memberMessages,
+		NextPageToken: nextPageToken,
+	}
+	return response, nil
 }
 
 // UpdateClassMemberRole updates a member's role in a class.
 func (s *APIV1Service) UpdateClassMemberRole(ctx context.Context, request *v1pb.UpdateClassMemberRoleRequest) (*v1pb.ClassMember, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateClassMemberRole not implemented")
+	// Extract class member ID from resource name
+	memberID, err := ExtractClassMemberIDFromName(request.Name)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class member name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class member
+	classMember, err := s.Store.GetClassMember(ctx, &store.FindClassMember{ID: &memberID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class member: %v", err)
+	}
+	if classMember == nil {
+		return nil, status.Errorf(codes.NotFound, "class member not found")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &classMember.ClassID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check permissions: only class teachers/admins can update member roles
+	if !s.canManageClass(currentUser, class) {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: only class teachers and administrators can update member roles")
+	}
+	
+	// Check if trying to update class creator (shouldn't happen through class_member table)
+	if class.CreatorID == classMember.UserID {
+		return nil, status.Errorf(codes.FailedPrecondition, "cannot change role of class creator")
+	}
+	
+	// Convert role
+	newRole, err := convertClassMemberRoleToStore(request.Role)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid role: %v", err)
+	}
+	
+	// Update class member
+	update := &store.UpdateClassMember{
+		ID:   classMember.ID,
+		Role: &newRole,
+	}
+	
+	if err = s.Store.UpdateClassMember(ctx, update); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update class member role: %v", err)
+	}
+	
+	// Get updated class member
+	updatedMember, err := s.Store.GetClassMember(ctx, &store.FindClassMember{ID: &memberID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get updated class member: %v", err)
+	}
+	if updatedMember == nil {
+		return nil, status.Errorf(codes.NotFound, "updated class member not found")
+	}
+	
+	// Convert to protobuf response
+	memberMessage, err := s.convertClassMemberFromStore(ctx, updatedMember)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert class member")
+	}
+	
+	slog.Info("Class member role updated", 
+		slog.String("class", class.UID), 
+		slog.Int("user_id", int(classMember.UserID)),
+		slog.String("old_role", string(classMember.Role)),
+		slog.String("new_role", string(newRole)))
+	
+	return memberMessage, nil
 }
 
 // SetClassMemoVisibility sets visibility of a memo within a class.
 func (s *APIV1Service) SetClassMemoVisibility(ctx context.Context, request *v1pb.SetClassMemoVisibilityRequest) (*v1pb.ClassMemoVisibility, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetClassMemoVisibility not implemented")
+	// Extract class UID from class resource name
+	classUID, err := ExtractClassUIDFromName(request.Class)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class name: %v", err)
+	}
+	
+	// Extract memo UID from memo resource name
+	memoUID, err := ExtractMemoUIDFromName(request.Memo)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid memo name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{UID: &classUID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Get memo
+	memo, err := s.Store.GetMemo(ctx, &store.FindMemo{UID: &memoUID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get memo: %v", err)
+	}
+	if memo == nil {
+		return nil, status.Errorf(codes.NotFound, "memo not found")
+	}
+	
+	// Check permissions: user must be able to view the class and manage memos
+	// For now, only class teachers/admins can set memo visibility
+	if !s.canManageClass(currentUser, class) {
+		// Also check if user is the memo creator and has permission to share
+		if memo.CreatorID != currentUser.ID {
+			return nil, status.Errorf(codes.PermissionDenied, "permission denied: only class teachers, administrators, or memo creators can set memo visibility")
+		}
+		// Check if user is a class member (including as creator)
+		isMember, err := s.isClassMember(ctx, currentUser.ID, class.ID)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to check membership: %v", err)
+		}
+		if !isMember {
+			return nil, status.Errorf(codes.PermissionDenied, "permission denied: must be a class member to share memos")
+		}
+	}
+	
+	// Convert visibility
+	visibility, err := convertClassVisibilityToStore(request.Visibility)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid visibility: %v", err)
+	}
+	
+	// Check if visibility record already exists
+	existingVisibility, err := s.Store.GetClassMemoVisibility(ctx, &store.FindClassMemoVisibility{
+		ClassID: &class.ID,
+		MemoID:  &memo.ID,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check existing visibility: %v", err)
+	}
+	
+	now := time.Now().Unix()
+	var createdVisibility *store.ClassMemoVisibility
+	
+	if existingVisibility != nil {
+		// Update existing visibility
+		update := &store.UpdateClassMemoVisibility{
+			ID:         existingVisibility.ID,
+			Visibility: &visibility,
+		}
+		
+		if err = s.Store.UpdateClassMemoVisibility(ctx, update); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to update memo visibility: %v", err)
+		}
+		
+		// Get updated visibility
+		createdVisibility, err = s.Store.GetClassMemoVisibility(ctx, &store.FindClassMemoVisibility{ID: &existingVisibility.ID})
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get updated visibility: %v", err)
+		}
+	} else {
+		// Create new visibility record
+		visibilityRecord := &store.ClassMemoVisibility{
+			ClassID:     class.ID,
+			MemoID:      memo.ID,
+			Visibility:  visibility,
+			SharedBy:    currentUser.ID,
+			SharedTs:    now,
+			Description: "", // Could be extended to accept description in request
+		}
+		
+		createdVisibility, err = s.Store.CreateClassMemoVisibility(ctx, visibilityRecord)
+		if err != nil {
+			if strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "UNIQUE") {
+				return nil, status.Errorf(codes.AlreadyExists, "memo visibility already set for this class")
+			}
+			return nil, status.Errorf(codes.Internal, "failed to set memo visibility: %v", err)
+		}
+	}
+	
+	if createdVisibility == nil {
+		return nil, status.Errorf(codes.Internal, "failed to create or update memo visibility")
+	}
+	
+	// Convert to protobuf response
+	visibilityMessage, err := s.convertClassMemoVisibilityFromStore(ctx, createdVisibility)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert class memo visibility")
+	}
+	
+	slog.Info("Class memo visibility set", 
+		slog.String("class", class.UID), 
+		slog.String("memo", memo.UID),
+		slog.String("visibility", string(visibility)))
+	
+	return visibilityMessage, nil
 }
 
 // GetClassMemoVisibility gets visibility settings of a memo in a class.
 func (s *APIV1Service) GetClassMemoVisibility(ctx context.Context, request *v1pb.GetClassMemoVisibilityRequest) (*v1pb.ClassMemoVisibility, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetClassMemoVisibility not implemented")
+	// Extract visibility ID from resource name
+	visibilityID, err := ExtractClassMemoVisibilityIDFromName(request.Name)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class memo visibility name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get visibility record
+	visibility, err := s.Store.GetClassMemoVisibility(ctx, &store.FindClassMemoVisibility{ID: &visibilityID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class memo visibility: %v", err)
+	}
+	if visibility == nil {
+		return nil, status.Errorf(codes.NotFound, "class memo visibility not found")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &visibility.ClassID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check if user can view the class
+	canView, err := s.canViewClass(ctx, currentUser, class)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check view permissions: %v", err)
+	}
+	if !canView {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: cannot view this class")
+	}
+	
+	// Get memo to ensure it still exists (optional but good for consistency)
+	memo, err := s.Store.GetMemo(ctx, &store.FindMemo{ID: &visibility.MemoID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get memo: %v", err)
+	}
+	if memo == nil {
+		return nil, status.Errorf(codes.NotFound, "memo not found")
+	}
+	
+	// Convert to protobuf response
+	visibilityMessage, err := s.convertClassMemoVisibilityFromStore(ctx, visibility)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert class memo visibility")
+	}
+	
+	return visibilityMessage, nil
 }
 
 // ListClassMemoVisibilities lists memo visibility settings for a class.
 func (s *APIV1Service) ListClassMemoVisibilities(ctx context.Context, request *v1pb.ListClassMemoVisibilitiesRequest) (*v1pb.ListClassMemoVisibilitiesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListClassMemoVisibilities not implemented")
+	// Extract class UID from class resource name
+	classUID, err := ExtractClassUIDFromName(request.Class)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{UID: &classUID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check if user can view the class
+	canView, err := s.canViewClass(ctx, currentUser, class)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check view permissions: %v", err)
+	}
+	if !canView {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: cannot view this class")
+	}
+	
+	// Handle pagination
+	var limit, offset int
+	if request.PageToken != "" {
+		var pageToken v1pb.PageToken
+		if err := unmarshalPageToken(request.PageToken, &pageToken); err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid page token: %v", err)
+		}
+		limit = int(pageToken.Limit)
+		offset = int(pageToken.Offset)
+	} else {
+		limit = int(request.PageSize)
+	}
+	if limit <= 0 {
+		limit = DefaultPageSize
+	}
+	if limit > MaxPageSize {
+		limit = MaxPageSize
+	}
+	limitPlusOne := limit + 1
+	
+	// Find memo visibilities
+	visibilityFind := &store.FindClassMemoVisibility{
+		ClassID: &class.ID,
+		Limit:   &limitPlusOne,
+		Offset:  &offset,
+	}
+	
+	visibilities, err := s.Store.ListClassMemoVisibilities(ctx, visibilityFind)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list class memo visibilities: %v", err)
+	}
+	
+	// Convert to protobuf messages
+	visibilityMessages := []*v1pb.ClassMemoVisibility{}
+	nextPageToken := ""
+	if len(visibilities) == limitPlusOne {
+		visibilities = visibilities[:limit]
+		nextPageToken, err = getPageToken(limit, offset+limit)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get next page token, error: %v", err)
+		}
+	}
+	
+	for _, visibility := range visibilities {
+		visibilityMessage, err := s.convertClassMemoVisibilityFromStore(ctx, visibility)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to convert class memo visibility")
+		}
+		visibilityMessages = append(visibilityMessages, visibilityMessage)
+	}
+	
+	response := &v1pb.ListClassMemoVisibilitiesResponse{
+		Visibilities:  visibilityMessages,
+		NextPageToken: nextPageToken,
+	}
+	return response, nil
 }
 
 // CreateClassTagTemplate creates a tag template for a class.
 func (s *APIV1Service) CreateClassTagTemplate(ctx context.Context, request *v1pb.CreateClassTagTemplateRequest) (*v1pb.ClassTagTemplate, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateClassTagTemplate not implemented")
+	// Extract class UID from class resource name
+	classUID, err := ExtractClassUIDFromName(request.Class)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class name: %v", err)
+	}
+	
+	// Validate request
+	if request.TagTemplate == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "tag_template is required")
+	}
+	if request.TagTemplate.DisplayName == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "tag_template.display_name is required")
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{UID: &classUID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check permissions: only class teachers/admins can create tag templates
+	if !s.canManageClass(currentUser, class) {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: only class teachers and administrators can create tag templates")
+	}
+	
+	// Check if tag template with same name already exists in this class
+	existingTemplate, err := s.Store.GetClassTagTemplate(ctx, &store.FindClassTagTemplate{
+		ClassID: &class.ID,
+		Name:    &request.TagTemplate.DisplayName,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check existing tag template: %v", err)
+	}
+	if existingTemplate != nil {
+		return nil, status.Errorf(codes.AlreadyExists, "tag template with name %q already exists in this class", request.TagTemplate.DisplayName)
+	}
+	
+	// Create tag template
+	now := time.Now().Unix()
+	color := ""
+	if request.TagTemplate.Color != nil {
+		color = *request.TagTemplate.Color
+	}
+	
+	tagTemplate := &store.ClassTagTemplate{
+		ClassID:     class.ID,
+		Name:        request.TagTemplate.DisplayName,
+		Color:       color,
+		Description: request.TagTemplate.Description,
+		CreatedTs:   now,
+		UpdatedTs:   now,
+	}
+	
+	createdTemplate, err := s.Store.CreateClassTagTemplate(ctx, tagTemplate)
+	if err != nil {
+		if strings.Contains(err.Error(), "duplicate") || strings.Contains(err.Error(), "UNIQUE") {
+			return nil, status.Errorf(codes.AlreadyExists, "tag template already exists")
+		}
+		return nil, status.Errorf(codes.Internal, "failed to create tag template: %v", err)
+	}
+	
+	// Convert to protobuf response
+	templateMessage, err := s.convertClassTagTemplateFromStore(ctx, createdTemplate)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert class tag template")
+	}
+	
+	slog.Info("Class tag template created", 
+		slog.String("class", class.UID), 
+		slog.String("template_name", createdTemplate.Name))
+	
+	return templateMessage, nil
 }
 
 // UpdateClassTagTemplate updates a tag template.
 func (s *APIV1Service) UpdateClassTagTemplate(ctx context.Context, request *v1pb.UpdateClassTagTemplateRequest) (*v1pb.ClassTagTemplate, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateClassTagTemplate not implemented")
+	// Extract template ID from resource name
+	templateID, err := ExtractClassTagTemplateIDFromName(request.TagTemplate.Name)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class tag template name: %v", err)
+	}
+	
+	if request.UpdateMask == nil || len(request.UpdateMask.Paths) == 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "update_mask is required")
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get tag template
+	tagTemplate, err := s.Store.GetClassTagTemplate(ctx, &store.FindClassTagTemplate{ID: &templateID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class tag template: %v", err)
+	}
+	if tagTemplate == nil {
+		return nil, status.Errorf(codes.NotFound, "class tag template not found")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &tagTemplate.ClassID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check permissions: only class teachers/admins can update tag templates
+	if !s.canManageClass(currentUser, class) {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: only class teachers and administrators can update tag templates")
+	}
+	
+	// Prepare update
+	update := &store.UpdateClassTagTemplate{
+		ID: tagTemplate.ID,
+	}
+	
+	for _, path := range request.UpdateMask.Paths {
+		switch path {
+		case "display_name":
+			if request.TagTemplate.DisplayName == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "tag_template.display_name cannot be empty")
+			}
+			update.Name = &request.TagTemplate.DisplayName
+			
+			// Check if new name already exists in class (excluding current template)
+			if request.TagTemplate.DisplayName != tagTemplate.Name {
+				existingTemplate, err := s.Store.GetClassTagTemplate(ctx, &store.FindClassTagTemplate{
+					ClassID: &class.ID,
+					Name:    &request.TagTemplate.DisplayName,
+				})
+				if err != nil {
+					return nil, status.Errorf(codes.Internal, "failed to check existing tag template: %v", err)
+				}
+				if existingTemplate != nil && existingTemplate.ID != tagTemplate.ID {
+					return nil, status.Errorf(codes.AlreadyExists, "tag template with name %q already exists in this class", request.TagTemplate.DisplayName)
+				}
+			}
+			
+		case "description":
+			update.Description = &request.TagTemplate.Description
+		case "color":
+			if request.TagTemplate.Color != nil {
+				color := *request.TagTemplate.Color
+				update.Color = &color
+			} else {
+				// Clear color
+				emptyString := ""
+				update.Color = &emptyString
+			}
+		}
+	}
+	
+	// Apply update
+	if err = s.Store.UpdateClassTagTemplate(ctx, update); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update tag template: %v", err)
+	}
+	
+	// Get updated template
+	updatedTemplate, err := s.Store.GetClassTagTemplate(ctx, &store.FindClassTagTemplate{ID: &templateID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get updated tag template: %v", err)
+	}
+	if updatedTemplate == nil {
+		return nil, status.Errorf(codes.NotFound, "updated tag template not found")
+	}
+	
+	// Convert to protobuf response
+	templateMessage, err := s.convertClassTagTemplateFromStore(ctx, updatedTemplate)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert class tag template")
+	}
+	
+	slog.Info("Class tag template updated", 
+		slog.String("class", class.UID), 
+		slog.String("template_name", updatedTemplate.Name))
+	
+	return templateMessage, nil
 }
 
 // DeleteClassTagTemplate deletes a tag template.
 func (s *APIV1Service) DeleteClassTagTemplate(ctx context.Context, request *v1pb.DeleteClassTagTemplateRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteClassTagTemplate not implemented")
+	// Extract template ID from resource name
+	templateID, err := ExtractClassTagTemplateIDFromName(request.Name)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class tag template name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get tag template
+	tagTemplate, err := s.Store.GetClassTagTemplate(ctx, &store.FindClassTagTemplate{ID: &templateID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class tag template: %v", err)
+	}
+	if tagTemplate == nil {
+		return nil, status.Errorf(codes.NotFound, "class tag template not found")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &tagTemplate.ClassID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check permissions: only class teachers/admins can delete tag templates
+	if !s.canManageClass(currentUser, class) {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: only class teachers and administrators can delete tag templates")
+	}
+	
+	// Delete tag template
+	if err = s.Store.DeleteClassTagTemplate(ctx, &store.DeleteClassTagTemplate{ID: tagTemplate.ID}); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to delete tag template: %v", err)
+	}
+	
+	slog.Info("Class tag template deleted", 
+		slog.String("class", class.UID), 
+		slog.String("template_name", tagTemplate.Name),
+		slog.Int("template_id", int(tagTemplate.ID)))
+	
+	return &emptypb.Empty{}, nil
 }
 
 // ListClassTagTemplates lists tag templates for a class.
 func (s *APIV1Service) ListClassTagTemplates(ctx context.Context, request *v1pb.ListClassTagTemplatesRequest) (*v1pb.ListClassTagTemplatesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListClassTagTemplates not implemented")
+	// Extract class UID from class resource name
+	classUID, err := ExtractClassUIDFromName(request.Class)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid class name: %v", err)
+	}
+	
+	// Get current user
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user")
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	
+	// Get class
+	class, err := s.Store.GetClass(ctx, &store.FindClass{UID: &classUID})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get class: %v", err)
+	}
+	if class == nil {
+		return nil, status.Errorf(codes.NotFound, "class not found")
+	}
+	
+	// Check if user can view the class
+	canView, err := s.canViewClass(ctx, currentUser, class)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check view permissions: %v", err)
+	}
+	if !canView {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied: cannot view this class")
+	}
+	
+	// Handle pagination
+	var limit, offset int
+	if request.PageToken != "" {
+		var pageToken v1pb.PageToken
+		if err := unmarshalPageToken(request.PageToken, &pageToken); err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid page token: %v", err)
+		}
+		limit = int(pageToken.Limit)
+		offset = int(pageToken.Offset)
+	} else {
+		limit = int(request.PageSize)
+	}
+	if limit <= 0 {
+		limit = DefaultPageSize
+	}
+	if limit > MaxPageSize {
+		limit = MaxPageSize
+	}
+	limitPlusOne := limit + 1
+	
+	// Find tag templates
+	templateFind := &store.FindClassTagTemplate{
+		ClassID: &class.ID,
+		Limit:   &limitPlusOne,
+		Offset:  &offset,
+	}
+	
+	templates, err := s.Store.ListClassTagTemplates(ctx, templateFind)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list class tag templates: %v", err)
+	}
+	
+	// Convert to protobuf messages
+	templateMessages := []*v1pb.ClassTagTemplate{}
+	nextPageToken := ""
+	if len(templates) == limitPlusOne {
+		templates = templates[:limit]
+		nextPageToken, err = getPageToken(limit, offset+limit)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to get next page token, error: %v", err)
+		}
+	}
+	
+	for _, template := range templates {
+		templateMessage, err := s.convertClassTagTemplateFromStore(ctx, template)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to convert class tag template")
+		}
+		templateMessages = append(templateMessages, templateMessage)
+	}
+	
+	response := &v1pb.ListClassTagTemplatesResponse{
+		TagTemplates:  templateMessages,
+		NextPageToken: nextPageToken,
+	}
+	return response, nil
+}
+
+// Helper functions for resource name parsing
+
+// ExtractClassMemberIDFromName extracts class member ID from resource name.
+// Format: classes/{class}/members/{class_member}
+func ExtractClassMemberIDFromName(name string) (int32, error) {
+	tokens, err := GetNameParentTokens(name, ClassNamePrefix, "members/")
+	if err != nil {
+		return 0, err
+	}
+	if len(tokens) != 2 {
+		return 0, errors.Errorf("invalid class member name: expected 2 tokens, got %d", len(tokens))
+	}
+	classUID := tokens[0]
+	memberIDStr := tokens[1]
+	
+	// Validate class UID format
+	if !base.UIDMatcher.MatchString(classUID) {
+		return 0, errors.Errorf("invalid class UID format: %s", classUID)
+	}
+	
+	memberID, err := util.ConvertStringToInt32(memberIDStr)
+	if err != nil {
+		return 0, errors.Errorf("invalid class member ID %q", memberIDStr)
+	}
+	return memberID, nil
+}
+
+// ExtractClassMemoVisibilityIDFromName extracts class memo visibility ID from resource name.
+// Format: classes/{class}/memoVisibility/{memo_visibility}
+func ExtractClassMemoVisibilityIDFromName(name string) (int32, error) {
+	tokens, err := GetNameParentTokens(name, ClassNamePrefix, "memoVisibility/")
+	if err != nil {
+		return 0, err
+	}
+	if len(tokens) != 2 {
+		return 0, errors.Errorf("invalid class memo visibility name: expected 2 tokens, got %d", len(tokens))
+	}
+	classUID := tokens[0]
+	visibilityIDStr := tokens[1]
+	
+	// Validate class UID format
+	if !base.UIDMatcher.MatchString(classUID) {
+		return 0, errors.Errorf("invalid class UID format: %s", classUID)
+	}
+	
+	visibilityID, err := util.ConvertStringToInt32(visibilityIDStr)
+	if err != nil {
+		return 0, errors.Errorf("invalid class memo visibility ID %q", visibilityIDStr)
+	}
+	return visibilityID, nil
+}
+
+// ExtractClassTagTemplateIDFromName extracts class tag template ID from resource name.
+// Format: classes/{class}/tagTemplates/{tag_template}
+func ExtractClassTagTemplateIDFromName(name string) (int32, error) {
+	tokens, err := GetNameParentTokens(name, ClassNamePrefix, "tagTemplates/")
+	if err != nil {
+		return 0, err
+	}
+	if len(tokens) != 2 {
+		return 0, errors.Errorf("invalid class tag template name: expected 2 tokens, got %d", len(tokens))
+	}
+	classUID := tokens[0]
+	templateIDStr := tokens[1]
+	
+	// Validate class UID format
+	if !base.UIDMatcher.MatchString(classUID) {
+		return 0, errors.Errorf("invalid class UID format: %s", classUID)
+	}
+	
+	templateID, err := util.ConvertStringToInt32(templateIDStr)
+	if err != nil {
+		return 0, errors.Errorf("invalid class tag template ID %q", templateIDStr)
+	}
+	return templateID, nil
+}
+
+// convertClassMemberRoleToStore converts protobuf ClassMemberRole to store.ClassMemberRole.
+func convertClassMemberRoleToStore(role v1pb.ClassMemberRole) (store.ClassMemberRole, error) {
+	switch role {
+	case v1pb.ClassMemberRole_TEACHER:
+		return store.ClassMemberRoleTeacher, nil
+	case v1pb.ClassMemberRole_ASSISTANT:
+		return store.ClassMemberRoleAssistant, nil
+	case v1pb.ClassMemberRole_STUDENT:
+		return store.ClassMemberRoleStudent, nil
+	case v1pb.ClassMemberRole_PARENT:
+		return store.ClassMemberRoleParent, nil
+	default:
+		return "", errors.Errorf("invalid class member role: %v", role)
+	}
+}
+
+// convertClassMemberRoleFromStore converts store.ClassMemberRole to protobuf ClassMemberRole.
+func convertClassMemberRoleFromStore(role store.ClassMemberRole) v1pb.ClassMemberRole {
+	switch role {
+	case store.ClassMemberRoleTeacher:
+		return v1pb.ClassMemberRole_TEACHER
+	case store.ClassMemberRoleAssistant:
+		return v1pb.ClassMemberRole_ASSISTANT
+	case store.ClassMemberRoleStudent:
+		return v1pb.ClassMemberRole_STUDENT
+	case store.ClassMemberRoleParent:
+		return v1pb.ClassMemberRole_PARENT
+	default:
+		return v1pb.ClassMemberRole_CLASS_MEMBER_ROLE_UNSPECIFIED
+	}
+}
+
+// convertClassMemberFromStore converts a store.ClassMember to a v1pb.ClassMember.
+func (s *APIV1Service) convertClassMemberFromStore(ctx context.Context, member *store.ClassMember) (*v1pb.ClassMember, error) {
+	if member == nil {
+		return nil, errors.New("class member is nil")
+	}
+	
+	// Get class information
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &member.ClassID})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get class")
+	}
+	if class == nil {
+		return nil, errors.Errorf("class not found for ID %d", member.ClassID)
+	}
+	
+	// Get user information
+	user, err := s.Store.GetUser(ctx, &store.FindUser{ID: &member.UserID})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get user")
+	}
+	if user == nil {
+		return nil, errors.Errorf("user not found for ID %d", member.UserID)
+	}
+	userName := fmt.Sprintf("%s%d", UserNamePrefix, user.ID)
+	
+	// Get invited by user information if available
+	var invitedByName *string
+	if member.InvitedBy != nil {
+		invitedByUser, err := s.Store.GetUser(ctx, &store.FindUser{ID: member.InvitedBy})
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get invited by user")
+		}
+		if invitedByUser != nil {
+			invitedBy := fmt.Sprintf("%s%d", UserNamePrefix, invitedByUser.ID)
+			invitedByName = &invitedBy
+		}
+	}
+	
+	className := fmt.Sprintf("%s%s", ClassNamePrefix, class.UID)
+	memberName := fmt.Sprintf("%s/members/%d", className, member.ID)
+	
+	// Convert role
+	role := convertClassMemberRoleFromStore(member.Role)
+	
+	// Convert timestamp
+	joinTime := timestamppb.New(time.Unix(member.JoinedTs, 0))
+	
+	return &v1pb.ClassMember{
+		Name:       memberName,
+		Class:      className,
+		User:       userName,
+		Role:       role,
+		JoinTime:   joinTime,
+		InvitedBy:  invitedByName,
+	}, nil
+}
+
+// convertClassMemoVisibilityFromStore converts a store.ClassMemoVisibility to a v1pb.ClassMemoVisibility.
+func (s *APIV1Service) convertClassMemoVisibilityFromStore(ctx context.Context, visibility *store.ClassMemoVisibility) (*v1pb.ClassMemoVisibility, error) {
+	if visibility == nil {
+		return nil, errors.New("class memo visibility is nil")
+	}
+	
+	// Get class information
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &visibility.ClassID})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get class")
+	}
+	if class == nil {
+		return nil, errors.Errorf("class not found for ID %d", visibility.ClassID)
+	}
+	
+	// Get memo information
+	memo, err := s.Store.GetMemo(ctx, &store.FindMemo{ID: &visibility.MemoID})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get memo")
+	}
+	if memo == nil {
+		return nil, errors.Errorf("memo not found for ID %d", visibility.MemoID)
+	}
+	
+	// Get user who shared the memo
+	sharedByUser, err := s.Store.GetUser(ctx, &store.FindUser{ID: &visibility.SharedBy})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get shared by user")
+	}
+	if sharedByUser == nil {
+		return nil, errors.Errorf("user not found for ID %d", visibility.SharedBy)
+	}
+	
+	className := fmt.Sprintf("%s%s", ClassNamePrefix, class.UID)
+	memoName := fmt.Sprintf("%s%d", MemoNamePrefix, memo.ID)
+	visibilityName := fmt.Sprintf("%s/memoVisibility/%d", className, visibility.ID)
+	
+	// Convert visibility
+	vis := convertClassVisibilityFromStore(visibility.Visibility)
+	
+	return &v1pb.ClassMemoVisibility{
+		Name:       visibilityName,
+		Class:      className,
+		Memo:       memoName,
+		Visibility: vis,
+		// Note: store.ClassMemoVisibility has Description field but protobuf doesn't
+		// Note: store.ClassMemoVisibility has SharedTs but protobuf doesn't have share_time
+	}, nil
+}
+
+// convertClassTagTemplateFromStore converts a store.ClassTagTemplate to a v1pb.ClassTagTemplate.
+func (s *APIV1Service) convertClassTagTemplateFromStore(ctx context.Context, template *store.ClassTagTemplate) (*v1pb.ClassTagTemplate, error) {
+	if template == nil {
+		return nil, errors.New("class tag template is nil")
+	}
+	
+	// Get class information
+	class, err := s.Store.GetClass(ctx, &store.FindClass{ID: &template.ClassID})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get class")
+	}
+	if class == nil {
+		return nil, errors.Errorf("class not found for ID %d", template.ClassID)
+	}
+	
+	className := fmt.Sprintf("%s%s", ClassNamePrefix, class.UID)
+	templateName := fmt.Sprintf("%s/tagTemplates/%d", className, template.ID)
+	
+	return &v1pb.ClassTagTemplate{
+		Name:        templateName,
+		Class:       className,
+		DisplayName: template.Name,
+		Description: template.Description,
+		Color:       &template.Color,
+	}, nil
 }
