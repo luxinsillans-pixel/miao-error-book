@@ -93,6 +93,20 @@
 **关键接口：**
 - `Login`, `Logout`, `GetAuthStatus`
 
+### 9. 班级管理模块 (ClassService)
+**功能点：**
+- 班级CRUD：创建、读取、更新、删除班级
+- 成员管理：添加、移除、列出班级成员，更新成员角色
+- 错题可见性：设置、获取、列出班级错题可见性
+- 标签模板：创建、更新、删除、列出班级标签模板
+- 权限控制：RBAC权限系统，支持公开/私有班级可见性
+
+**关键接口：**
+- `CreateClass`, `GetClass`, `ListClasses`, `UpdateClass`, `DeleteClass`
+- `AddClassMember`, `RemoveClassMember`, `ListClassMembers`, `UpdateClassMemberRole`
+- `SetClassMemoVisibility`, `GetClassMemoVisibility`, `ListClassMemoVisibilities`
+- `CreateClassTagTemplate`, `UpdateClassTagTemplate`, `DeleteClassTagTemplate`, `ListClassTagTemplates`
+
 ## 数据库模型
 主要数据表：
 - `user`：用户基本信息
@@ -107,6 +121,10 @@
 - `instance_setting`：系统全局配置
 - `idp`：身份提供者配置
 - `shortcut`：保存的查询快捷方式
+- `class`：班级基本信息（名称、描述、可见性、设置）
+- `class_member`：班级成员关系（用户角色：TEACHER/ASSISTANT/STUDENT/PARENT）
+- `class_memo_visibility`：班级错题可见性设置
+- `class_tag_template`：班级标签模板定义
 
 ## 扩展点（错题本定制）
 基于现有模块可扩展的功能：
@@ -151,5 +169,5 @@
 - 存储卷：数据持久化配置
 
 ---
-*文档生成时间：2026-02-10*
+*文档生成时间：2026-02-22*
 *基于 memos v0.26.1 代码分析*
