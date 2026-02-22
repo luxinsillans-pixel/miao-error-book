@@ -28,3 +28,6 @@ dist
 # Git worktrees
 .worktrees/
 data/
+
+# Go test binaries
+*.test
