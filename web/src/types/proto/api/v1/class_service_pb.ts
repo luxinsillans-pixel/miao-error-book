@@ -17,7 +17,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/v1/class_service.proto.
  */
 export const file_api_v1_class_service: GenFile = /*@__PURE__*/
-  fileDesc("ChphcGkvdjEvY2xhc3Nfc2VydmljZS5wcm90bxIMbWVtb3MuYXBpLnYxIu4CCg1DbGFzc1NldHRpbmdzEiQKF3N0dWRlbnRfbWVtb192aXNpYmlsaXR5GAEgASgISACIAQESHAoPYWxsb3dfYW5vbnltb3VzGAIgASgISAGIAQESQQoaZGVmYXVsdF9zdHVkZW50X3Zpc2liaWxpdHkYAyABKA4yHS5tZW1vcy5hcGkudjEuQ2xhc3NWaXNpYmlsaXR5EiEKFGVuYWJsZV90YWdfdGVtcGxhdGVzGAQgASgISAKIAQESGAoLbWF4X21lbWJlcnMYBSABKAVIA4gBARIkChdyZXF1aXJlX21lbWJlcl9hcHByb3ZhbBgGIAEoCEgEiAEBQhoKGF9zdHVkZW50X21lbW9fdmlzaWJpbGl0eUISChBfYWxsb3dfYW5vbnltb3VzQhcKFV9lbmFibGVfdGFnX3RlbXBsYXRlc0IOCgxfbWF4X21lbWJlcnNCGgoYX3JlcXVpcmVfbWVtYmVyX2FwcHJvdmFsItQDCgVDbGFzcxIRCgRuYW1lGAEgASgJQgPgQQgSEAoDdWlkGAIgASgJQgPgQQISGQoMZGlzcGxheV9uYW1lGAMgASgJQgPgQQISGAoLZGVzY3JpcHRpb24YBCABKAlCA+BBARIqCgdjcmVhdG9yGAUgASgJQhngQQP6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEjQKC2NyZWF0ZV90aW1lGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDEjQKC3VwZGF0ZV90aW1lGAcgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDEjYKCnZpc2liaWxpdHkYCCABKA4yHS5tZW1vcy5hcGkudjEuQ2xhc3NWaXNpYmlsaXR5QgPgQQISHQoLaW52aXRlX2NvZGUYCSABKAlCA+BBAUgAiAEBEjIKCHNldHRpbmdzGAogASgLMhsubWVtb3MuYXBpLnYxLkNsYXNzU2V0dGluZ3NCA+BBATo+6kE7ChJtZW1vcy5hcGkudjEvQ2xhc3MSD2NsYXNzZXMve2NsYXNzfRoEbmFtZSoHY2xhc3NlczIFY2xhc3NCDgoMX2ludml0ZV9jb2RlIocDCgtDbGFzc01lbWJlchIRCgRuYW1lGAEgASgJQgPgQQgSKQoFY2xhc3MYAiABKAlCGuBBA/pBFAoSbWVtb3MuYXBpLnYxL0NsYXNzEicKBHVzZXIYAyABKAlCGeBBA/pBEwoRbWVtb3MuYXBpLnYxL1VzZXISMAoEcm9sZRgEIAEoDjIdLm1lbW9zLmFwaS52MS5DbGFzc01lbWJlclJvbGVCA+BBAhIyCglqb2luX3RpbWUYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgPgQQMSMgoKaW52aXRlZF9ieRgGIAEoCUIZ4EEB+kETChFtZW1vcy5hcGkudjEvVXNlckgAiAEBOmjqQWUKGG1lbW9zLmFwaS52MS9DbGFzc01lbWJlchImY2xhc3Nlcy97Y2xhc3N9L21lbWJlcnMve2NsYXNzX21lbWJlcn0aBG5hbWUqDWNsYXNzX21lbWJlcnMyDGNsYXNzX21lbWJlckINCgtfaW52aXRlZF9ieSJmChJDcmVhdGVDbGFzc1JlcXVlc3QSGgoIY2xhc3NfaWQYASABKAlCA+BBAUgAiAEBEicKBWNsYXNzGAIgASgLMhMubWVtb3MuYXBpLnYxLkNsYXNzQgPgQQJCCwoJX2NsYXNzX2lkIjsKD0dldENsYXNzUmVxdWVzdBIoCgRuYW1lGAEgASgJQhrgQQL6QRQKEm1lbW9zLmFwaS52MS9DbGFzcyJaChJMaXN0Q2xhc3Nlc1JlcXVlc3QSEwoGZmlsdGVyGAEgASgJQgPgQQESFgoJcGFnZV9zaXplGAIgASgFQgPgQQESFwoKcGFnZV90b2tlbhgDIAEoCUID4EEBIlQKE0xpc3RDbGFzc2VzUmVzcG9uc2USJAoHY2xhc3NlcxgBIAMoCzITLm1lbW9zLmFwaS52MS5DbGFzcxIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkicwoSVXBkYXRlQ2xhc3NSZXF1ZXN0EicKBWNsYXNzGAEgASgLMhMubWVtb3MuYXBpLnYxLkNsYXNzQgPgQQISNAoLdXBkYXRlX21hc2sYAiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrQgPgQQIiPgoSRGVsZXRlQ2xhc3NSZXF1ZXN0EigKBG5hbWUYASABKAlCGuBBAvpBFAoSbWVtb3MuYXBpLnYxL0NsYXNzKm0KD0NsYXNzVmlzaWJpbGl0eRIgChxDTEFTU19WSVNJQklMSVRZX1VOU1BFQ0lGSUVEEAASEAoMQ0xBU1NfUFVCTElDEAESEwoPQ0xBU1NfUFJPVEVDVEVEEAISEQoNQ0xBU1NfUFJJVkFURRADKmkKD0NsYXNzTWVtYmVyUm9sZRIhCh1DTEFTU19NRU1CRVJfUk9MRV9VTlNQRUNJRklFRBAAEgsKB1RFQUNIRVIQARINCglBU1NJU1RBTlQQAhILCgdTVFVERU5UEAMSCgoGUEFSRU5UEAQywwQKDENsYXNzU2VydmljZRJkCgtDcmVhdGVDbGFzcxIgLm1lbW9zLmFwaS52MS5DcmVhdGVDbGFzc1JlcXVlc3QaEy5tZW1vcy5hcGkudjEuQ2xhc3MiHtpBBWNsYXNzgtPkkwIQOgEqIgsvdjEvY2xhc3NlcxJjCghHZXRDbGFzcxIdLm1lbW9zLmFwaS52MS5HZXRDbGFzc1JlcXVlc3QaEy5tZW1vcy5hcGkudjEuQ2xhc3MiI9pBBG5hbWWC0+STAhYSFC92MS97bmFtZT1jbGFzc2VzLyp9EmcKC0xpc3RDbGFzc2VzEiAubWVtb3MuYXBpLnYxLkxpc3RDbGFzc2VzUmVxdWVzdBohLm1lbW9zLmFwaS52MS5MaXN0Q2xhc3Nlc1Jlc3BvbnNlIhOC0+STAg0SCy92MS9jbGFzc2VzEn8KC1VwZGF0ZUNsYXNzEiAubWVtb3MuYXBpLnYxLlVwZGF0ZUNsYXNzUmVxdWVzdBoTLm1lbW9zLmFwaS52MS5DbGFzcyI52kERY2xhc3MsdXBkYXRlX21hc2uC0+STAh86ASoyGi92MS97Y2xhc3MubmFtZT1jbGFzc2VzLyp9EmwKC0RlbGV0ZUNsYXNzEiAubWVtb3MuYXBpLnYxLkRlbGV0ZUNsYXNzUmVxdWVzdBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSIj2kEEbmFtZYLT5JMCFioUL3YxL3tuYW1lPWNsYXNzZXMvKn0aEMpBDWFwaS5tZW1vcy5jb21CqQEKEGNvbS5tZW1vcy5hcGkudjFCEUNsYXNzU2VydmljZVByb3RvUAFaMGdpdGh1Yi5jb20vdXNlbWVtb3MvbWVtb3MvcHJvdG8vZ2VuL2FwaS92MTthcGl2MaICA01BWKoCDE1lbW9zLkFwaS5WMcoCDE1lbW9zXEFwaVxWMeICGE1lbW9zXEFwaVxWMVxHUEJNZXRhZGF0YeoCDk1lbW9zOjpBcGk6OlYxYgZwcm90bzM", [file_api_v1_common, file_google_api_annotations, file_google_api_client, file_google_api_field_behavior, file_google_api_resource, file_google_protobuf_empty, file_google_protobuf_field_mask, file_google_protobuf_timestamp]);
+  fileDesc("ChphcGkvdjEvY2xhc3Nfc2VydmljZS5wcm90bxIMbWVtb3MuYXBpLnYxIu4CCg1DbGFzc1NldHRpbmdzEiQKF3N0dWRlbnRfbWVtb192aXNpYmlsaXR5GAEgASgISACIAQESHAoPYWxsb3dfYW5vbnltb3VzGAIgASgISAGIAQESQQoaZGVmYXVsdF9zdHVkZW50X3Zpc2liaWxpdHkYAyABKA4yHS5tZW1vcy5hcGkudjEuQ2xhc3NWaXNpYmlsaXR5EiEKFGVuYWJsZV90YWdfdGVtcGxhdGVzGAQgASgISAKIAQESGAoLbWF4X21lbWJlcnMYBSABKAVIA4gBARIkChdyZXF1aXJlX21lbWJlcl9hcHByb3ZhbBgGIAEoCEgEiAEBQhoKGF9zdHVkZW50X21lbW9fdmlzaWJpbGl0eUISChBfYWxsb3dfYW5vbnltb3VzQhcKFV9lbmFibGVfdGFnX3RlbXBsYXRlc0IOCgxfbWF4X21lbWJlcnNCGgoYX3JlcXVpcmVfbWVtYmVyX2FwcHJvdmFsItQDCgVDbGFzcxIRCgRuYW1lGAEgASgJQgPgQQgSEAoDdWlkGAIgASgJQgPgQQISGQoMZGlzcGxheV9uYW1lGAMgASgJQgPgQQISGAoLZGVzY3JpcHRpb24YBCABKAlCA+BBARIqCgdjcmVhdG9yGAUgASgJQhngQQP6QRMKEW1lbW9zLmFwaS52MS9Vc2VyEjQKC2NyZWF0ZV90aW1lGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDEjQKC3VwZGF0ZV90aW1lGAcgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEID4EEDEjYKCnZpc2liaWxpdHkYCCABKA4yHS5tZW1vcy5hcGkudjEuQ2xhc3NWaXNpYmlsaXR5QgPgQQISHQoLaW52aXRlX2NvZGUYCSABKAlCA+BBAUgAiAEBEjIKCHNldHRpbmdzGAogASgLMhsubWVtb3MuYXBpLnYxLkNsYXNzU2V0dGluZ3NCA+BBATo+6kE7ChJtZW1vcy5hcGkudjEvQ2xhc3MSD2NsYXNzZXMve2NsYXNzfRoEbmFtZSoHY2xhc3NlczIFY2xhc3NCDgoMX2ludml0ZV9jb2RlIocDCgtDbGFzc01lbWJlchIRCgRuYW1lGAEgASgJQgPgQQgSKQoFY2xhc3MYAiABKAlCGuBBA/pBFAoSbWVtb3MuYXBpLnYxL0NsYXNzEicKBHVzZXIYAyABKAlCGeBBA/pBEwoRbWVtb3MuYXBpLnYxL1VzZXISMAoEcm9sZRgEIAEoDjIdLm1lbW9zLmFwaS52MS5DbGFzc01lbWJlclJvbGVCA+BBAhIyCglqb2luX3RpbWUYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgPgQQMSMgoKaW52aXRlZF9ieRgGIAEoCUIZ4EEB+kETChFtZW1vcy5hcGkudjEvVXNlckgAiAEBOmjqQWUKGG1lbW9zLmFwaS52MS9DbGFzc01lbWJlchImY2xhc3Nlcy97Y2xhc3N9L21lbWJlcnMve2NsYXNzX21lbWJlcn0aBG5hbWUqDWNsYXNzX21lbWJlcnMyDGNsYXNzX21lbWJlckINCgtfaW52aXRlZF9ieSJmChJDcmVhdGVDbGFzc1JlcXVlc3QSGgoIY2xhc3NfaWQYASABKAlCA+BBAUgAiAEBEicKBWNsYXNzGAIgASgLMhMubWVtb3MuYXBpLnYxLkNsYXNzQgPgQQJCCwoJX2NsYXNzX2lkIjsKD0dldENsYXNzUmVxdWVzdBIoCgRuYW1lGAEgASgJQhrgQQL6QRQKEm1lbW9zLmFwaS52MS9DbGFzcyJaChJMaXN0Q2xhc3Nlc1JlcXVlc3QSEwoGZmlsdGVyGAEgASgJQgPgQQESFgoJcGFnZV9zaXplGAIgASgFQgPgQQESFwoKcGFnZV90b2tlbhgDIAEoCUID4EEBIlQKE0xpc3RDbGFzc2VzUmVzcG9uc2USJAoHY2xhc3NlcxgBIAMoCzITLm1lbW9zLmFwaS52MS5DbGFzcxIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkicwoSVXBkYXRlQ2xhc3NSZXF1ZXN0EicKBWNsYXNzGAEgASgLMhMubWVtb3MuYXBpLnYxLkNsYXNzQgPgQQISNAoLdXBkYXRlX21hc2sYAiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrQgPgQQIiPgoSRGVsZXRlQ2xhc3NSZXF1ZXN0EigKBG5hbWUYASABKAlCGuBBAvpBFAoSbWVtb3MuYXBpLnYxL0NsYXNzIrgCChNDbGFzc01lbW9WaXNpYmlsaXR5EhEKBG5hbWUYASABKAlCA+BBCBIpCgVjbGFzcxgCIAEoCUIa4EED+kEUChJtZW1vcy5hcGkudjEvQ2xhc3MSJwoEbWVtbxgDIAEoCUIZ4EEC+kETChFtZW1vcy5hcGkudjEvTWVtbxI2Cgp2aXNpYmlsaXR5GAQgASgOMh0ubWVtb3MuYXBpLnYxLkNsYXNzVmlzaWJpbGl0eUID4EECOoEB6kF+CiBtZW1vcy5hcGkudjEvQ2xhc3NNZW1vVmlzaWJpbGl0eRIwY2xhc3Nlcy97Y2xhc3N9L21lbW9WaXNpYmlsaXR5L3ttZW1vX3Zpc2liaWxpdHl9GgRuYW1lKhFtZW1vX3Zpc2liaWxpdGllczIPbWVtb192aXNpYmlsaXR5IpwCChBDbGFzc1RhZ1RlbXBsYXRlEhEKBG5hbWUYASABKAlCA+BBCBIpCgVjbGFzcxgCIAEoCUIa4EED+kEUChJtZW1vcy5hcGkudjEvQ2xhc3MSGQoMZGlzcGxheV9uYW1lGAMgASgJQgPgQQISGAoLZGVzY3JpcHRpb24YBCABKAlCA+BBARIXCgVjb2xvchgFIAEoCUID4EEBSACIAQE6cupBbwodbWVtb3MuYXBpLnYxL0NsYXNzVGFnVGVtcGxhdGUSK2NsYXNzZXMve2NsYXNzfS90YWdUZW1wbGF0ZXMve3RhZ190ZW1wbGF0ZX0aBG5hbWUqDXRhZ190ZW1wbGF0ZXMyDHRhZ190ZW1wbGF0ZUIICgZfY29sb3IinQEKFUFkZENsYXNzTWVtYmVyUmVxdWVzdBIpCgVjbGFzcxgBIAEoCUIa4EEC+kEUChJtZW1vcy5hcGkudjEvQ2xhc3MSJwoEdXNlchgCIAEoCUIZ4EEC+kETChFtZW1vcy5hcGkudjEvVXNlchIwCgRyb2xlGAMgASgOMh0ubWVtb3MuYXBpLnYxLkNsYXNzTWVtYmVyUm9sZUID4EECIkoKGFJlbW92ZUNsYXNzTWVtYmVyUmVxdWVzdBIuCgRuYW1lGAEgASgJQiDgQQL6QRoKGG1lbW9zLmFwaS52MS9DbGFzc01lbWJlciJ1ChdMaXN0Q2xhc3NNZW1iZXJzUmVxdWVzdBIpCgVjbGFzcxgBIAEoCUIa4EEC+kEUChJtZW1vcy5hcGkudjEvQ2xhc3MSFgoJcGFnZV9zaXplGAIgASgFQgPgQQESFwoKcGFnZV90b2tlbhgDIAEoCUID4EEBIl8KGExpc3RDbGFzc01lbWJlcnNSZXNwb25zZRIqCgdtZW1iZXJzGAEgAygLMhkubWVtb3MuYXBpLnYxLkNsYXNzTWVtYmVyEhcKD25leHRfcGFnZV90b2tlbhgCIAEoCSKAAQocVXBkYXRlQ2xhc3NNZW1iZXJSb2xlUmVxdWVzdBIuCgRuYW1lGAEgASgJQiDgQQL6QRoKGG1lbW9zLmFwaS52MS9DbGFzc01lbWJlchIwCgRyb2xlGAIgASgOMh0ubWVtb3MuYXBpLnYxLkNsYXNzTWVtYmVyUm9sZUID4EECIqsBCh1TZXRDbGFzc01lbW9WaXNpYmlsaXR5UmVxdWVzdBIpCgVjbGFzcxgBIAEoCUIa4EEC+kEUChJtZW1vcy5hcGkudjEvQ2xhc3MSJwoEbWVtbxgCIAEoCUIZ4EEC+kETChFtZW1vcy5hcGkudjEvTWVtbxI2Cgp2aXNpYmlsaXR5GAMgASgOMh0ubWVtb3MuYXBpLnYxLkNsYXNzVmlzaWJpbGl0eUID4EECIlcKHUdldENsYXNzTWVtb1Zpc2liaWxpdHlSZXF1ZXN0EjYKBG5hbWUYASABKAlCKOBBAvpBIgogbWVtb3MuYXBpLnYxL0NsYXNzTWVtb1Zpc2liaWxpdHkifgogTGlzdENsYXNzTWVtb1Zpc2liaWxpdGllc1JlcXVlc3QSKQoFY2xhc3MYASABKAlCGuBBAvpBFAoSbWVtb3MuYXBpLnYxL0NsYXNzEhYKCXBhZ2Vfc2l6ZRgCIAEoBUID4EEBEhcKCnBhZ2VfdG9rZW4YAyABKAlCA+BBASJ1CiFMaXN0Q2xhc3NNZW1vVmlzaWJpbGl0aWVzUmVzcG9uc2USNwoMdmlzaWJpbGl0aWVzGAEgAygLMiEubWVtb3MuYXBpLnYxLkNsYXNzTWVtb1Zpc2liaWxpdHkSFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJIoUBCh1DcmVhdGVDbGFzc1RhZ1RlbXBsYXRlUmVxdWVzdBIpCgVjbGFzcxgBIAEoCUIa4EEC+kEUChJtZW1vcy5hcGkudjEvQ2xhc3MSOQoMdGFnX3RlbXBsYXRlGAIgASgLMh4ubWVtb3MuYXBpLnYxLkNsYXNzVGFnVGVtcGxhdGVCA+BBAiKQAQodVXBkYXRlQ2xhc3NUYWdUZW1wbGF0ZVJlcXVlc3QSOQoMdGFnX3RlbXBsYXRlGAEgASgLMh4ubWVtb3MuYXBpLnYxLkNsYXNzVGFnVGVtcGxhdGVCA+BBAhI0Cgt1cGRhdGVfbWFzaxgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCA+BBAiJUCh1EZWxldGVDbGFzc1RhZ1RlbXBsYXRlUmVxdWVzdBIzCgRuYW1lGAEgASgJQiXgQQL6QR8KHW1lbW9zLmFwaS52MS9DbGFzc1RhZ1RlbXBsYXRlInoKHExpc3RDbGFzc1RhZ1RlbXBsYXRlc1JlcXVlc3QSKQoFY2xhc3MYASABKAlCGuBBAvpBFAoSbWVtb3MuYXBpLnYxL0NsYXNzEhYKCXBhZ2Vfc2l6ZRgCIAEoBUID4EEBEhcKCnBhZ2VfdG9rZW4YAyABKAlCA+BBASJvCh1MaXN0Q2xhc3NUYWdUZW1wbGF0ZXNSZXNwb25zZRI1Cg10YWdfdGVtcGxhdGVzGAEgAygLMh4ubWVtb3MuYXBpLnYxLkNsYXNzVGFnVGVtcGxhdGUSFwoPbmV4dF9wYWdlX3Rva2VuGAIgASgJKm0KD0NsYXNzVmlzaWJpbGl0eRIgChxDTEFTU19WSVNJQklMSVRZX1VOU1BFQ0lGSUVEEAASEAoMQ0xBU1NfUFVCTElDEAESEwoPQ0xBU1NfUFJPVEVDVEVEEAISEQoNQ0xBU1NfUFJJVkFURRADKmkKD0NsYXNzTWVtYmVyUm9sZRIhCh1DTEFTU19NRU1CRVJfUk9MRV9VTlNQRUNJRklFRBAAEgsKB1RFQUNIRVIQARINCglBU1NJU1RBTlQQAhILCgdTVFVERU5UEAMSCgoGUEFSRU5UEAQytRIKDENsYXNzU2VydmljZRJkCgtDcmVhdGVDbGFzcxIgLm1lbW9zLmFwaS52MS5DcmVhdGVDbGFzc1JlcXVlc3QaEy5tZW1vcy5hcGkudjEuQ2xhc3MiHtpBBWNsYXNzgtPkkwIQOgEqIgsvdjEvY2xhc3NlcxJjCghHZXRDbGFzcxIdLm1lbW9zLmFwaS52MS5HZXRDbGFzc1JlcXVlc3QaEy5tZW1vcy5hcGkudjEuQ2xhc3MiI9pBBG5hbWWC0+STAhYSFC92MS97bmFtZT1jbGFzc2VzLyp9EmcKC0xpc3RDbGFzc2VzEiAubWVtb3MuYXBpLnYxLkxpc3RDbGFzc2VzUmVxdWVzdBohLm1lbW9zLmFwaS52MS5MaXN0Q2xhc3Nlc1Jlc3BvbnNlIhOC0+STAg0SCy92MS9jbGFzc2VzEn8KC1VwZGF0ZUNsYXNzEiAubWVtb3MuYXBpLnYxLlVwZGF0ZUNsYXNzUmVxdWVzdBoTLm1lbW9zLmFwaS52MS5DbGFzcyI52kERY2xhc3MsdXBkYXRlX21hc2uC0+STAh86ASoyGi92MS97Y2xhc3MubmFtZT1jbGFzc2VzLyp9EmwKC0RlbGV0ZUNsYXNzEiAubWVtb3MuYXBpLnYxLkRlbGV0ZUNsYXNzUmVxdWVzdBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSIj2kEEbmFtZYLT5JMCFioUL3YxL3tuYW1lPWNsYXNzZXMvKn0SjAEKDkFkZENsYXNzTWVtYmVyEiMubWVtb3MuYXBpLnYxLkFkZENsYXNzTWVtYmVyUmVxdWVzdBoZLm1lbW9zLmFwaS52MS5DbGFzc01lbWJlciI62kEPY2xhc3MsdXNlcixyb2xlgtPkkwIiOgEqIh0vdjEve2NsYXNzPWNsYXNzZXMvKn0vbWVtYmVycxKCAQoRUmVtb3ZlQ2xhc3NNZW1iZXISJi5tZW1vcy5hcGkudjEuUmVtb3ZlQ2xhc3NNZW1iZXJSZXF1ZXN0GhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5Ii3aQQRuYW1lgtPkkwIgKh4vdjEve25hbWU9Y2xhc3Nlcy8qL21lbWJlcnMvKn0SkAEKEExpc3RDbGFzc01lbWJlcnMSJS5tZW1vcy5hcGkudjEuTGlzdENsYXNzTWVtYmVyc1JlcXVlc3QaJi5tZW1vcy5hcGkudjEuTGlzdENsYXNzTWVtYmVyc1Jlc3BvbnNlIi3aQQVjbGFzc4LT5JMCHxIdL3YxL3tjbGFzcz1jbGFzc2VzLyp9L21lbWJlcnMSlQEKFVVwZGF0ZUNsYXNzTWVtYmVyUm9sZRIqLm1lbW9zLmFwaS52MS5VcGRhdGVDbGFzc01lbWJlclJvbGVSZXF1ZXN0GhkubWVtb3MuYXBpLnYxLkNsYXNzTWVtYmVyIjXaQQluYW1lLHJvbGWC0+STAiM6ASoyHi92MS97bmFtZT1jbGFzc2VzLyovbWVtYmVycy8qfRKxAQoWU2V0Q2xhc3NNZW1vVmlzaWJpbGl0eRIrLm1lbW9zLmFwaS52MS5TZXRDbGFzc01lbW9WaXNpYmlsaXR5UmVxdWVzdBohLm1lbW9zLmFwaS52MS5DbGFzc01lbW9WaXNpYmlsaXR5IkfaQRVjbGFzcyxtZW1vLHZpc2liaWxpdHmC0+STAik6ASoiJC92MS97Y2xhc3M9Y2xhc3Nlcy8qfS9tZW1vVmlzaWJpbGl0eRKeAQoWR2V0Q2xhc3NNZW1vVmlzaWJpbGl0eRIrLm1lbW9zLmFwaS52MS5HZXRDbGFzc01lbW9WaXNpYmlsaXR5UmVxdWVzdBohLm1lbW9zLmFwaS52MS5DbGFzc01lbW9WaXNpYmlsaXR5IjTaQQRuYW1lgtPkkwInEiUvdjEve25hbWU9Y2xhc3Nlcy8qL21lbW9WaXNpYmlsaXR5Lyp9ErQBChlMaXN0Q2xhc3NNZW1vVmlzaWJpbGl0aWVzEi4ubWVtb3MuYXBpLnYxLkxpc3RDbGFzc01lbW9WaXNpYmlsaXRpZXNSZXF1ZXN0Gi8ubWVtb3MuYXBpLnYxLkxpc3RDbGFzc01lbW9WaXNpYmlsaXRpZXNSZXNwb25zZSI22kEFY2xhc3OC0+STAigSJi92MS97Y2xhc3M9Y2xhc3Nlcy8qfS9tZW1vVmlzaWJpbGl0aWVzEqkBChZDcmVhdGVDbGFzc1RhZ1RlbXBsYXRlEisubWVtb3MuYXBpLnYxLkNyZWF0ZUNsYXNzVGFnVGVtcGxhdGVSZXF1ZXN0Gh4ubWVtb3MuYXBpLnYxLkNsYXNzVGFnVGVtcGxhdGUiQtpBEmNsYXNzLHRhZ190ZW1wbGF0ZYLT5JMCJzoBKiIiL3YxL3tjbGFzcz1jbGFzc2VzLyp9L3RhZ1RlbXBsYXRlcxK9AQoWVXBkYXRlQ2xhc3NUYWdUZW1wbGF0ZRIrLm1lbW9zLmFwaS52MS5VcGRhdGVDbGFzc1RhZ1RlbXBsYXRlUmVxdWVzdBoeLm1lbW9zLmFwaS52MS5DbGFzc1RhZ1RlbXBsYXRlIlbaQRh0YWdfdGVtcGxhdGUsdXBkYXRlX21hc2uC0+STAjU6ASoyMC92MS97dGFnX3RlbXBsYXRlLm5hbWU9Y2xhc3Nlcy8qL3RhZ1RlbXBsYXRlcy8qfRKRAQoWRGVsZXRlQ2xhc3NUYWdUZW1wbGF0ZRIrLm1lbW9zLmFwaS52MS5EZWxldGVDbGFzc1RhZ1RlbXBsYXRlUmVxdWVzdBoWLmdvb2dsZS5wcm90b2J1Zi5FbXB0eSIy2kEEbmFtZYLT5JMCJSojL3YxL3tuYW1lPWNsYXNzZXMvKi90YWdUZW1wbGF0ZXMvKn0SpAEKFUxpc3RDbGFzc1RhZ1RlbXBsYXRlcxIqLm1lbW9zLmFwaS52MS5MaXN0Q2xhc3NUYWdUZW1wbGF0ZXNSZXF1ZXN0GisubWVtb3MuYXBpLnYxLkxpc3RDbGFzc1RhZ1RlbXBsYXRlc1Jlc3BvbnNlIjLaQQVjbGFzc4LT5JMCJBIiL3YxL3tjbGFzcz1jbGFzc2VzLyp9L3RhZ1RlbXBsYXRlcxoQykENYXBpLm1lbW9zLmNvbUKpAQoQY29tLm1lbW9zLmFwaS52MUIRQ2xhc3NTZXJ2aWNlUHJvdG9QAVowZ2l0aHViLmNvbS91c2VtZW1vcy9tZW1vcy9wcm90by9nZW4vYXBpL3YxO2FwaXYxogIDTUFYqgIMTWVtb3MuQXBpLlYxygIMTWVtb3NcQXBpXFYx4gIYTWVtb3NcQXBpXFYxXEdQQk1ldGFkYXRh6gIOTWVtb3M6OkFwaTo6VjFiBnByb3RvMw", [file_api_v1_common, file_google_api_annotations, file_google_api_client, file_google_api_field_behavior, file_google_api_resource, file_google_protobuf_empty, file_google_protobuf_field_mask, file_google_protobuf_timestamp]);
 
 /**
  * Class settings for configuration.
@@ -375,6 +375,500 @@ export const DeleteClassRequestSchema: GenMessage<DeleteClassRequest> = /*@__PUR
   messageDesc(file_api_v1_class_service, 8);
 
 /**
+ * ClassMemoVisibility controls memo visibility within a class.
+ *
+ * @generated from message memos.api.v1.ClassMemoVisibility
+ */
+export type ClassMemoVisibility = Message<"memos.api.v1.ClassMemoVisibility"> & {
+  /**
+   * The resource name of the memo visibility setting.
+   * Format: classes/{class}/memoVisibility/{memo_visibility}
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 2;
+   */
+  class: string;
+
+  /**
+   * The resource name of the memo.
+   * Format: memos/{memo}
+   *
+   * @generated from field: string memo = 3;
+   */
+  memo: string;
+
+  /**
+   * The visibility level for this memo in the class.
+   *
+   * @generated from field: memos.api.v1.ClassVisibility visibility = 4;
+   */
+  visibility: ClassVisibility;
+};
+
+/**
+ * Describes the message memos.api.v1.ClassMemoVisibility.
+ * Use `create(ClassMemoVisibilitySchema)` to create a new message.
+ */
+export const ClassMemoVisibilitySchema: GenMessage<ClassMemoVisibility> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 9);
+
+/**
+ * ClassTagTemplate defines a tag template for a class.
+ *
+ * @generated from message memos.api.v1.ClassTagTemplate
+ */
+export type ClassTagTemplate = Message<"memos.api.v1.ClassTagTemplate"> & {
+  /**
+   * The resource name of the tag template.
+   * Format: classes/{class}/tagTemplates/{tag_template}
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 2;
+   */
+  class: string;
+
+  /**
+   * The display name of the tag template.
+   *
+   * @generated from field: string display_name = 3;
+   */
+  displayName: string;
+
+  /**
+   * Optional description of the tag template.
+   *
+   * @generated from field: string description = 4;
+   */
+  description: string;
+
+  /**
+   * Optional color for the tag (e.g., "#FF0000").
+   *
+   * @generated from field: optional string color = 5;
+   */
+  color?: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ClassTagTemplate.
+ * Use `create(ClassTagTemplateSchema)` to create a new message.
+ */
+export const ClassTagTemplateSchema: GenMessage<ClassTagTemplate> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 10);
+
+/**
+ * Messages for member management
+ *
+ * @generated from message memos.api.v1.AddClassMemberRequest
+ */
+export type AddClassMemberRequest = Message<"memos.api.v1.AddClassMemberRequest"> & {
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 1;
+   */
+  class: string;
+
+  /**
+   * The resource name of the user to add.
+   * Format: users/{user}
+   *
+   * @generated from field: string user = 2;
+   */
+  user: string;
+
+  /**
+   * The role of the member in the class.
+   *
+   * @generated from field: memos.api.v1.ClassMemberRole role = 3;
+   */
+  role: ClassMemberRole;
+};
+
+/**
+ * Describes the message memos.api.v1.AddClassMemberRequest.
+ * Use `create(AddClassMemberRequestSchema)` to create a new message.
+ */
+export const AddClassMemberRequestSchema: GenMessage<AddClassMemberRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 11);
+
+/**
+ * @generated from message memos.api.v1.RemoveClassMemberRequest
+ */
+export type RemoveClassMemberRequest = Message<"memos.api.v1.RemoveClassMemberRequest"> & {
+  /**
+   * The resource name of the class member to remove.
+   * Format: classes/{class}/members/{class_member}
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message memos.api.v1.RemoveClassMemberRequest.
+ * Use `create(RemoveClassMemberRequestSchema)` to create a new message.
+ */
+export const RemoveClassMemberRequestSchema: GenMessage<RemoveClassMemberRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 12);
+
+/**
+ * @generated from message memos.api.v1.ListClassMembersRequest
+ */
+export type ListClassMembersRequest = Message<"memos.api.v1.ListClassMembersRequest"> & {
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 1;
+   */
+  class: string;
+
+  /**
+   * Optional page size.
+   *
+   * @generated from field: int32 page_size = 2;
+   */
+  pageSize: number;
+
+  /**
+   * Optional page token.
+   *
+   * @generated from field: string page_token = 3;
+   */
+  pageToken: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ListClassMembersRequest.
+ * Use `create(ListClassMembersRequestSchema)` to create a new message.
+ */
+export const ListClassMembersRequestSchema: GenMessage<ListClassMembersRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 13);
+
+/**
+ * @generated from message memos.api.v1.ListClassMembersResponse
+ */
+export type ListClassMembersResponse = Message<"memos.api.v1.ListClassMembersResponse"> & {
+  /**
+   * The list of class members.
+   *
+   * @generated from field: repeated memos.api.v1.ClassMember members = 1;
+   */
+  members: ClassMember[];
+
+  /**
+   * Next page token.
+   *
+   * @generated from field: string next_page_token = 2;
+   */
+  nextPageToken: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ListClassMembersResponse.
+ * Use `create(ListClassMembersResponseSchema)` to create a new message.
+ */
+export const ListClassMembersResponseSchema: GenMessage<ListClassMembersResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 14);
+
+/**
+ * @generated from message memos.api.v1.UpdateClassMemberRoleRequest
+ */
+export type UpdateClassMemberRoleRequest = Message<"memos.api.v1.UpdateClassMemberRoleRequest"> & {
+  /**
+   * The resource name of the class member to update.
+   * Format: classes/{class}/members/{class_member}
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+
+  /**
+   * The new role for the member.
+   *
+   * @generated from field: memos.api.v1.ClassMemberRole role = 2;
+   */
+  role: ClassMemberRole;
+};
+
+/**
+ * Describes the message memos.api.v1.UpdateClassMemberRoleRequest.
+ * Use `create(UpdateClassMemberRoleRequestSchema)` to create a new message.
+ */
+export const UpdateClassMemberRoleRequestSchema: GenMessage<UpdateClassMemberRoleRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 15);
+
+/**
+ * Messages for memo visibility management
+ *
+ * @generated from message memos.api.v1.SetClassMemoVisibilityRequest
+ */
+export type SetClassMemoVisibilityRequest = Message<"memos.api.v1.SetClassMemoVisibilityRequest"> & {
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 1;
+   */
+  class: string;
+
+  /**
+   * The resource name of the memo.
+   * Format: memos/{memo}
+   *
+   * @generated from field: string memo = 2;
+   */
+  memo: string;
+
+  /**
+   * The visibility level for this memo in the class.
+   *
+   * @generated from field: memos.api.v1.ClassVisibility visibility = 3;
+   */
+  visibility: ClassVisibility;
+};
+
+/**
+ * Describes the message memos.api.v1.SetClassMemoVisibilityRequest.
+ * Use `create(SetClassMemoVisibilityRequestSchema)` to create a new message.
+ */
+export const SetClassMemoVisibilityRequestSchema: GenMessage<SetClassMemoVisibilityRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 16);
+
+/**
+ * @generated from message memos.api.v1.GetClassMemoVisibilityRequest
+ */
+export type GetClassMemoVisibilityRequest = Message<"memos.api.v1.GetClassMemoVisibilityRequest"> & {
+  /**
+   * The resource name of the memo visibility setting.
+   * Format: classes/{class}/memoVisibility/{memo_visibility}
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message memos.api.v1.GetClassMemoVisibilityRequest.
+ * Use `create(GetClassMemoVisibilityRequestSchema)` to create a new message.
+ */
+export const GetClassMemoVisibilityRequestSchema: GenMessage<GetClassMemoVisibilityRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 17);
+
+/**
+ * @generated from message memos.api.v1.ListClassMemoVisibilitiesRequest
+ */
+export type ListClassMemoVisibilitiesRequest = Message<"memos.api.v1.ListClassMemoVisibilitiesRequest"> & {
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 1;
+   */
+  class: string;
+
+  /**
+   * Optional page size.
+   *
+   * @generated from field: int32 page_size = 2;
+   */
+  pageSize: number;
+
+  /**
+   * Optional page token.
+   *
+   * @generated from field: string page_token = 3;
+   */
+  pageToken: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ListClassMemoVisibilitiesRequest.
+ * Use `create(ListClassMemoVisibilitiesRequestSchema)` to create a new message.
+ */
+export const ListClassMemoVisibilitiesRequestSchema: GenMessage<ListClassMemoVisibilitiesRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 18);
+
+/**
+ * @generated from message memos.api.v1.ListClassMemoVisibilitiesResponse
+ */
+export type ListClassMemoVisibilitiesResponse = Message<"memos.api.v1.ListClassMemoVisibilitiesResponse"> & {
+  /**
+   * The list of memo visibility settings.
+   *
+   * @generated from field: repeated memos.api.v1.ClassMemoVisibility visibilities = 1;
+   */
+  visibilities: ClassMemoVisibility[];
+
+  /**
+   * Next page token.
+   *
+   * @generated from field: string next_page_token = 2;
+   */
+  nextPageToken: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ListClassMemoVisibilitiesResponse.
+ * Use `create(ListClassMemoVisibilitiesResponseSchema)` to create a new message.
+ */
+export const ListClassMemoVisibilitiesResponseSchema: GenMessage<ListClassMemoVisibilitiesResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 19);
+
+/**
+ * Messages for tag template management
+ *
+ * @generated from message memos.api.v1.CreateClassTagTemplateRequest
+ */
+export type CreateClassTagTemplateRequest = Message<"memos.api.v1.CreateClassTagTemplateRequest"> & {
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 1;
+   */
+  class: string;
+
+  /**
+   * The tag template to create.
+   *
+   * @generated from field: memos.api.v1.ClassTagTemplate tag_template = 2;
+   */
+  tagTemplate?: ClassTagTemplate;
+};
+
+/**
+ * Describes the message memos.api.v1.CreateClassTagTemplateRequest.
+ * Use `create(CreateClassTagTemplateRequestSchema)` to create a new message.
+ */
+export const CreateClassTagTemplateRequestSchema: GenMessage<CreateClassTagTemplateRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 20);
+
+/**
+ * @generated from message memos.api.v1.UpdateClassTagTemplateRequest
+ */
+export type UpdateClassTagTemplateRequest = Message<"memos.api.v1.UpdateClassTagTemplateRequest"> & {
+  /**
+   * The tag template to update.
+   * The tag template's `name` field is used to identify the tag template to update.
+   * Format: classes/{class}/tagTemplates/{tag_template}
+   *
+   * @generated from field: memos.api.v1.ClassTagTemplate tag_template = 1;
+   */
+  tagTemplate?: ClassTagTemplate;
+
+  /**
+   * The list of fields to update.
+   *
+   * @generated from field: google.protobuf.FieldMask update_mask = 2;
+   */
+  updateMask?: FieldMask;
+};
+
+/**
+ * Describes the message memos.api.v1.UpdateClassTagTemplateRequest.
+ * Use `create(UpdateClassTagTemplateRequestSchema)` to create a new message.
+ */
+export const UpdateClassTagTemplateRequestSchema: GenMessage<UpdateClassTagTemplateRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 21);
+
+/**
+ * @generated from message memos.api.v1.DeleteClassTagTemplateRequest
+ */
+export type DeleteClassTagTemplateRequest = Message<"memos.api.v1.DeleteClassTagTemplateRequest"> & {
+  /**
+   * The resource name of the tag template to delete.
+   * Format: classes/{class}/tagTemplates/{tag_template}
+   *
+   * @generated from field: string name = 1;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message memos.api.v1.DeleteClassTagTemplateRequest.
+ * Use `create(DeleteClassTagTemplateRequestSchema)` to create a new message.
+ */
+export const DeleteClassTagTemplateRequestSchema: GenMessage<DeleteClassTagTemplateRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 22);
+
+/**
+ * @generated from message memos.api.v1.ListClassTagTemplatesRequest
+ */
+export type ListClassTagTemplatesRequest = Message<"memos.api.v1.ListClassTagTemplatesRequest"> & {
+  /**
+   * The resource name of the class.
+   * Format: classes/{class}
+   *
+   * @generated from field: string class = 1;
+   */
+  class: string;
+
+  /**
+   * Optional page size.
+   *
+   * @generated from field: int32 page_size = 2;
+   */
+  pageSize: number;
+
+  /**
+   * Optional page token.
+   *
+   * @generated from field: string page_token = 3;
+   */
+  pageToken: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ListClassTagTemplatesRequest.
+ * Use `create(ListClassTagTemplatesRequestSchema)` to create a new message.
+ */
+export const ListClassTagTemplatesRequestSchema: GenMessage<ListClassTagTemplatesRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 23);
+
+/**
+ * @generated from message memos.api.v1.ListClassTagTemplatesResponse
+ */
+export type ListClassTagTemplatesResponse = Message<"memos.api.v1.ListClassTagTemplatesResponse"> & {
+  /**
+   * The list of tag templates.
+   *
+   * @generated from field: repeated memos.api.v1.ClassTagTemplate tag_templates = 1;
+   */
+  tagTemplates: ClassTagTemplate[];
+
+  /**
+   * Next page token.
+   *
+   * @generated from field: string next_page_token = 2;
+   */
+  nextPageToken: string;
+};
+
+/**
+ * Describes the message memos.api.v1.ListClassTagTemplatesResponse.
+ * Use `create(ListClassTagTemplatesResponseSchema)` to create a new message.
+ */
+export const ListClassTagTemplatesResponseSchema: GenMessage<ListClassTagTemplatesResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_class_service, 24);
+
+/**
  * Class visibility level.
  *
  * @generated from enum memos.api.v1.ClassVisibility
@@ -500,6 +994,116 @@ export const ClassService: GenService<{
     methodKind: "unary";
     input: typeof DeleteClassRequestSchema;
     output: typeof EmptySchema;
+  },
+  /**
+   * AddClassMember adds a user as a member to a class.
+   *
+   * @generated from rpc memos.api.v1.ClassService.AddClassMember
+   */
+  addClassMember: {
+    methodKind: "unary";
+    input: typeof AddClassMemberRequestSchema;
+    output: typeof ClassMemberSchema;
+  },
+  /**
+   * RemoveClassMember removes a member from a class.
+   *
+   * @generated from rpc memos.api.v1.ClassService.RemoveClassMember
+   */
+  removeClassMember: {
+    methodKind: "unary";
+    input: typeof RemoveClassMemberRequestSchema;
+    output: typeof EmptySchema;
+  },
+  /**
+   * ListClassMembers lists members of a class.
+   *
+   * @generated from rpc memos.api.v1.ClassService.ListClassMembers
+   */
+  listClassMembers: {
+    methodKind: "unary";
+    input: typeof ListClassMembersRequestSchema;
+    output: typeof ListClassMembersResponseSchema;
+  },
+  /**
+   * UpdateClassMemberRole updates the role of a class member.
+   *
+   * @generated from rpc memos.api.v1.ClassService.UpdateClassMemberRole
+   */
+  updateClassMemberRole: {
+    methodKind: "unary";
+    input: typeof UpdateClassMemberRoleRequestSchema;
+    output: typeof ClassMemberSchema;
+  },
+  /**
+   * SetClassMemoVisibility sets visibility for a memo in a class.
+   *
+   * @generated from rpc memos.api.v1.ClassService.SetClassMemoVisibility
+   */
+  setClassMemoVisibility: {
+    methodKind: "unary";
+    input: typeof SetClassMemoVisibilityRequestSchema;
+    output: typeof ClassMemoVisibilitySchema;
+  },
+  /**
+   * GetClassMemoVisibility retrieves a memo visibility setting.
+   *
+   * @generated from rpc memos.api.v1.ClassService.GetClassMemoVisibility
+   */
+  getClassMemoVisibility: {
+    methodKind: "unary";
+    input: typeof GetClassMemoVisibilityRequestSchema;
+    output: typeof ClassMemoVisibilitySchema;
+  },
+  /**
+   * ListClassMemoVisibilities lists memo visibility settings for a class.
+   *
+   * @generated from rpc memos.api.v1.ClassService.ListClassMemoVisibilities
+   */
+  listClassMemoVisibilities: {
+    methodKind: "unary";
+    input: typeof ListClassMemoVisibilitiesRequestSchema;
+    output: typeof ListClassMemoVisibilitiesResponseSchema;
+  },
+  /**
+   * CreateClassTagTemplate creates a new tag template for a class.
+   *
+   * @generated from rpc memos.api.v1.ClassService.CreateClassTagTemplate
+   */
+  createClassTagTemplate: {
+    methodKind: "unary";
+    input: typeof CreateClassTagTemplateRequestSchema;
+    output: typeof ClassTagTemplateSchema;
+  },
+  /**
+   * UpdateClassTagTemplate updates a tag template.
+   *
+   * @generated from rpc memos.api.v1.ClassService.UpdateClassTagTemplate
+   */
+  updateClassTagTemplate: {
+    methodKind: "unary";
+    input: typeof UpdateClassTagTemplateRequestSchema;
+    output: typeof ClassTagTemplateSchema;
+  },
+  /**
+   * DeleteClassTagTemplate deletes a tag template.
+   *
+   * @generated from rpc memos.api.v1.ClassService.DeleteClassTagTemplate
+   */
+  deleteClassTagTemplate: {
+    methodKind: "unary";
+    input: typeof DeleteClassTagTemplateRequestSchema;
+    output: typeof EmptySchema;
+  },
+  /**
+   * ListClassTagTemplates lists tag templates for a class.
+   *
+   * @generated from rpc memos.api.v1.ClassService.ListClassTagTemplates
+   */
+  listClassTagTemplates: {
+    methodKind: "unary";
+    input: typeof ListClassTagTemplatesRequestSchema;
+    output: typeof ListClassTagTemplatesResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_v1_class_service, 0);

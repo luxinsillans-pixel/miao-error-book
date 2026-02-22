@@ -530,3 +530,91 @@ func (s *ConnectServiceHandler) DeleteClass(ctx context.Context, req *connect.Re
 	}
 	return connect.NewResponse(resp), nil
 }
+
+func (s *ConnectServiceHandler) AddClassMember(ctx context.Context, req *connect.Request[v1pb.AddClassMemberRequest]) (*connect.Response[v1pb.ClassMember], error) {
+	resp, err := s.APIV1Service.AddClassMember(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) RemoveClassMember(ctx context.Context, req *connect.Request[v1pb.RemoveClassMemberRequest]) (*connect.Response[emptypb.Empty], error) {
+	resp, err := s.APIV1Service.RemoveClassMember(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ListClassMembers(ctx context.Context, req *connect.Request[v1pb.ListClassMembersRequest]) (*connect.Response[v1pb.ListClassMembersResponse], error) {
+	resp, err := s.APIV1Service.ListClassMembers(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) UpdateClassMemberRole(ctx context.Context, req *connect.Request[v1pb.UpdateClassMemberRoleRequest]) (*connect.Response[v1pb.ClassMember], error) {
+	resp, err := s.APIV1Service.UpdateClassMemberRole(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) SetClassMemoVisibility(ctx context.Context, req *connect.Request[v1pb.SetClassMemoVisibilityRequest]) (*connect.Response[v1pb.ClassMemoVisibility], error) {
+	resp, err := s.APIV1Service.SetClassMemoVisibility(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) GetClassMemoVisibility(ctx context.Context, req *connect.Request[v1pb.GetClassMemoVisibilityRequest]) (*connect.Response[v1pb.ClassMemoVisibility], error) {
+	resp, err := s.APIV1Service.GetClassMemoVisibility(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ListClassMemoVisibilities(ctx context.Context, req *connect.Request[v1pb.ListClassMemoVisibilitiesRequest]) (*connect.Response[v1pb.ListClassMemoVisibilitiesResponse], error) {
+	resp, err := s.APIV1Service.ListClassMemoVisibilities(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) CreateClassTagTemplate(ctx context.Context, req *connect.Request[v1pb.CreateClassTagTemplateRequest]) (*connect.Response[v1pb.ClassTagTemplate], error) {
+	resp, err := s.APIV1Service.CreateClassTagTemplate(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) UpdateClassTagTemplate(ctx context.Context, req *connect.Request[v1pb.UpdateClassTagTemplateRequest]) (*connect.Response[v1pb.ClassTagTemplate], error) {
+	resp, err := s.APIV1Service.UpdateClassTagTemplate(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) DeleteClassTagTemplate(ctx context.Context, req *connect.Request[v1pb.DeleteClassTagTemplateRequest]) (*connect.Response[emptypb.Empty], error) {
+	resp, err := s.APIV1Service.DeleteClassTagTemplate(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ListClassTagTemplates(ctx context.Context, req *connect.Request[v1pb.ListClassTagTemplatesRequest]) (*connect.Response[v1pb.ListClassTagTemplatesResponse], error) {
+	resp, err := s.APIV1Service.ListClassTagTemplates(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}

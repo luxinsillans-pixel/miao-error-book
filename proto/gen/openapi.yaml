@@ -2066,6 +2066,375 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}/members:
+        get:
+            tags:
+                - ClassService
+            description: ListClassMembers lists members of a class.
+            operationId: ClassService_ListClassMembers
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  description: Optional page size.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  description: Optional page token.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListClassMembersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - ClassService
+            description: AddClassMember adds a user as a member to a class.
+            operationId: ClassService_AddClassMember
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddClassMemberRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClassMember'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}/members/{member}:
+        delete:
+            tags:
+                - ClassService
+            description: RemoveClassMember removes a member from a class.
+            operationId: ClassService_RemoveClassMember
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: member
+                  in: path
+                  description: The member id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - ClassService
+            description: UpdateClassMemberRole updates the role of a class member.
+            operationId: ClassService_UpdateClassMemberRole
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: member
+                  in: path
+                  description: The member id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateClassMemberRoleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClassMember'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}/memoVisibilities:
+        get:
+            tags:
+                - ClassService
+            description: ListClassMemoVisibilities lists memo visibility settings for a class.
+            operationId: ClassService_ListClassMemoVisibilities
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  description: Optional page size.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  description: Optional page token.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListClassMemoVisibilitiesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}/memoVisibility:
+        post:
+            tags:
+                - ClassService
+            description: SetClassMemoVisibility sets visibility for a memo in a class.
+            operationId: ClassService_SetClassMemoVisibility
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SetClassMemoVisibilityRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClassMemoVisibility'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}/memoVisibility/{memoVisibility}:
+        get:
+            tags:
+                - ClassService
+            description: GetClassMemoVisibility retrieves a memo visibility setting.
+            operationId: ClassService_GetClassMemoVisibility
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: memoVisibility
+                  in: path
+                  description: The memoVisibility id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClassMemoVisibility'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}/tagTemplates:
+        get:
+            tags:
+                - ClassService
+            description: ListClassTagTemplates lists tag templates for a class.
+            operationId: ClassService_ListClassTagTemplates
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: pageSize
+                  in: query
+                  description: Optional page size.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  description: Optional page token.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListClassTagTemplatesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - ClassService
+            description: CreateClassTagTemplate creates a new tag template for a class.
+            operationId: ClassService_CreateClassTagTemplate
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateClassTagTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClassTagTemplate'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/classes/{classe}/tagTemplates/{tagTemplate}:
+        delete:
+            tags:
+                - ClassService
+            description: DeleteClassTagTemplate deletes a tag template.
+            operationId: ClassService_DeleteClassTagTemplate
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: tagTemplate
+                  in: path
+                  description: The tagTemplate id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - ClassService
+            description: UpdateClassTagTemplate updates a tag template.
+            operationId: ClassService_UpdateClassTagTemplate
+            parameters:
+                - name: classe
+                  in: path
+                  description: The classe id.
+                  required: true
+                  schema:
+                    type: string
+                - name: tagTemplate
+                  in: path
+                  description: The tagTemplate id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateClassTagTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ClassTagTemplate'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
         Activity:
@@ -2132,6 +2501,34 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/ActivityMemoCommentPayload'
                     description: Memo comment activity payload.
+        AddClassMemberRequest:
+            required:
+                - class
+                - user
+                - role
+            type: object
+            properties:
+                class:
+                    type: string
+                    description: |-
+                        The resource name of the class.
+                         Format: classes/{class}
+                user:
+                    type: string
+                    description: |-
+                        The resource name of the user to add.
+                         Format: users/{user}
+                role:
+                    enum:
+                        - CLASS_MEMBER_ROLE_UNSPECIFIED
+                        - TEACHER
+                        - ASSISTANT
+                        - STUDENT
+                        - PARENT
+                    type: string
+                    description: The role of the member in the class.
+                    format: enum
+            description: Messages for member management
         Attachment:
             required:
                 - filename
@@ -2225,35 +2622,116 @@ components:
                         - $ref: '#/components/schemas/ClassSettings'
                     description: Optional class settings.
             description: Class represents a classroom for error book.
-        ClassSettings:
+        ClassMember:
+            required:
+                - role
             type: object
             properties:
-                studentMemoVisibility:
-                    type: boolean
-                    description: Whether students can see each other's memos.
-                allowAnonymous:
-                    type: boolean
-                    description: Whether to allow anonymous submissions.
-                defaultStudentVisibility:
+                name:
+                    type: string
+                    description: |-
+                        The resource name of the class member.
+                         Format: classes/{class}/members/{class_member}
+                class:
+                    readOnly: true
+                    type: string
+                    description: |-
+                        The resource name of the class.
+                         Format: classes/{class}
+                user:
+                    readOnly: true
+                    type: string
+                    description: |-
+                        The resource name of the user.
+                         Format: users/{user}
+                role:
+                    enum:
+                        - CLASS_MEMBER_ROLE_UNSPECIFIED
+                        - TEACHER
+                        - ASSISTANT
+                        - STUDENT
+                        - PARENT
+                    type: string
+                    description: The role of the member in the class.
+                    format: enum
+                joinTime:
+                    readOnly: true
+                    type: string
+                    description: Output only. The timestamp when the member joined.
+                    format: date-time
+                invitedBy:
+                    type: string
+                    description: |-
+                        The resource name of the user who invited this member.
+                         Format: users/{user}
+            description: ClassMember represents membership of a user in a class.
+        ClassMemoVisibility:
+            required:
+                - memo
+                - visibility
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        The resource name of the memo visibility setting.
+                         Format: classes/{class}/memoVisibility/{memo_visibility}
+                class:
+                    readOnly: true
+                    type: string
+                    description: |-
+                        The resource name of the class.
+                         Format: classes/{class}
+                memo:
+                    type: string
+                    description: |-
+                        The resource name of the memo.
+                         Format: memos/{memo}
+                visibility:
                     enum:
                         - CLASS_VISIBILITY_UNSPECIFIED
                         - CLASS_PUBLIC
                         - CLASS_PROTECTED
                         - CLASS_PRIVATE
                     type: string
-                    description: Default visibility for student memos.
+                    description: The visibility level for this memo in the class.
                     format: enum
-                enableTagTemplates:
-                    type: boolean
-                    description: Whether to enable class tag templates.
-                maxMembers:
-                    type: integer
-                    description: Maximum number of members allowed (0 for unlimited).
-                    format: int32
-                requireMemberApproval:
-                    type: boolean
-                    description: Whether to require approval for new members.
-            description: Class settings for configuration.
+            description: ClassMemoVisibility controls memo visibility within a class.
+        ClassSettings:
+            type: object
+            properties:
+                settings:
+                    type: object
+                    description: Optional JSON-structured settings for future extensibility.
+            description: |-
+                ClassSettings contains configuration and settings for a class.
+                 This can be extended with specific fields as needed.
+        ClassTagTemplate:
+            required:
+                - displayName
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        The resource name of the tag template.
+                         Format: classes/{class}/tagTemplates/{tag_template}
+                class:
+                    readOnly: true
+                    type: string
+                    description: |-
+                        The resource name of the class.
+                         Format: classes/{class}
+                displayName:
+                    type: string
+                    description: The display name of the tag template.
+                description:
+                    type: string
+                    description: Optional description of the tag template.
+                color:
+                    type: string
+                    description: Optional color for the tag (e.g., "#FF0000").
+            description: ClassTagTemplate defines a tag template for a class.
         CreateClassRequest:
             required:
                 - class
@@ -2266,6 +2744,22 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/Class'
                     description: The class to create.
+        CreateClassTagTemplateRequest:
+            required:
+                - class
+                - tagTemplate
+            type: object
+            properties:
+                class:
+                    type: string
+                    description: |-
+                        The resource name of the class.
+                         Format: classes/{class}
+                tagTemplate:
+                    allOf:
+                        - $ref: '#/components/schemas/ClassTagTemplate'
+                    description: The tag template to create.
+            description: Messages for tag template management
         CreatePersonalAccessTokenRequest:
             required:
                 - parent
@@ -2518,6 +3012,39 @@ components:
                     type: integer
                     description: The total count of attachments (may be approximate).
                     format: int32
+        ListClassMembersResponse:
+            type: object
+            properties:
+                members:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ClassMember'
+                    description: The list of class members.
+                nextPageToken:
+                    type: string
+                    description: Next page token.
+        ListClassMemoVisibilitiesResponse:
+            type: object
+            properties:
+                visibilities:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ClassMemoVisibility'
+                    description: The list of memo visibility settings.
+                nextPageToken:
+                    type: string
+                    description: Next page token.
+        ListClassTagTemplatesResponse:
+            type: object
+            properties:
+                tagTemplates:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ClassTagTemplate'
+                    description: The list of tag templates.
+                nextPageToken:
+                    type: string
+                    description: Next page token.
         ListClassesResponse:
             type: object
             properties:
@@ -2930,6 +3457,33 @@ components:
                     type: string
                     description: When the access token expires.
                     format: date-time
+        SetClassMemoVisibilityRequest:
+            required:
+                - class
+                - memo
+                - visibility
+            type: object
+            properties:
+                class:
+                    type: string
+                    description: |-
+                        The resource name of the class.
+                         Format: classes/{class}
+                memo:
+                    type: string
+                    description: |-
+                        The resource name of the memo.
+                         Format: memos/{memo}
+                visibility:
+                    enum:
+                        - CLASS_VISIBILITY_UNSPECIFIED
+                        - CLASS_PUBLIC
+                        - CLASS_PROTECTED
+                        - CLASS_PRIVATE
+                    type: string
+                    description: The visibility level for this memo in the class.
+                    format: enum
+            description: Messages for memo visibility management
         SetMemoAttachmentsRequest:
             required:
                 - name
@@ -3077,6 +3631,27 @@ components:
             description: |-
                 S3 configuration for cloud storage backend.
                  Reference: https://developers.cloudflare.com/r2/examples/aws/aws-sdk-go/
+        UpdateClassMemberRoleRequest:
+            required:
+                - name
+                - role
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: |-
+                        The resource name of the class member to update.
+                         Format: classes/{class}/members/{class_member}
+                role:
+                    enum:
+                        - CLASS_MEMBER_ROLE_UNSPECIFIED
+                        - TEACHER
+                        - ASSISTANT
+                        - STUDENT
+                        - PARENT
+                    type: string
+                    description: The new role for the member.
+                    format: enum
         UpdateClassRequest:
             required:
                 - class
@@ -3090,6 +3665,23 @@ components:
                         The class to update.
                          The class's `name` field is used to identify the class to update.
                          Format: classes/{class}
+                updateMask:
+                    type: string
+                    description: The list of fields to update.
+                    format: field-mask
+        UpdateClassTagTemplateRequest:
+            required:
+                - tagTemplate
+                - updateMask
+            type: object
+            properties:
+                tagTemplate:
+                    allOf:
+                        - $ref: '#/components/schemas/ClassTagTemplate'
+                    description: |-
+                        The tag template to update.
+                         The tag template's `name` field is used to identify the tag template to update.
+                         Format: classes/{class}/tagTemplates/{tag_template}
                 updateMask:
                     type: string
                     description: The list of fields to update.

@@ -768,6 +768,957 @@ func (x *DeleteClassRequest) GetName() string {
 	return ""
 }
 
+// ClassMemoVisibility controls memo visibility within a class.
+type ClassMemoVisibility struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the memo visibility setting.
+	// Format: classes/{class}/memoVisibility/{memo_visibility}
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,2,opt,name=class,proto3" json:"class,omitempty"`
+	// The resource name of the memo.
+	// Format: memos/{memo}
+	Memo string `protobuf:"bytes,3,opt,name=memo,proto3" json:"memo,omitempty"`
+	// The visibility level for this memo in the class.
+	Visibility    ClassVisibility `protobuf:"varint,4,opt,name=visibility,proto3,enum=memos.api.v1.ClassVisibility" json:"visibility,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ClassMemoVisibility) Reset() {
+	*x = ClassMemoVisibility{}
+	mi := &file_api_v1_class_service_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClassMemoVisibility) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClassMemoVisibility) ProtoMessage() {}
+
+func (x *ClassMemoVisibility) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClassMemoVisibility.ProtoReflect.Descriptor instead.
+func (*ClassMemoVisibility) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ClassMemoVisibility) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ClassMemoVisibility) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *ClassMemoVisibility) GetMemo() string {
+	if x != nil {
+		return x.Memo
+	}
+	return ""
+}
+
+func (x *ClassMemoVisibility) GetVisibility() ClassVisibility {
+	if x != nil {
+		return x.Visibility
+	}
+	return ClassVisibility_CLASS_VISIBILITY_UNSPECIFIED
+}
+
+// ClassTagTemplate defines a tag template for a class.
+type ClassTagTemplate struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the tag template.
+	// Format: classes/{class}/tagTemplates/{tag_template}
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,2,opt,name=class,proto3" json:"class,omitempty"`
+	// The display name of the tag template.
+	DisplayName string `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	// Optional description of the tag template.
+	Description string `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	// Optional color for the tag (e.g., "#FF0000").
+	Color         *string `protobuf:"bytes,5,opt,name=color,proto3,oneof" json:"color,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ClassTagTemplate) Reset() {
+	*x = ClassTagTemplate{}
+	mi := &file_api_v1_class_service_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClassTagTemplate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClassTagTemplate) ProtoMessage() {}
+
+func (x *ClassTagTemplate) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClassTagTemplate.ProtoReflect.Descriptor instead.
+func (*ClassTagTemplate) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ClassTagTemplate) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ClassTagTemplate) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *ClassTagTemplate) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *ClassTagTemplate) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *ClassTagTemplate) GetColor() string {
+	if x != nil && x.Color != nil {
+		return *x.Color
+	}
+	return ""
+}
+
+// Messages for member management
+type AddClassMemberRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,1,opt,name=class,proto3" json:"class,omitempty"`
+	// The resource name of the user to add.
+	// Format: users/{user}
+	User string `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	// The role of the member in the class.
+	Role          ClassMemberRole `protobuf:"varint,3,opt,name=role,proto3,enum=memos.api.v1.ClassMemberRole" json:"role,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddClassMemberRequest) Reset() {
+	*x = AddClassMemberRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddClassMemberRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddClassMemberRequest) ProtoMessage() {}
+
+func (x *AddClassMemberRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddClassMemberRequest.ProtoReflect.Descriptor instead.
+func (*AddClassMemberRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *AddClassMemberRequest) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *AddClassMemberRequest) GetUser() string {
+	if x != nil {
+		return x.User
+	}
+	return ""
+}
+
+func (x *AddClassMemberRequest) GetRole() ClassMemberRole {
+	if x != nil {
+		return x.Role
+	}
+	return ClassMemberRole_CLASS_MEMBER_ROLE_UNSPECIFIED
+}
+
+type RemoveClassMemberRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class member to remove.
+	// Format: classes/{class}/members/{class_member}
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveClassMemberRequest) Reset() {
+	*x = RemoveClassMemberRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveClassMemberRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveClassMemberRequest) ProtoMessage() {}
+
+func (x *RemoveClassMemberRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveClassMemberRequest.ProtoReflect.Descriptor instead.
+func (*RemoveClassMemberRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *RemoveClassMemberRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type ListClassMembersRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,1,opt,name=class,proto3" json:"class,omitempty"`
+	// Optional page size.
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// Optional page token.
+	PageToken     string `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListClassMembersRequest) Reset() {
+	*x = ListClassMembersRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListClassMembersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListClassMembersRequest) ProtoMessage() {}
+
+func (x *ListClassMembersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListClassMembersRequest.ProtoReflect.Descriptor instead.
+func (*ListClassMembersRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *ListClassMembersRequest) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *ListClassMembersRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListClassMembersRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+type ListClassMembersResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The list of class members.
+	Members []*ClassMember `protobuf:"bytes,1,rep,name=members,proto3" json:"members,omitempty"`
+	// Next page token.
+	NextPageToken string `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListClassMembersResponse) Reset() {
+	*x = ListClassMembersResponse{}
+	mi := &file_api_v1_class_service_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListClassMembersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListClassMembersResponse) ProtoMessage() {}
+
+func (x *ListClassMembersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListClassMembersResponse.ProtoReflect.Descriptor instead.
+func (*ListClassMembersResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *ListClassMembersResponse) GetMembers() []*ClassMember {
+	if x != nil {
+		return x.Members
+	}
+	return nil
+}
+
+func (x *ListClassMembersResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+type UpdateClassMemberRoleRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class member to update.
+	// Format: classes/{class}/members/{class_member}
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// The new role for the member.
+	Role          ClassMemberRole `protobuf:"varint,2,opt,name=role,proto3,enum=memos.api.v1.ClassMemberRole" json:"role,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateClassMemberRoleRequest) Reset() {
+	*x = UpdateClassMemberRoleRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateClassMemberRoleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateClassMemberRoleRequest) ProtoMessage() {}
+
+func (x *UpdateClassMemberRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateClassMemberRoleRequest.ProtoReflect.Descriptor instead.
+func (*UpdateClassMemberRoleRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *UpdateClassMemberRoleRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UpdateClassMemberRoleRequest) GetRole() ClassMemberRole {
+	if x != nil {
+		return x.Role
+	}
+	return ClassMemberRole_CLASS_MEMBER_ROLE_UNSPECIFIED
+}
+
+// Messages for memo visibility management
+type SetClassMemoVisibilityRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,1,opt,name=class,proto3" json:"class,omitempty"`
+	// The resource name of the memo.
+	// Format: memos/{memo}
+	Memo string `protobuf:"bytes,2,opt,name=memo,proto3" json:"memo,omitempty"`
+	// The visibility level for this memo in the class.
+	Visibility    ClassVisibility `protobuf:"varint,3,opt,name=visibility,proto3,enum=memos.api.v1.ClassVisibility" json:"visibility,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetClassMemoVisibilityRequest) Reset() {
+	*x = SetClassMemoVisibilityRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetClassMemoVisibilityRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetClassMemoVisibilityRequest) ProtoMessage() {}
+
+func (x *SetClassMemoVisibilityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetClassMemoVisibilityRequest.ProtoReflect.Descriptor instead.
+func (*SetClassMemoVisibilityRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *SetClassMemoVisibilityRequest) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *SetClassMemoVisibilityRequest) GetMemo() string {
+	if x != nil {
+		return x.Memo
+	}
+	return ""
+}
+
+func (x *SetClassMemoVisibilityRequest) GetVisibility() ClassVisibility {
+	if x != nil {
+		return x.Visibility
+	}
+	return ClassVisibility_CLASS_VISIBILITY_UNSPECIFIED
+}
+
+type GetClassMemoVisibilityRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the memo visibility setting.
+	// Format: classes/{class}/memoVisibility/{memo_visibility}
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetClassMemoVisibilityRequest) Reset() {
+	*x = GetClassMemoVisibilityRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetClassMemoVisibilityRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetClassMemoVisibilityRequest) ProtoMessage() {}
+
+func (x *GetClassMemoVisibilityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetClassMemoVisibilityRequest.ProtoReflect.Descriptor instead.
+func (*GetClassMemoVisibilityRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetClassMemoVisibilityRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type ListClassMemoVisibilitiesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,1,opt,name=class,proto3" json:"class,omitempty"`
+	// Optional page size.
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// Optional page token.
+	PageToken     string `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListClassMemoVisibilitiesRequest) Reset() {
+	*x = ListClassMemoVisibilitiesRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListClassMemoVisibilitiesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListClassMemoVisibilitiesRequest) ProtoMessage() {}
+
+func (x *ListClassMemoVisibilitiesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListClassMemoVisibilitiesRequest.ProtoReflect.Descriptor instead.
+func (*ListClassMemoVisibilitiesRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *ListClassMemoVisibilitiesRequest) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *ListClassMemoVisibilitiesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListClassMemoVisibilitiesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+type ListClassMemoVisibilitiesResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The list of memo visibility settings.
+	Visibilities []*ClassMemoVisibility `protobuf:"bytes,1,rep,name=visibilities,proto3" json:"visibilities,omitempty"`
+	// Next page token.
+	NextPageToken string `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListClassMemoVisibilitiesResponse) Reset() {
+	*x = ListClassMemoVisibilitiesResponse{}
+	mi := &file_api_v1_class_service_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListClassMemoVisibilitiesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListClassMemoVisibilitiesResponse) ProtoMessage() {}
+
+func (x *ListClassMemoVisibilitiesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListClassMemoVisibilitiesResponse.ProtoReflect.Descriptor instead.
+func (*ListClassMemoVisibilitiesResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *ListClassMemoVisibilitiesResponse) GetVisibilities() []*ClassMemoVisibility {
+	if x != nil {
+		return x.Visibilities
+	}
+	return nil
+}
+
+func (x *ListClassMemoVisibilitiesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+// Messages for tag template management
+type CreateClassTagTemplateRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,1,opt,name=class,proto3" json:"class,omitempty"`
+	// The tag template to create.
+	TagTemplate   *ClassTagTemplate `protobuf:"bytes,2,opt,name=tag_template,json=tagTemplate,proto3" json:"tag_template,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateClassTagTemplateRequest) Reset() {
+	*x = CreateClassTagTemplateRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateClassTagTemplateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateClassTagTemplateRequest) ProtoMessage() {}
+
+func (x *CreateClassTagTemplateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateClassTagTemplateRequest.ProtoReflect.Descriptor instead.
+func (*CreateClassTagTemplateRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *CreateClassTagTemplateRequest) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *CreateClassTagTemplateRequest) GetTagTemplate() *ClassTagTemplate {
+	if x != nil {
+		return x.TagTemplate
+	}
+	return nil
+}
+
+type UpdateClassTagTemplateRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The tag template to update.
+	// The tag template's `name` field is used to identify the tag template to update.
+	// Format: classes/{class}/tagTemplates/{tag_template}
+	TagTemplate *ClassTagTemplate `protobuf:"bytes,1,opt,name=tag_template,json=tagTemplate,proto3" json:"tag_template,omitempty"`
+	// The list of fields to update.
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,2,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateClassTagTemplateRequest) Reset() {
+	*x = UpdateClassTagTemplateRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateClassTagTemplateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateClassTagTemplateRequest) ProtoMessage() {}
+
+func (x *UpdateClassTagTemplateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateClassTagTemplateRequest.ProtoReflect.Descriptor instead.
+func (*UpdateClassTagTemplateRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *UpdateClassTagTemplateRequest) GetTagTemplate() *ClassTagTemplate {
+	if x != nil {
+		return x.TagTemplate
+	}
+	return nil
+}
+
+func (x *UpdateClassTagTemplateRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.UpdateMask
+	}
+	return nil
+}
+
+type DeleteClassTagTemplateRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the tag template to delete.
+	// Format: classes/{class}/tagTemplates/{tag_template}
+	Name          string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteClassTagTemplateRequest) Reset() {
+	*x = DeleteClassTagTemplateRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteClassTagTemplateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteClassTagTemplateRequest) ProtoMessage() {}
+
+func (x *DeleteClassTagTemplateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteClassTagTemplateRequest.ProtoReflect.Descriptor instead.
+func (*DeleteClassTagTemplateRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *DeleteClassTagTemplateRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type ListClassTagTemplatesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource name of the class.
+	// Format: classes/{class}
+	Class string `protobuf:"bytes,1,opt,name=class,proto3" json:"class,omitempty"`
+	// Optional page size.
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// Optional page token.
+	PageToken     string `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListClassTagTemplatesRequest) Reset() {
+	*x = ListClassTagTemplatesRequest{}
+	mi := &file_api_v1_class_service_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListClassTagTemplatesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListClassTagTemplatesRequest) ProtoMessage() {}
+
+func (x *ListClassTagTemplatesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListClassTagTemplatesRequest.ProtoReflect.Descriptor instead.
+func (*ListClassTagTemplatesRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *ListClassTagTemplatesRequest) GetClass() string {
+	if x != nil {
+		return x.Class
+	}
+	return ""
+}
+
+func (x *ListClassTagTemplatesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListClassTagTemplatesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+type ListClassTagTemplatesResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The list of tag templates.
+	TagTemplates []*ClassTagTemplate `protobuf:"bytes,1,rep,name=tag_templates,json=tagTemplates,proto3" json:"tag_templates,omitempty"`
+	// Next page token.
+	NextPageToken string `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListClassTagTemplatesResponse) Reset() {
+	*x = ListClassTagTemplatesResponse{}
+	mi := &file_api_v1_class_service_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListClassTagTemplatesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListClassTagTemplatesResponse) ProtoMessage() {}
+
+func (x *ListClassTagTemplatesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_class_service_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListClassTagTemplatesResponse.ProtoReflect.Descriptor instead.
+func (*ListClassTagTemplatesResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_class_service_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *ListClassTagTemplatesResponse) GetTagTemplates() []*ClassTagTemplate {
+	if x != nil {
+		return x.TagTemplates
+	}
+	return nil
+}
+
+func (x *ListClassTagTemplatesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 var File_api_v1_class_service_proto protoreflect.FileDescriptor
 
 const file_api_v1_class_service_proto_rawDesc = "" +
@@ -840,7 +1791,88 @@ const file_api_v1_class_service_proto_rawDesc = "" +
 	"updateMask\"D\n" +
 	"\x12DeleteClassRequest\x12.\n" +
 	"\x04name\x18\x01 \x01(\tB\x1a\xe0A\x02\xfaA\x14\n" +
-	"\x12memos.api.v1/ClassR\x04name*m\n" +
+	"\x12memos.api.v1/ClassR\x04name\"\xd7\x02\n" +
+	"\x13ClassMemoVisibility\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tB\x03\xe0A\bR\x04name\x120\n" +
+	"\x05class\x18\x02 \x01(\tB\x1a\xe0A\x03\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12-\n" +
+	"\x04memo\x18\x03 \x01(\tB\x19\xe0A\x02\xfaA\x13\n" +
+	"\x11memos.api.v1/MemoR\x04memo\x12B\n" +
+	"\n" +
+	"visibility\x18\x04 \x01(\x0e2\x1d.memos.api.v1.ClassVisibilityB\x03\xe0A\x02R\n" +
+	"visibility:\x81\x01\xeaA~\n" +
+	" memos.api.v1/ClassMemoVisibility\x120classes/{class}/memoVisibility/{memo_visibility}\x1a\x04name*\x11memo_visibilities2\x0fmemo_visibility\"\xca\x02\n" +
+	"\x10ClassTagTemplate\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tB\x03\xe0A\bR\x04name\x120\n" +
+	"\x05class\x18\x02 \x01(\tB\x1a\xe0A\x03\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12&\n" +
+	"\fdisplay_name\x18\x03 \x01(\tB\x03\xe0A\x02R\vdisplayName\x12%\n" +
+	"\vdescription\x18\x04 \x01(\tB\x03\xe0A\x01R\vdescription\x12\x1e\n" +
+	"\x05color\x18\x05 \x01(\tB\x03\xe0A\x01H\x00R\x05color\x88\x01\x01:r\xeaAo\n" +
+	"\x1dmemos.api.v1/ClassTagTemplate\x12+classes/{class}/tagTemplates/{tag_template}\x1a\x04name*\rtag_templates2\ftag_templateB\b\n" +
+	"\x06_color\"\xb0\x01\n" +
+	"\x15AddClassMemberRequest\x120\n" +
+	"\x05class\x18\x01 \x01(\tB\x1a\xe0A\x02\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12-\n" +
+	"\x04user\x18\x02 \x01(\tB\x19\xe0A\x02\xfaA\x13\n" +
+	"\x11memos.api.v1/UserR\x04user\x126\n" +
+	"\x04role\x18\x03 \x01(\x0e2\x1d.memos.api.v1.ClassMemberRoleB\x03\xe0A\x02R\x04role\"P\n" +
+	"\x18RemoveClassMemberRequest\x124\n" +
+	"\x04name\x18\x01 \x01(\tB \xe0A\x02\xfaA\x1a\n" +
+	"\x18memos.api.v1/ClassMemberR\x04name\"\x91\x01\n" +
+	"\x17ListClassMembersRequest\x120\n" +
+	"\x05class\x18\x01 \x01(\tB\x1a\xe0A\x02\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12 \n" +
+	"\tpage_size\x18\x02 \x01(\x05B\x03\xe0A\x01R\bpageSize\x12\"\n" +
+	"\n" +
+	"page_token\x18\x03 \x01(\tB\x03\xe0A\x01R\tpageToken\"w\n" +
+	"\x18ListClassMembersResponse\x123\n" +
+	"\amembers\x18\x01 \x03(\v2\x19.memos.api.v1.ClassMemberR\amembers\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"\x8c\x01\n" +
+	"\x1cUpdateClassMemberRoleRequest\x124\n" +
+	"\x04name\x18\x01 \x01(\tB \xe0A\x02\xfaA\x1a\n" +
+	"\x18memos.api.v1/ClassMemberR\x04name\x126\n" +
+	"\x04role\x18\x02 \x01(\x0e2\x1d.memos.api.v1.ClassMemberRoleB\x03\xe0A\x02R\x04role\"\xc4\x01\n" +
+	"\x1dSetClassMemoVisibilityRequest\x120\n" +
+	"\x05class\x18\x01 \x01(\tB\x1a\xe0A\x02\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12-\n" +
+	"\x04memo\x18\x02 \x01(\tB\x19\xe0A\x02\xfaA\x13\n" +
+	"\x11memos.api.v1/MemoR\x04memo\x12B\n" +
+	"\n" +
+	"visibility\x18\x03 \x01(\x0e2\x1d.memos.api.v1.ClassVisibilityB\x03\xe0A\x02R\n" +
+	"visibility\"]\n" +
+	"\x1dGetClassMemoVisibilityRequest\x12<\n" +
+	"\x04name\x18\x01 \x01(\tB(\xe0A\x02\xfaA\"\n" +
+	" memos.api.v1/ClassMemoVisibilityR\x04name\"\x9a\x01\n" +
+	" ListClassMemoVisibilitiesRequest\x120\n" +
+	"\x05class\x18\x01 \x01(\tB\x1a\xe0A\x02\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12 \n" +
+	"\tpage_size\x18\x02 \x01(\x05B\x03\xe0A\x01R\bpageSize\x12\"\n" +
+	"\n" +
+	"page_token\x18\x03 \x01(\tB\x03\xe0A\x01R\tpageToken\"\x92\x01\n" +
+	"!ListClassMemoVisibilitiesResponse\x12E\n" +
+	"\fvisibilities\x18\x01 \x03(\v2!.memos.api.v1.ClassMemoVisibilityR\fvisibilities\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"\x99\x01\n" +
+	"\x1dCreateClassTagTemplateRequest\x120\n" +
+	"\x05class\x18\x01 \x01(\tB\x1a\xe0A\x02\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12F\n" +
+	"\ftag_template\x18\x02 \x01(\v2\x1e.memos.api.v1.ClassTagTemplateB\x03\xe0A\x02R\vtagTemplate\"\xa9\x01\n" +
+	"\x1dUpdateClassTagTemplateRequest\x12F\n" +
+	"\ftag_template\x18\x01 \x01(\v2\x1e.memos.api.v1.ClassTagTemplateB\x03\xe0A\x02R\vtagTemplate\x12@\n" +
+	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskB\x03\xe0A\x02R\n" +
+	"updateMask\"Z\n" +
+	"\x1dDeleteClassTagTemplateRequest\x129\n" +
+	"\x04name\x18\x01 \x01(\tB%\xe0A\x02\xfaA\x1f\n" +
+	"\x1dmemos.api.v1/ClassTagTemplateR\x04name\"\x96\x01\n" +
+	"\x1cListClassTagTemplatesRequest\x120\n" +
+	"\x05class\x18\x01 \x01(\tB\x1a\xe0A\x02\xfaA\x14\n" +
+	"\x12memos.api.v1/ClassR\x05class\x12 \n" +
+	"\tpage_size\x18\x02 \x01(\x05B\x03\xe0A\x01R\bpageSize\x12\"\n" +
+	"\n" +
+	"page_token\x18\x03 \x01(\tB\x03\xe0A\x01R\tpageToken\"\x8c\x01\n" +
+	"\x1dListClassTagTemplatesResponse\x12C\n" +
+	"\rtag_templates\x18\x01 \x03(\v2\x1e.memos.api.v1.ClassTagTemplateR\ftagTemplates\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken*m\n" +
 	"\x0fClassVisibility\x12 \n" +
 	"\x1cCLASS_VISIBILITY_UNSPECIFIED\x10\x00\x12\x10\n" +
 	"\fCLASS_PUBLIC\x10\x01\x12\x13\n" +
@@ -852,13 +1884,24 @@ const file_api_v1_class_service_proto_rawDesc = "" +
 	"\tASSISTANT\x10\x02\x12\v\n" +
 	"\aSTUDENT\x10\x03\x12\n" +
 	"\n" +
-	"\x06PARENT\x10\x042\xc3\x04\n" +
+	"\x06PARENT\x10\x042\xb5\x12\n" +
 	"\fClassService\x12d\n" +
 	"\vCreateClass\x12 .memos.api.v1.CreateClassRequest\x1a\x13.memos.api.v1.Class\"\x1e\xdaA\x05class\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/v1/classes\x12c\n" +
 	"\bGetClass\x12\x1d.memos.api.v1.GetClassRequest\x1a\x13.memos.api.v1.Class\"#\xdaA\x04name\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=classes/*}\x12g\n" +
 	"\vListClasses\x12 .memos.api.v1.ListClassesRequest\x1a!.memos.api.v1.ListClassesResponse\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/v1/classes\x12\x7f\n" +
 	"\vUpdateClass\x12 .memos.api.v1.UpdateClassRequest\x1a\x13.memos.api.v1.Class\"9\xdaA\x11class,update_mask\x82\xd3\xe4\x93\x02\x1f:\x01*2\x1a/v1/{class.name=classes/*}\x12l\n" +
-	"\vDeleteClass\x12 .memos.api.v1.DeleteClassRequest\x1a\x16.google.protobuf.Empty\"#\xdaA\x04name\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=classes/*}\x1a\x10\xcaA\rapi.memos.comB\xa9\x01\n" +
+	"\vDeleteClass\x12 .memos.api.v1.DeleteClassRequest\x1a\x16.google.protobuf.Empty\"#\xdaA\x04name\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=classes/*}\x12\x8c\x01\n" +
+	"\x0eAddClassMember\x12#.memos.api.v1.AddClassMemberRequest\x1a\x19.memos.api.v1.ClassMember\":\xdaA\x0fclass,user,role\x82\xd3\xe4\x93\x02\":\x01*\"\x1d/v1/{class=classes/*}/members\x12\x82\x01\n" +
+	"\x11RemoveClassMember\x12&.memos.api.v1.RemoveClassMemberRequest\x1a\x16.google.protobuf.Empty\"-\xdaA\x04name\x82\xd3\xe4\x93\x02 *\x1e/v1/{name=classes/*/members/*}\x12\x90\x01\n" +
+	"\x10ListClassMembers\x12%.memos.api.v1.ListClassMembersRequest\x1a&.memos.api.v1.ListClassMembersResponse\"-\xdaA\x05class\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/{class=classes/*}/members\x12\x95\x01\n" +
+	"\x15UpdateClassMemberRole\x12*.memos.api.v1.UpdateClassMemberRoleRequest\x1a\x19.memos.api.v1.ClassMember\"5\xdaA\tname,role\x82\xd3\xe4\x93\x02#:\x01*2\x1e/v1/{name=classes/*/members/*}\x12\xb1\x01\n" +
+	"\x16SetClassMemoVisibility\x12+.memos.api.v1.SetClassMemoVisibilityRequest\x1a!.memos.api.v1.ClassMemoVisibility\"G\xdaA\x15class,memo,visibility\x82\xd3\xe4\x93\x02):\x01*\"$/v1/{class=classes/*}/memoVisibility\x12\x9e\x01\n" +
+	"\x16GetClassMemoVisibility\x12+.memos.api.v1.GetClassMemoVisibilityRequest\x1a!.memos.api.v1.ClassMemoVisibility\"4\xdaA\x04name\x82\xd3\xe4\x93\x02'\x12%/v1/{name=classes/*/memoVisibility/*}\x12\xb4\x01\n" +
+	"\x19ListClassMemoVisibilities\x12..memos.api.v1.ListClassMemoVisibilitiesRequest\x1a/.memos.api.v1.ListClassMemoVisibilitiesResponse\"6\xdaA\x05class\x82\xd3\xe4\x93\x02(\x12&/v1/{class=classes/*}/memoVisibilities\x12\xa9\x01\n" +
+	"\x16CreateClassTagTemplate\x12+.memos.api.v1.CreateClassTagTemplateRequest\x1a\x1e.memos.api.v1.ClassTagTemplate\"B\xdaA\x12class,tag_template\x82\xd3\xe4\x93\x02':\x01*\"\"/v1/{class=classes/*}/tagTemplates\x12\xbd\x01\n" +
+	"\x16UpdateClassTagTemplate\x12+.memos.api.v1.UpdateClassTagTemplateRequest\x1a\x1e.memos.api.v1.ClassTagTemplate\"V\xdaA\x18tag_template,update_mask\x82\xd3\xe4\x93\x025:\x01*20/v1/{tag_template.name=classes/*/tagTemplates/*}\x12\x91\x01\n" +
+	"\x16DeleteClassTagTemplate\x12+.memos.api.v1.DeleteClassTagTemplateRequest\x1a\x16.google.protobuf.Empty\"2\xdaA\x04name\x82\xd3\xe4\x93\x02%*#/v1/{name=classes/*/tagTemplates/*}\x12\xa4\x01\n" +
+	"\x15ListClassTagTemplates\x12*.memos.api.v1.ListClassTagTemplatesRequest\x1a+.memos.api.v1.ListClassTagTemplatesResponse\"2\xdaA\x05class\x82\xd3\xe4\x93\x02$\x12\"/v1/{class=classes/*}/tagTemplates\x1a\x10\xcaA\rapi.memos.comB\xa9\x01\n" +
 	"\x10com.memos.api.v1B\x11ClassServiceProtoP\x01Z0github.com/usememos/memos/proto/gen/api/v1;apiv1\xa2\x02\x03MAX\xaa\x02\fMemos.Api.V1\xca\x02\fMemos\\Api\\V1\xe2\x02\x18Memos\\Api\\V1\\GPBMetadata\xea\x02\x0eMemos::Api::V1b\x06proto3"
 
 var (
@@ -874,50 +1917,98 @@ func file_api_v1_class_service_proto_rawDescGZIP() []byte {
 }
 
 var file_api_v1_class_service_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_api_v1_class_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_api_v1_class_service_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_api_v1_class_service_proto_goTypes = []any{
-	(ClassVisibility)(0),          // 0: memos.api.v1.ClassVisibility
-	(ClassMemberRole)(0),          // 1: memos.api.v1.ClassMemberRole
-	(*ClassSettings)(nil),         // 2: memos.api.v1.ClassSettings
-	(*Class)(nil),                 // 3: memos.api.v1.Class
-	(*ClassMember)(nil),           // 4: memos.api.v1.ClassMember
-	(*CreateClassRequest)(nil),    // 5: memos.api.v1.CreateClassRequest
-	(*GetClassRequest)(nil),       // 6: memos.api.v1.GetClassRequest
-	(*ListClassesRequest)(nil),    // 7: memos.api.v1.ListClassesRequest
-	(*ListClassesResponse)(nil),   // 8: memos.api.v1.ListClassesResponse
-	(*UpdateClassRequest)(nil),    // 9: memos.api.v1.UpdateClassRequest
-	(*DeleteClassRequest)(nil),    // 10: memos.api.v1.DeleteClassRequest
-	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil), // 12: google.protobuf.FieldMask
-	(*emptypb.Empty)(nil),         // 13: google.protobuf.Empty
+	(ClassVisibility)(0),                      // 0: memos.api.v1.ClassVisibility
+	(ClassMemberRole)(0),                      // 1: memos.api.v1.ClassMemberRole
+	(*ClassSettings)(nil),                     // 2: memos.api.v1.ClassSettings
+	(*Class)(nil),                             // 3: memos.api.v1.Class
+	(*ClassMember)(nil),                       // 4: memos.api.v1.ClassMember
+	(*CreateClassRequest)(nil),                // 5: memos.api.v1.CreateClassRequest
+	(*GetClassRequest)(nil),                   // 6: memos.api.v1.GetClassRequest
+	(*ListClassesRequest)(nil),                // 7: memos.api.v1.ListClassesRequest
+	(*ListClassesResponse)(nil),               // 8: memos.api.v1.ListClassesResponse
+	(*UpdateClassRequest)(nil),                // 9: memos.api.v1.UpdateClassRequest
+	(*DeleteClassRequest)(nil),                // 10: memos.api.v1.DeleteClassRequest
+	(*ClassMemoVisibility)(nil),               // 11: memos.api.v1.ClassMemoVisibility
+	(*ClassTagTemplate)(nil),                  // 12: memos.api.v1.ClassTagTemplate
+	(*AddClassMemberRequest)(nil),             // 13: memos.api.v1.AddClassMemberRequest
+	(*RemoveClassMemberRequest)(nil),          // 14: memos.api.v1.RemoveClassMemberRequest
+	(*ListClassMembersRequest)(nil),           // 15: memos.api.v1.ListClassMembersRequest
+	(*ListClassMembersResponse)(nil),          // 16: memos.api.v1.ListClassMembersResponse
+	(*UpdateClassMemberRoleRequest)(nil),      // 17: memos.api.v1.UpdateClassMemberRoleRequest
+	(*SetClassMemoVisibilityRequest)(nil),     // 18: memos.api.v1.SetClassMemoVisibilityRequest
+	(*GetClassMemoVisibilityRequest)(nil),     // 19: memos.api.v1.GetClassMemoVisibilityRequest
+	(*ListClassMemoVisibilitiesRequest)(nil),  // 20: memos.api.v1.ListClassMemoVisibilitiesRequest
+	(*ListClassMemoVisibilitiesResponse)(nil), // 21: memos.api.v1.ListClassMemoVisibilitiesResponse
+	(*CreateClassTagTemplateRequest)(nil),     // 22: memos.api.v1.CreateClassTagTemplateRequest
+	(*UpdateClassTagTemplateRequest)(nil),     // 23: memos.api.v1.UpdateClassTagTemplateRequest
+	(*DeleteClassTagTemplateRequest)(nil),     // 24: memos.api.v1.DeleteClassTagTemplateRequest
+	(*ListClassTagTemplatesRequest)(nil),      // 25: memos.api.v1.ListClassTagTemplatesRequest
+	(*ListClassTagTemplatesResponse)(nil),     // 26: memos.api.v1.ListClassTagTemplatesResponse
+	(*timestamppb.Timestamp)(nil),             // 27: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),             // 28: google.protobuf.FieldMask
+	(*emptypb.Empty)(nil),                     // 29: google.protobuf.Empty
 }
 var file_api_v1_class_service_proto_depIdxs = []int32{
 	0,  // 0: memos.api.v1.ClassSettings.default_student_visibility:type_name -> memos.api.v1.ClassVisibility
-	11, // 1: memos.api.v1.Class.create_time:type_name -> google.protobuf.Timestamp
-	11, // 2: memos.api.v1.Class.update_time:type_name -> google.protobuf.Timestamp
+	27, // 1: memos.api.v1.Class.create_time:type_name -> google.protobuf.Timestamp
+	27, // 2: memos.api.v1.Class.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 3: memos.api.v1.Class.visibility:type_name -> memos.api.v1.ClassVisibility
 	2,  // 4: memos.api.v1.Class.settings:type_name -> memos.api.v1.ClassSettings
 	1,  // 5: memos.api.v1.ClassMember.role:type_name -> memos.api.v1.ClassMemberRole
-	11, // 6: memos.api.v1.ClassMember.join_time:type_name -> google.protobuf.Timestamp
+	27, // 6: memos.api.v1.ClassMember.join_time:type_name -> google.protobuf.Timestamp
 	3,  // 7: memos.api.v1.CreateClassRequest.class:type_name -> memos.api.v1.Class
 	3,  // 8: memos.api.v1.ListClassesResponse.classes:type_name -> memos.api.v1.Class
 	3,  // 9: memos.api.v1.UpdateClassRequest.class:type_name -> memos.api.v1.Class
-	12, // 10: memos.api.v1.UpdateClassRequest.update_mask:type_name -> google.protobuf.FieldMask
-	5,  // 11: memos.api.v1.ClassService.CreateClass:input_type -> memos.api.v1.CreateClassRequest
-	6,  // 12: memos.api.v1.ClassService.GetClass:input_type -> memos.api.v1.GetClassRequest
-	7,  // 13: memos.api.v1.ClassService.ListClasses:input_type -> memos.api.v1.ListClassesRequest
-	9,  // 14: memos.api.v1.ClassService.UpdateClass:input_type -> memos.api.v1.UpdateClassRequest
-	10, // 15: memos.api.v1.ClassService.DeleteClass:input_type -> memos.api.v1.DeleteClassRequest
-	3,  // 16: memos.api.v1.ClassService.CreateClass:output_type -> memos.api.v1.Class
-	3,  // 17: memos.api.v1.ClassService.GetClass:output_type -> memos.api.v1.Class
-	8,  // 18: memos.api.v1.ClassService.ListClasses:output_type -> memos.api.v1.ListClassesResponse
-	3,  // 19: memos.api.v1.ClassService.UpdateClass:output_type -> memos.api.v1.Class
-	13, // 20: memos.api.v1.ClassService.DeleteClass:output_type -> google.protobuf.Empty
-	16, // [16:21] is the sub-list for method output_type
-	11, // [11:16] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	28, // 10: memos.api.v1.UpdateClassRequest.update_mask:type_name -> google.protobuf.FieldMask
+	0,  // 11: memos.api.v1.ClassMemoVisibility.visibility:type_name -> memos.api.v1.ClassVisibility
+	1,  // 12: memos.api.v1.AddClassMemberRequest.role:type_name -> memos.api.v1.ClassMemberRole
+	4,  // 13: memos.api.v1.ListClassMembersResponse.members:type_name -> memos.api.v1.ClassMember
+	1,  // 14: memos.api.v1.UpdateClassMemberRoleRequest.role:type_name -> memos.api.v1.ClassMemberRole
+	0,  // 15: memos.api.v1.SetClassMemoVisibilityRequest.visibility:type_name -> memos.api.v1.ClassVisibility
+	11, // 16: memos.api.v1.ListClassMemoVisibilitiesResponse.visibilities:type_name -> memos.api.v1.ClassMemoVisibility
+	12, // 17: memos.api.v1.CreateClassTagTemplateRequest.tag_template:type_name -> memos.api.v1.ClassTagTemplate
+	12, // 18: memos.api.v1.UpdateClassTagTemplateRequest.tag_template:type_name -> memos.api.v1.ClassTagTemplate
+	28, // 19: memos.api.v1.UpdateClassTagTemplateRequest.update_mask:type_name -> google.protobuf.FieldMask
+	12, // 20: memos.api.v1.ListClassTagTemplatesResponse.tag_templates:type_name -> memos.api.v1.ClassTagTemplate
+	5,  // 21: memos.api.v1.ClassService.CreateClass:input_type -> memos.api.v1.CreateClassRequest
+	6,  // 22: memos.api.v1.ClassService.GetClass:input_type -> memos.api.v1.GetClassRequest
+	7,  // 23: memos.api.v1.ClassService.ListClasses:input_type -> memos.api.v1.ListClassesRequest
+	9,  // 24: memos.api.v1.ClassService.UpdateClass:input_type -> memos.api.v1.UpdateClassRequest
+	10, // 25: memos.api.v1.ClassService.DeleteClass:input_type -> memos.api.v1.DeleteClassRequest
+	13, // 26: memos.api.v1.ClassService.AddClassMember:input_type -> memos.api.v1.AddClassMemberRequest
+	14, // 27: memos.api.v1.ClassService.RemoveClassMember:input_type -> memos.api.v1.RemoveClassMemberRequest
+	15, // 28: memos.api.v1.ClassService.ListClassMembers:input_type -> memos.api.v1.ListClassMembersRequest
+	17, // 29: memos.api.v1.ClassService.UpdateClassMemberRole:input_type -> memos.api.v1.UpdateClassMemberRoleRequest
+	18, // 30: memos.api.v1.ClassService.SetClassMemoVisibility:input_type -> memos.api.v1.SetClassMemoVisibilityRequest
+	19, // 31: memos.api.v1.ClassService.GetClassMemoVisibility:input_type -> memos.api.v1.GetClassMemoVisibilityRequest
+	20, // 32: memos.api.v1.ClassService.ListClassMemoVisibilities:input_type -> memos.api.v1.ListClassMemoVisibilitiesRequest
+	22, // 33: memos.api.v1.ClassService.CreateClassTagTemplate:input_type -> memos.api.v1.CreateClassTagTemplateRequest
+	23, // 34: memos.api.v1.ClassService.UpdateClassTagTemplate:input_type -> memos.api.v1.UpdateClassTagTemplateRequest
+	24, // 35: memos.api.v1.ClassService.DeleteClassTagTemplate:input_type -> memos.api.v1.DeleteClassTagTemplateRequest
+	25, // 36: memos.api.v1.ClassService.ListClassTagTemplates:input_type -> memos.api.v1.ListClassTagTemplatesRequest
+	3,  // 37: memos.api.v1.ClassService.CreateClass:output_type -> memos.api.v1.Class
+	3,  // 38: memos.api.v1.ClassService.GetClass:output_type -> memos.api.v1.Class
+	8,  // 39: memos.api.v1.ClassService.ListClasses:output_type -> memos.api.v1.ListClassesResponse
+	3,  // 40: memos.api.v1.ClassService.UpdateClass:output_type -> memos.api.v1.Class
+	29, // 41: memos.api.v1.ClassService.DeleteClass:output_type -> google.protobuf.Empty
+	4,  // 42: memos.api.v1.ClassService.AddClassMember:output_type -> memos.api.v1.ClassMember
+	29, // 43: memos.api.v1.ClassService.RemoveClassMember:output_type -> google.protobuf.Empty
+	16, // 44: memos.api.v1.ClassService.ListClassMembers:output_type -> memos.api.v1.ListClassMembersResponse
+	4,  // 45: memos.api.v1.ClassService.UpdateClassMemberRole:output_type -> memos.api.v1.ClassMember
+	11, // 46: memos.api.v1.ClassService.SetClassMemoVisibility:output_type -> memos.api.v1.ClassMemoVisibility
+	11, // 47: memos.api.v1.ClassService.GetClassMemoVisibility:output_type -> memos.api.v1.ClassMemoVisibility
+	21, // 48: memos.api.v1.ClassService.ListClassMemoVisibilities:output_type -> memos.api.v1.ListClassMemoVisibilitiesResponse
+	12, // 49: memos.api.v1.ClassService.CreateClassTagTemplate:output_type -> memos.api.v1.ClassTagTemplate
+	12, // 50: memos.api.v1.ClassService.UpdateClassTagTemplate:output_type -> memos.api.v1.ClassTagTemplate
+	29, // 51: memos.api.v1.ClassService.DeleteClassTagTemplate:output_type -> google.protobuf.Empty
+	26, // 52: memos.api.v1.ClassService.ListClassTagTemplates:output_type -> memos.api.v1.ListClassTagTemplatesResponse
+	37, // [37:53] is the sub-list for method output_type
+	21, // [21:37] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_class_service_proto_init() }
@@ -930,13 +2021,14 @@ func file_api_v1_class_service_proto_init() {
 	file_api_v1_class_service_proto_msgTypes[1].OneofWrappers = []any{}
 	file_api_v1_class_service_proto_msgTypes[2].OneofWrappers = []any{}
 	file_api_v1_class_service_proto_msgTypes[3].OneofWrappers = []any{}
+	file_api_v1_class_service_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_class_service_proto_rawDesc), len(file_api_v1_class_service_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   9,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

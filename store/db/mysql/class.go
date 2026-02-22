@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"context"
-	"database/sql"
 	"strings"
 
 	"github.com/pkg/errors"

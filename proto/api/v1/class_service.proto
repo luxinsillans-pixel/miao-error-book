@@ -196,6 +196,239 @@ message DeleteClassRequest {
     (google.api.resource_reference) = {type: "memos.api.v1/Class"}
   ];
 }
+// ClassMemoVisibility controls memo visibility within a class.
+message ClassMemoVisibility {
+  option (google.api.resource) = {
+    type: "memos.api.v1/ClassMemoVisibility"
+    pattern: "classes/{class}/memoVisibility/{memo_visibility}"
+    name_field: "name"
+    singular: "memo_visibility"
+    plural: "memo_visibilities"
+  };
+
+  // The resource name of the memo visibility setting.
+  // Format: classes/{class}/memoVisibility/{memo_visibility}
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+
+  // The resource name of the memo.
+  // Format: memos/{memo}
+  string memo = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Memo"}
+  ];
+
+  // The visibility level for this memo in the class.
+  ClassVisibility visibility = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+// ClassTagTemplate defines a tag template for a class.
+message ClassTagTemplate {
+  option (google.api.resource) = {
+    type: "memos.api.v1/ClassTagTemplate"
+    pattern: "classes/{class}/tagTemplates/{tag_template}"
+    name_field: "name"
+    singular: "tag_template"
+    plural: "tag_templates"
+  };
+
+  // The resource name of the tag template.
+  // Format: classes/{class}/tagTemplates/{tag_template}
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 2 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+
+  // The display name of the tag template.
+  string display_name = 3 [(google.api.field_behavior) = REQUIRED];
+
+  // Optional description of the tag template.
+  string description = 4 [(google.api.field_behavior) = OPTIONAL];
+
+  // Optional color for the tag (e.g., "#FF0000").
+  optional string color = 5 [(google.api.field_behavior) = OPTIONAL];
+}
+
+// Messages for member management
+message AddClassMemberRequest {
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+  
+  // The resource name of the user to add.
+  // Format: users/{user}
+  string user = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+  
+  // The role of the member in the class.
+  ClassMemberRole role = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message RemoveClassMemberRequest {
+  // The resource name of the class member to remove.
+  // Format: classes/{class}/members/{class_member}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/ClassMember"}
+  ];
+}
+
+message ListClassMembersRequest {
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+  
+  // Optional page size.
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+  
+  // Optional page token.
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListClassMembersResponse {
+  // The list of class members.
+  repeated ClassMember members = 1;
+  
+  // Next page token.
+  string next_page_token = 2;
+}
+
+message UpdateClassMemberRoleRequest {
+  // The resource name of the class member to update.
+  // Format: classes/{class}/members/{class_member}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/ClassMember"}
+  ];
+  
+  // The new role for the member.
+  ClassMemberRole role = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+// Messages for memo visibility management
+message SetClassMemoVisibilityRequest {
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+  
+  // The resource name of the memo.
+  // Format: memos/{memo}
+  string memo = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Memo"}
+  ];
+  
+  // The visibility level for this memo in the class.
+  ClassVisibility visibility = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetClassMemoVisibilityRequest {
+  // The resource name of the memo visibility setting.
+  // Format: classes/{class}/memoVisibility/{memo_visibility}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/ClassMemoVisibility"}
+  ];
+}
+
+message ListClassMemoVisibilitiesRequest {
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+  
+  // Optional page size.
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+  
+  // Optional page token.
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListClassMemoVisibilitiesResponse {
+  // The list of memo visibility settings.
+  repeated ClassMemoVisibility visibilities = 1;
+  
+  // Next page token.
+  string next_page_token = 2;
+}
+
+// Messages for tag template management
+message CreateClassTagTemplateRequest {
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+  
+  // The tag template to create.
+  ClassTagTemplate tag_template = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdateClassTagTemplateRequest {
+  // The tag template to update.
+  // The tag template's `name` field is used to identify the tag template to update.
+  // Format: classes/{class}/tagTemplates/{tag_template}
+  ClassTagTemplate tag_template = 1 [(google.api.field_behavior) = REQUIRED];
+  
+  // The list of fields to update.
+  google.protobuf.FieldMask update_mask = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message DeleteClassTagTemplateRequest {
+  // The resource name of the tag template to delete.
+  // Format: classes/{class}/tagTemplates/{tag_template}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/ClassTagTemplate"}
+  ];
+}
+
+message ListClassTagTemplatesRequest {
+  // The resource name of the class.
+  // Format: classes/{class}
+  string class = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Class"}
+  ];
+  
+  // Optional page size.
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL];
+  
+  // Optional page token.
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListClassTagTemplatesResponse {
+  // The list of tag templates.
+  repeated ClassTagTemplate tag_templates = 1;
+  
+  // Next page token.
+  string next_page_token = 2;
+}
 
 // ClassService provides API for managing classes.
 service ClassService {
@@ -240,5 +473,104 @@ service ClassService {
       delete: "/v1/{name=classes/*}"
     };
     option (google.api.method_signature) = "name";
+  }
+  
+  // Member management
+  
+  // AddClassMember adds a user as a member to a class.
+  rpc AddClassMember(AddClassMemberRequest) returns (ClassMember) {
+    option (google.api.http) = {
+      post: "/v1/{class=classes/*}/members"
+      body: "*"
+    };
+    option (google.api.method_signature) = "class,user,role";
+  }
+  
+  // RemoveClassMember removes a member from a class.
+  rpc RemoveClassMember(RemoveClassMemberRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/{name=classes/*/members/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  
+  // ListClassMembers lists members of a class.
+  rpc ListClassMembers(ListClassMembersRequest) returns (ListClassMembersResponse) {
+    option (google.api.http) = {
+      get: "/v1/{class=classes/*}/members"
+    };
+    option (google.api.method_signature) = "class";
+  }
+  
+  // UpdateClassMemberRole updates the role of a class member.
+  rpc UpdateClassMemberRole(UpdateClassMemberRoleRequest) returns (ClassMember) {
+    option (google.api.http) = {
+      patch: "/v1/{name=classes/*/members/*}"
+      body: "*"
+    };
+    option (google.api.method_signature) = "name,role";
+  }
+  
+  // Memo visibility management
+  
+  // SetClassMemoVisibility sets visibility for a memo in a class.
+  rpc SetClassMemoVisibility(SetClassMemoVisibilityRequest) returns (ClassMemoVisibility) {
+    option (google.api.http) = {
+      post: "/v1/{class=classes/*}/memoVisibility"
+      body: "*"
+    };
+    option (google.api.method_signature) = "class,memo,visibility";
+  }
+  
+  // GetClassMemoVisibility retrieves a memo visibility setting.
+  rpc GetClassMemoVisibility(GetClassMemoVisibilityRequest) returns (ClassMemoVisibility) {
+    option (google.api.http) = {
+      get: "/v1/{name=classes/*/memoVisibility/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  
+  // ListClassMemoVisibilities lists memo visibility settings for a class.
+  rpc ListClassMemoVisibilities(ListClassMemoVisibilitiesRequest) returns (ListClassMemoVisibilitiesResponse) {
+    option (google.api.http) = {
+      get: "/v1/{class=classes/*}/memoVisibilities"
+    };
+    option (google.api.method_signature) = "class";
+  }
+  
+  // Tag template management
+  
+  // CreateClassTagTemplate creates a new tag template for a class.
+  rpc CreateClassTagTemplate(CreateClassTagTemplateRequest) returns (ClassTagTemplate) {
+    option (google.api.http) = {
+      post: "/v1/{class=classes/*}/tagTemplates"
+      body: "*"
+    };
+    option (google.api.method_signature) = "class,tag_template";
+  }
+  
+  // UpdateClassTagTemplate updates a tag template.
+  rpc UpdateClassTagTemplate(UpdateClassTagTemplateRequest) returns (ClassTagTemplate) {
+    option (google.api.http) = {
+      patch: "/v1/{tag_template.name=classes/*/tagTemplates/*}"
+      body: "*"
+    };
+    option (google.api.method_signature) = "tag_template,update_mask";
+  }
+  
+  // DeleteClassTagTemplate deletes a tag template.
+  rpc DeleteClassTagTemplate(DeleteClassTagTemplateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/{name=classes/*/tagTemplates/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  
+  // ListClassTagTemplates lists tag templates for a class.
+  rpc ListClassTagTemplates(ListClassTagTemplatesRequest) returns (ListClassTagTemplatesResponse) {
+    option (google.api.http) = {
+      get: "/v1/{class=classes/*}/tagTemplates"
+    };
+    option (google.api.method_signature) = "class";
   }
 }

@@ -20,11 +20,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ClassService_CreateClass_FullMethodName = "/memos.api.v1.ClassService/CreateClass"
-	ClassService_GetClass_FullMethodName    = "/memos.api.v1.ClassService/GetClass"
-	ClassService_ListClasses_FullMethodName = "/memos.api.v1.ClassService/ListClasses"
-	ClassService_UpdateClass_FullMethodName = "/memos.api.v1.ClassService/UpdateClass"
-	ClassService_DeleteClass_FullMethodName = "/memos.api.v1.ClassService/DeleteClass"
+	ClassService_CreateClass_FullMethodName               = "/memos.api.v1.ClassService/CreateClass"
+	ClassService_GetClass_FullMethodName                  = "/memos.api.v1.ClassService/GetClass"
+	ClassService_ListClasses_FullMethodName               = "/memos.api.v1.ClassService/ListClasses"
+	ClassService_UpdateClass_FullMethodName               = "/memos.api.v1.ClassService/UpdateClass"
+	ClassService_DeleteClass_FullMethodName               = "/memos.api.v1.ClassService/DeleteClass"
+	ClassService_AddClassMember_FullMethodName            = "/memos.api.v1.ClassService/AddClassMember"
+	ClassService_RemoveClassMember_FullMethodName         = "/memos.api.v1.ClassService/RemoveClassMember"
+	ClassService_ListClassMembers_FullMethodName          = "/memos.api.v1.ClassService/ListClassMembers"
+	ClassService_UpdateClassMemberRole_FullMethodName     = "/memos.api.v1.ClassService/UpdateClassMemberRole"
+	ClassService_SetClassMemoVisibility_FullMethodName    = "/memos.api.v1.ClassService/SetClassMemoVisibility"
+	ClassService_GetClassMemoVisibility_FullMethodName    = "/memos.api.v1.ClassService/GetClassMemoVisibility"
+	ClassService_ListClassMemoVisibilities_FullMethodName = "/memos.api.v1.ClassService/ListClassMemoVisibilities"
+	ClassService_CreateClassTagTemplate_FullMethodName    = "/memos.api.v1.ClassService/CreateClassTagTemplate"
+	ClassService_UpdateClassTagTemplate_FullMethodName    = "/memos.api.v1.ClassService/UpdateClassTagTemplate"
+	ClassService_DeleteClassTagTemplate_FullMethodName    = "/memos.api.v1.ClassService/DeleteClassTagTemplate"
+	ClassService_ListClassTagTemplates_FullMethodName     = "/memos.api.v1.ClassService/ListClassTagTemplates"
 )
 
 // ClassServiceClient is the client API for ClassService service.
@@ -43,6 +54,28 @@ type ClassServiceClient interface {
 	UpdateClass(ctx context.Context, in *UpdateClassRequest, opts ...grpc.CallOption) (*Class, error)
 	// DeleteClass deletes a class.
 	DeleteClass(ctx context.Context, in *DeleteClassRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// AddClassMember adds a user as a member to a class.
+	AddClassMember(ctx context.Context, in *AddClassMemberRequest, opts ...grpc.CallOption) (*ClassMember, error)
+	// RemoveClassMember removes a member from a class.
+	RemoveClassMember(ctx context.Context, in *RemoveClassMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ListClassMembers lists members of a class.
+	ListClassMembers(ctx context.Context, in *ListClassMembersRequest, opts ...grpc.CallOption) (*ListClassMembersResponse, error)
+	// UpdateClassMemberRole updates the role of a class member.
+	UpdateClassMemberRole(ctx context.Context, in *UpdateClassMemberRoleRequest, opts ...grpc.CallOption) (*ClassMember, error)
+	// SetClassMemoVisibility sets visibility for a memo in a class.
+	SetClassMemoVisibility(ctx context.Context, in *SetClassMemoVisibilityRequest, opts ...grpc.CallOption) (*ClassMemoVisibility, error)
+	// GetClassMemoVisibility retrieves a memo visibility setting.
+	GetClassMemoVisibility(ctx context.Context, in *GetClassMemoVisibilityRequest, opts ...grpc.CallOption) (*ClassMemoVisibility, error)
+	// ListClassMemoVisibilities lists memo visibility settings for a class.
+	ListClassMemoVisibilities(ctx context.Context, in *ListClassMemoVisibilitiesRequest, opts ...grpc.CallOption) (*ListClassMemoVisibilitiesResponse, error)
+	// CreateClassTagTemplate creates a new tag template for a class.
+	CreateClassTagTemplate(ctx context.Context, in *CreateClassTagTemplateRequest, opts ...grpc.CallOption) (*ClassTagTemplate, error)
+	// UpdateClassTagTemplate updates a tag template.
+	UpdateClassTagTemplate(ctx context.Context, in *UpdateClassTagTemplateRequest, opts ...grpc.CallOption) (*ClassTagTemplate, error)
+	// DeleteClassTagTemplate deletes a tag template.
+	DeleteClassTagTemplate(ctx context.Context, in *DeleteClassTagTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ListClassTagTemplates lists tag templates for a class.
+	ListClassTagTemplates(ctx context.Context, in *ListClassTagTemplatesRequest, opts ...grpc.CallOption) (*ListClassTagTemplatesResponse, error)
 }
 
 type classServiceClient struct {
@@ -103,6 +136,116 @@ func (c *classServiceClient) DeleteClass(ctx context.Context, in *DeleteClassReq
 	return out, nil
 }
 
+func (c *classServiceClient) AddClassMember(ctx context.Context, in *AddClassMemberRequest, opts ...grpc.CallOption) (*ClassMember, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClassMember)
+	err := c.cc.Invoke(ctx, ClassService_AddClassMember_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) RemoveClassMember(ctx context.Context, in *RemoveClassMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ClassService_RemoveClassMember_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) ListClassMembers(ctx context.Context, in *ListClassMembersRequest, opts ...grpc.CallOption) (*ListClassMembersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListClassMembersResponse)
+	err := c.cc.Invoke(ctx, ClassService_ListClassMembers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) UpdateClassMemberRole(ctx context.Context, in *UpdateClassMemberRoleRequest, opts ...grpc.CallOption) (*ClassMember, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClassMember)
+	err := c.cc.Invoke(ctx, ClassService_UpdateClassMemberRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) SetClassMemoVisibility(ctx context.Context, in *SetClassMemoVisibilityRequest, opts ...grpc.CallOption) (*ClassMemoVisibility, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClassMemoVisibility)
+	err := c.cc.Invoke(ctx, ClassService_SetClassMemoVisibility_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) GetClassMemoVisibility(ctx context.Context, in *GetClassMemoVisibilityRequest, opts ...grpc.CallOption) (*ClassMemoVisibility, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClassMemoVisibility)
+	err := c.cc.Invoke(ctx, ClassService_GetClassMemoVisibility_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) ListClassMemoVisibilities(ctx context.Context, in *ListClassMemoVisibilitiesRequest, opts ...grpc.CallOption) (*ListClassMemoVisibilitiesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListClassMemoVisibilitiesResponse)
+	err := c.cc.Invoke(ctx, ClassService_ListClassMemoVisibilities_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) CreateClassTagTemplate(ctx context.Context, in *CreateClassTagTemplateRequest, opts ...grpc.CallOption) (*ClassTagTemplate, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClassTagTemplate)
+	err := c.cc.Invoke(ctx, ClassService_CreateClassTagTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) UpdateClassTagTemplate(ctx context.Context, in *UpdateClassTagTemplateRequest, opts ...grpc.CallOption) (*ClassTagTemplate, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ClassTagTemplate)
+	err := c.cc.Invoke(ctx, ClassService_UpdateClassTagTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) DeleteClassTagTemplate(ctx context.Context, in *DeleteClassTagTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ClassService_DeleteClassTagTemplate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *classServiceClient) ListClassTagTemplates(ctx context.Context, in *ListClassTagTemplatesRequest, opts ...grpc.CallOption) (*ListClassTagTemplatesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListClassTagTemplatesResponse)
+	err := c.cc.Invoke(ctx, ClassService_ListClassTagTemplates_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ClassServiceServer is the server API for ClassService service.
 // All implementations must embed UnimplementedClassServiceServer
 // for forward compatibility.
@@ -119,6 +262,28 @@ type ClassServiceServer interface {
 	UpdateClass(context.Context, *UpdateClassRequest) (*Class, error)
 	// DeleteClass deletes a class.
 	DeleteClass(context.Context, *DeleteClassRequest) (*emptypb.Empty, error)
+	// AddClassMember adds a user as a member to a class.
+	AddClassMember(context.Context, *AddClassMemberRequest) (*ClassMember, error)
+	// RemoveClassMember removes a member from a class.
+	RemoveClassMember(context.Context, *RemoveClassMemberRequest) (*emptypb.Empty, error)
+	// ListClassMembers lists members of a class.
+	ListClassMembers(context.Context, *ListClassMembersRequest) (*ListClassMembersResponse, error)
+	// UpdateClassMemberRole updates the role of a class member.
+	UpdateClassMemberRole(context.Context, *UpdateClassMemberRoleRequest) (*ClassMember, error)
+	// SetClassMemoVisibility sets visibility for a memo in a class.
+	SetClassMemoVisibility(context.Context, *SetClassMemoVisibilityRequest) (*ClassMemoVisibility, error)
+	// GetClassMemoVisibility retrieves a memo visibility setting.
+	GetClassMemoVisibility(context.Context, *GetClassMemoVisibilityRequest) (*ClassMemoVisibility, error)
+	// ListClassMemoVisibilities lists memo visibility settings for a class.
+	ListClassMemoVisibilities(context.Context, *ListClassMemoVisibilitiesRequest) (*ListClassMemoVisibilitiesResponse, error)
+	// CreateClassTagTemplate creates a new tag template for a class.
+	CreateClassTagTemplate(context.Context, *CreateClassTagTemplateRequest) (*ClassTagTemplate, error)
+	// UpdateClassTagTemplate updates a tag template.
+	UpdateClassTagTemplate(context.Context, *UpdateClassTagTemplateRequest) (*ClassTagTemplate, error)
+	// DeleteClassTagTemplate deletes a tag template.
+	DeleteClassTagTemplate(context.Context, *DeleteClassTagTemplateRequest) (*emptypb.Empty, error)
+	// ListClassTagTemplates lists tag templates for a class.
+	ListClassTagTemplates(context.Context, *ListClassTagTemplatesRequest) (*ListClassTagTemplatesResponse, error)
 	mustEmbedUnimplementedClassServiceServer()
 }
 
@@ -143,6 +308,39 @@ func (UnimplementedClassServiceServer) UpdateClass(context.Context, *UpdateClass
 }
 func (UnimplementedClassServiceServer) DeleteClass(context.Context, *DeleteClassRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteClass not implemented")
+}
+func (UnimplementedClassServiceServer) AddClassMember(context.Context, *AddClassMemberRequest) (*ClassMember, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddClassMember not implemented")
+}
+func (UnimplementedClassServiceServer) RemoveClassMember(context.Context, *RemoveClassMemberRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RemoveClassMember not implemented")
+}
+func (UnimplementedClassServiceServer) ListClassMembers(context.Context, *ListClassMembersRequest) (*ListClassMembersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListClassMembers not implemented")
+}
+func (UnimplementedClassServiceServer) UpdateClassMemberRole(context.Context, *UpdateClassMemberRoleRequest) (*ClassMember, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateClassMemberRole not implemented")
+}
+func (UnimplementedClassServiceServer) SetClassMemoVisibility(context.Context, *SetClassMemoVisibilityRequest) (*ClassMemoVisibility, error) {
+	return nil, status.Error(codes.Unimplemented, "method SetClassMemoVisibility not implemented")
+}
+func (UnimplementedClassServiceServer) GetClassMemoVisibility(context.Context, *GetClassMemoVisibilityRequest) (*ClassMemoVisibility, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetClassMemoVisibility not implemented")
+}
+func (UnimplementedClassServiceServer) ListClassMemoVisibilities(context.Context, *ListClassMemoVisibilitiesRequest) (*ListClassMemoVisibilitiesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListClassMemoVisibilities not implemented")
+}
+func (UnimplementedClassServiceServer) CreateClassTagTemplate(context.Context, *CreateClassTagTemplateRequest) (*ClassTagTemplate, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateClassTagTemplate not implemented")
+}
+func (UnimplementedClassServiceServer) UpdateClassTagTemplate(context.Context, *UpdateClassTagTemplateRequest) (*ClassTagTemplate, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateClassTagTemplate not implemented")
+}
+func (UnimplementedClassServiceServer) DeleteClassTagTemplate(context.Context, *DeleteClassTagTemplateRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteClassTagTemplate not implemented")
+}
+func (UnimplementedClassServiceServer) ListClassTagTemplates(context.Context, *ListClassTagTemplatesRequest) (*ListClassTagTemplatesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListClassTagTemplates not implemented")
 }
 func (UnimplementedClassServiceServer) mustEmbedUnimplementedClassServiceServer() {}
 func (UnimplementedClassServiceServer) testEmbeddedByValue()                      {}
@@ -255,6 +453,204 @@ func _ClassService_DeleteClass_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ClassService_AddClassMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddClassMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).AddClassMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_AddClassMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).AddClassMember(ctx, req.(*AddClassMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_RemoveClassMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveClassMemberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).RemoveClassMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_RemoveClassMember_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).RemoveClassMember(ctx, req.(*RemoveClassMemberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_ListClassMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListClassMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).ListClassMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_ListClassMembers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).ListClassMembers(ctx, req.(*ListClassMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_UpdateClassMemberRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateClassMemberRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).UpdateClassMemberRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_UpdateClassMemberRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).UpdateClassMemberRole(ctx, req.(*UpdateClassMemberRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_SetClassMemoVisibility_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetClassMemoVisibilityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).SetClassMemoVisibility(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_SetClassMemoVisibility_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).SetClassMemoVisibility(ctx, req.(*SetClassMemoVisibilityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_GetClassMemoVisibility_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetClassMemoVisibilityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).GetClassMemoVisibility(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_GetClassMemoVisibility_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).GetClassMemoVisibility(ctx, req.(*GetClassMemoVisibilityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_ListClassMemoVisibilities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListClassMemoVisibilitiesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).ListClassMemoVisibilities(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_ListClassMemoVisibilities_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).ListClassMemoVisibilities(ctx, req.(*ListClassMemoVisibilitiesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_CreateClassTagTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateClassTagTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).CreateClassTagTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_CreateClassTagTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).CreateClassTagTemplate(ctx, req.(*CreateClassTagTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_UpdateClassTagTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateClassTagTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).UpdateClassTagTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_UpdateClassTagTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).UpdateClassTagTemplate(ctx, req.(*UpdateClassTagTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_DeleteClassTagTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteClassTagTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).DeleteClassTagTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_DeleteClassTagTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).DeleteClassTagTemplate(ctx, req.(*DeleteClassTagTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ClassService_ListClassTagTemplates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListClassTagTemplatesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ClassServiceServer).ListClassTagTemplates(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ClassService_ListClassTagTemplates_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ClassServiceServer).ListClassTagTemplates(ctx, req.(*ListClassTagTemplatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ClassService_ServiceDesc is the grpc.ServiceDesc for ClassService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -281,6 +677,50 @@ var ClassService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteClass",
 			Handler:    _ClassService_DeleteClass_Handler,
+		},
+		{
+			MethodName: "AddClassMember",
+			Handler:    _ClassService_AddClassMember_Handler,
+		},
+		{
+			MethodName: "RemoveClassMember",
+			Handler:    _ClassService_RemoveClassMember_Handler,
+		},
+		{
+			MethodName: "ListClassMembers",
+			Handler:    _ClassService_ListClassMembers_Handler,
+		},
+		{
+			MethodName: "UpdateClassMemberRole",
+			Handler:    _ClassService_UpdateClassMemberRole_Handler,
+		},
+		{
+			MethodName: "SetClassMemoVisibility",
+			Handler:    _ClassService_SetClassMemoVisibility_Handler,
+		},
+		{
+			MethodName: "GetClassMemoVisibility",
+			Handler:    _ClassService_GetClassMemoVisibility_Handler,
+		},
+		{
+			MethodName: "ListClassMemoVisibilities",
+			Handler:    _ClassService_ListClassMemoVisibilities_Handler,
+		},
+		{
+			MethodName: "CreateClassTagTemplate",
+			Handler:    _ClassService_CreateClassTagTemplate_Handler,
+		},
+		{
+			MethodName: "UpdateClassTagTemplate",
+			Handler:    _ClassService_UpdateClassTagTemplate_Handler,
+		},
+		{
+			MethodName: "DeleteClassTagTemplate",
+			Handler:    _ClassService_DeleteClassTagTemplate_Handler,
+		},
+		{
+			MethodName: "ListClassTagTemplates",
+			Handler:    _ClassService_ListClassTagTemplates_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

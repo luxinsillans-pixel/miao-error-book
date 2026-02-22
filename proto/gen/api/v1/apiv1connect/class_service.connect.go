@@ -48,6 +48,39 @@ const (
 	// ClassServiceDeleteClassProcedure is the fully-qualified name of the ClassService's DeleteClass
 	// RPC.
 	ClassServiceDeleteClassProcedure = "/memos.api.v1.ClassService/DeleteClass"
+	// ClassServiceAddClassMemberProcedure is the fully-qualified name of the ClassService's
+	// AddClassMember RPC.
+	ClassServiceAddClassMemberProcedure = "/memos.api.v1.ClassService/AddClassMember"
+	// ClassServiceRemoveClassMemberProcedure is the fully-qualified name of the ClassService's
+	// RemoveClassMember RPC.
+	ClassServiceRemoveClassMemberProcedure = "/memos.api.v1.ClassService/RemoveClassMember"
+	// ClassServiceListClassMembersProcedure is the fully-qualified name of the ClassService's
+	// ListClassMembers RPC.
+	ClassServiceListClassMembersProcedure = "/memos.api.v1.ClassService/ListClassMembers"
+	// ClassServiceUpdateClassMemberRoleProcedure is the fully-qualified name of the ClassService's
+	// UpdateClassMemberRole RPC.
+	ClassServiceUpdateClassMemberRoleProcedure = "/memos.api.v1.ClassService/UpdateClassMemberRole"
+	// ClassServiceSetClassMemoVisibilityProcedure is the fully-qualified name of the ClassService's
+	// SetClassMemoVisibility RPC.
+	ClassServiceSetClassMemoVisibilityProcedure = "/memos.api.v1.ClassService/SetClassMemoVisibility"
+	// ClassServiceGetClassMemoVisibilityProcedure is the fully-qualified name of the ClassService's
+	// GetClassMemoVisibility RPC.
+	ClassServiceGetClassMemoVisibilityProcedure = "/memos.api.v1.ClassService/GetClassMemoVisibility"
+	// ClassServiceListClassMemoVisibilitiesProcedure is the fully-qualified name of the ClassService's
+	// ListClassMemoVisibilities RPC.
+	ClassServiceListClassMemoVisibilitiesProcedure = "/memos.api.v1.ClassService/ListClassMemoVisibilities"
+	// ClassServiceCreateClassTagTemplateProcedure is the fully-qualified name of the ClassService's
+	// CreateClassTagTemplate RPC.
+	ClassServiceCreateClassTagTemplateProcedure = "/memos.api.v1.ClassService/CreateClassTagTemplate"
+	// ClassServiceUpdateClassTagTemplateProcedure is the fully-qualified name of the ClassService's
+	// UpdateClassTagTemplate RPC.
+	ClassServiceUpdateClassTagTemplateProcedure = "/memos.api.v1.ClassService/UpdateClassTagTemplate"
+	// ClassServiceDeleteClassTagTemplateProcedure is the fully-qualified name of the ClassService's
+	// DeleteClassTagTemplate RPC.
+	ClassServiceDeleteClassTagTemplateProcedure = "/memos.api.v1.ClassService/DeleteClassTagTemplate"
+	// ClassServiceListClassTagTemplatesProcedure is the fully-qualified name of the ClassService's
+	// ListClassTagTemplates RPC.
+	ClassServiceListClassTagTemplatesProcedure = "/memos.api.v1.ClassService/ListClassTagTemplates"
 )
 
 // ClassServiceClient is a client for the memos.api.v1.ClassService service.
@@ -62,6 +95,28 @@ type ClassServiceClient interface {
 	UpdateClass(context.Context, *connect.Request[v1.UpdateClassRequest]) (*connect.Response[v1.Class], error)
 	// DeleteClass deletes a class.
 	DeleteClass(context.Context, *connect.Request[v1.DeleteClassRequest]) (*connect.Response[emptypb.Empty], error)
+	// AddClassMember adds a user as a member to a class.
+	AddClassMember(context.Context, *connect.Request[v1.AddClassMemberRequest]) (*connect.Response[v1.ClassMember], error)
+	// RemoveClassMember removes a member from a class.
+	RemoveClassMember(context.Context, *connect.Request[v1.RemoveClassMemberRequest]) (*connect.Response[emptypb.Empty], error)
+	// ListClassMembers lists members of a class.
+	ListClassMembers(context.Context, *connect.Request[v1.ListClassMembersRequest]) (*connect.Response[v1.ListClassMembersResponse], error)
+	// UpdateClassMemberRole updates the role of a class member.
+	UpdateClassMemberRole(context.Context, *connect.Request[v1.UpdateClassMemberRoleRequest]) (*connect.Response[v1.ClassMember], error)
+	// SetClassMemoVisibility sets visibility for a memo in a class.
+	SetClassMemoVisibility(context.Context, *connect.Request[v1.SetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error)
+	// GetClassMemoVisibility retrieves a memo visibility setting.
+	GetClassMemoVisibility(context.Context, *connect.Request[v1.GetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error)
+	// ListClassMemoVisibilities lists memo visibility settings for a class.
+	ListClassMemoVisibilities(context.Context, *connect.Request[v1.ListClassMemoVisibilitiesRequest]) (*connect.Response[v1.ListClassMemoVisibilitiesResponse], error)
+	// CreateClassTagTemplate creates a new tag template for a class.
+	CreateClassTagTemplate(context.Context, *connect.Request[v1.CreateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error)
+	// UpdateClassTagTemplate updates a tag template.
+	UpdateClassTagTemplate(context.Context, *connect.Request[v1.UpdateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error)
+	// DeleteClassTagTemplate deletes a tag template.
+	DeleteClassTagTemplate(context.Context, *connect.Request[v1.DeleteClassTagTemplateRequest]) (*connect.Response[emptypb.Empty], error)
+	// ListClassTagTemplates lists tag templates for a class.
+	ListClassTagTemplates(context.Context, *connect.Request[v1.ListClassTagTemplatesRequest]) (*connect.Response[v1.ListClassTagTemplatesResponse], error)
 }
 
 // NewClassServiceClient constructs a client for the memos.api.v1.ClassService service. By default,
@@ -105,16 +160,93 @@ func NewClassServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 			connect.WithSchema(classServiceMethods.ByName("DeleteClass")),
 			connect.WithClientOptions(opts...),
 		),
+		addClassMember: connect.NewClient[v1.AddClassMemberRequest, v1.ClassMember](
+			httpClient,
+			baseURL+ClassServiceAddClassMemberProcedure,
+			connect.WithSchema(classServiceMethods.ByName("AddClassMember")),
+			connect.WithClientOptions(opts...),
+		),
+		removeClassMember: connect.NewClient[v1.RemoveClassMemberRequest, emptypb.Empty](
+			httpClient,
+			baseURL+ClassServiceRemoveClassMemberProcedure,
+			connect.WithSchema(classServiceMethods.ByName("RemoveClassMember")),
+			connect.WithClientOptions(opts...),
+		),
+		listClassMembers: connect.NewClient[v1.ListClassMembersRequest, v1.ListClassMembersResponse](
+			httpClient,
+			baseURL+ClassServiceListClassMembersProcedure,
+			connect.WithSchema(classServiceMethods.ByName("ListClassMembers")),
+			connect.WithClientOptions(opts...),
+		),
+		updateClassMemberRole: connect.NewClient[v1.UpdateClassMemberRoleRequest, v1.ClassMember](
+			httpClient,
+			baseURL+ClassServiceUpdateClassMemberRoleProcedure,
+			connect.WithSchema(classServiceMethods.ByName("UpdateClassMemberRole")),
+			connect.WithClientOptions(opts...),
+		),
+		setClassMemoVisibility: connect.NewClient[v1.SetClassMemoVisibilityRequest, v1.ClassMemoVisibility](
+			httpClient,
+			baseURL+ClassServiceSetClassMemoVisibilityProcedure,
+			connect.WithSchema(classServiceMethods.ByName("SetClassMemoVisibility")),
+			connect.WithClientOptions(opts...),
+		),
+		getClassMemoVisibility: connect.NewClient[v1.GetClassMemoVisibilityRequest, v1.ClassMemoVisibility](
+			httpClient,
+			baseURL+ClassServiceGetClassMemoVisibilityProcedure,
+			connect.WithSchema(classServiceMethods.ByName("GetClassMemoVisibility")),
+			connect.WithClientOptions(opts...),
+		),
+		listClassMemoVisibilities: connect.NewClient[v1.ListClassMemoVisibilitiesRequest, v1.ListClassMemoVisibilitiesResponse](
+			httpClient,
+			baseURL+ClassServiceListClassMemoVisibilitiesProcedure,
+			connect.WithSchema(classServiceMethods.ByName("ListClassMemoVisibilities")),
+			connect.WithClientOptions(opts...),
+		),
+		createClassTagTemplate: connect.NewClient[v1.CreateClassTagTemplateRequest, v1.ClassTagTemplate](
+			httpClient,
+			baseURL+ClassServiceCreateClassTagTemplateProcedure,
+			connect.WithSchema(classServiceMethods.ByName("CreateClassTagTemplate")),
+			connect.WithClientOptions(opts...),
+		),
+		updateClassTagTemplate: connect.NewClient[v1.UpdateClassTagTemplateRequest, v1.ClassTagTemplate](
+			httpClient,
+			baseURL+ClassServiceUpdateClassTagTemplateProcedure,
+			connect.WithSchema(classServiceMethods.ByName("UpdateClassTagTemplate")),
+			connect.WithClientOptions(opts...),
+		),
+		deleteClassTagTemplate: connect.NewClient[v1.DeleteClassTagTemplateRequest, emptypb.Empty](
+			httpClient,
+			baseURL+ClassServiceDeleteClassTagTemplateProcedure,
+			connect.WithSchema(classServiceMethods.ByName("DeleteClassTagTemplate")),
+			connect.WithClientOptions(opts...),
+		),
+		listClassTagTemplates: connect.NewClient[v1.ListClassTagTemplatesRequest, v1.ListClassTagTemplatesResponse](
+			httpClient,
+			baseURL+ClassServiceListClassTagTemplatesProcedure,
+			connect.WithSchema(classServiceMethods.ByName("ListClassTagTemplates")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // classServiceClient implements ClassServiceClient.
 type classServiceClient struct {
-	createClass *connect.Client[v1.CreateClassRequest, v1.Class]
-	getClass    *connect.Client[v1.GetClassRequest, v1.Class]
-	listClasses *connect.Client[v1.ListClassesRequest, v1.ListClassesResponse]
-	updateClass *connect.Client[v1.UpdateClassRequest, v1.Class]
-	deleteClass *connect.Client[v1.DeleteClassRequest, emptypb.Empty]
+	createClass               *connect.Client[v1.CreateClassRequest, v1.Class]
+	getClass                  *connect.Client[v1.GetClassRequest, v1.Class]
+	listClasses               *connect.Client[v1.ListClassesRequest, v1.ListClassesResponse]
+	updateClass               *connect.Client[v1.UpdateClassRequest, v1.Class]
+	deleteClass               *connect.Client[v1.DeleteClassRequest, emptypb.Empty]
+	addClassMember            *connect.Client[v1.AddClassMemberRequest, v1.ClassMember]
+	removeClassMember         *connect.Client[v1.RemoveClassMemberRequest, emptypb.Empty]
+	listClassMembers          *connect.Client[v1.ListClassMembersRequest, v1.ListClassMembersResponse]
+	updateClassMemberRole     *connect.Client[v1.UpdateClassMemberRoleRequest, v1.ClassMember]
+	setClassMemoVisibility    *connect.Client[v1.SetClassMemoVisibilityRequest, v1.ClassMemoVisibility]
+	getClassMemoVisibility    *connect.Client[v1.GetClassMemoVisibilityRequest, v1.ClassMemoVisibility]
+	listClassMemoVisibilities *connect.Client[v1.ListClassMemoVisibilitiesRequest, v1.ListClassMemoVisibilitiesResponse]
+	createClassTagTemplate    *connect.Client[v1.CreateClassTagTemplateRequest, v1.ClassTagTemplate]
+	updateClassTagTemplate    *connect.Client[v1.UpdateClassTagTemplateRequest, v1.ClassTagTemplate]
+	deleteClassTagTemplate    *connect.Client[v1.DeleteClassTagTemplateRequest, emptypb.Empty]
+	listClassTagTemplates     *connect.Client[v1.ListClassTagTemplatesRequest, v1.ListClassTagTemplatesResponse]
 }
 
 // CreateClass calls memos.api.v1.ClassService.CreateClass.
@@ -142,6 +274,61 @@ func (c *classServiceClient) DeleteClass(ctx context.Context, req *connect.Reque
 	return c.deleteClass.CallUnary(ctx, req)
 }
 
+// AddClassMember calls memos.api.v1.ClassService.AddClassMember.
+func (c *classServiceClient) AddClassMember(ctx context.Context, req *connect.Request[v1.AddClassMemberRequest]) (*connect.Response[v1.ClassMember], error) {
+	return c.addClassMember.CallUnary(ctx, req)
+}
+
+// RemoveClassMember calls memos.api.v1.ClassService.RemoveClassMember.
+func (c *classServiceClient) RemoveClassMember(ctx context.Context, req *connect.Request[v1.RemoveClassMemberRequest]) (*connect.Response[emptypb.Empty], error) {
+	return c.removeClassMember.CallUnary(ctx, req)
+}
+
+// ListClassMembers calls memos.api.v1.ClassService.ListClassMembers.
+func (c *classServiceClient) ListClassMembers(ctx context.Context, req *connect.Request[v1.ListClassMembersRequest]) (*connect.Response[v1.ListClassMembersResponse], error) {
+	return c.listClassMembers.CallUnary(ctx, req)
+}
+
+// UpdateClassMemberRole calls memos.api.v1.ClassService.UpdateClassMemberRole.
+func (c *classServiceClient) UpdateClassMemberRole(ctx context.Context, req *connect.Request[v1.UpdateClassMemberRoleRequest]) (*connect.Response[v1.ClassMember], error) {
+	return c.updateClassMemberRole.CallUnary(ctx, req)
+}
+
+// SetClassMemoVisibility calls memos.api.v1.ClassService.SetClassMemoVisibility.
+func (c *classServiceClient) SetClassMemoVisibility(ctx context.Context, req *connect.Request[v1.SetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error) {
+	return c.setClassMemoVisibility.CallUnary(ctx, req)
+}
+
+// GetClassMemoVisibility calls memos.api.v1.ClassService.GetClassMemoVisibility.
+func (c *classServiceClient) GetClassMemoVisibility(ctx context.Context, req *connect.Request[v1.GetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error) {
+	return c.getClassMemoVisibility.CallUnary(ctx, req)
+}
+
+// ListClassMemoVisibilities calls memos.api.v1.ClassService.ListClassMemoVisibilities.
+func (c *classServiceClient) ListClassMemoVisibilities(ctx context.Context, req *connect.Request[v1.ListClassMemoVisibilitiesRequest]) (*connect.Response[v1.ListClassMemoVisibilitiesResponse], error) {
+	return c.listClassMemoVisibilities.CallUnary(ctx, req)
+}
+
+// CreateClassTagTemplate calls memos.api.v1.ClassService.CreateClassTagTemplate.
+func (c *classServiceClient) CreateClassTagTemplate(ctx context.Context, req *connect.Request[v1.CreateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error) {
+	return c.createClassTagTemplate.CallUnary(ctx, req)
+}
+
+// UpdateClassTagTemplate calls memos.api.v1.ClassService.UpdateClassTagTemplate.
+func (c *classServiceClient) UpdateClassTagTemplate(ctx context.Context, req *connect.Request[v1.UpdateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error) {
+	return c.updateClassTagTemplate.CallUnary(ctx, req)
+}
+
+// DeleteClassTagTemplate calls memos.api.v1.ClassService.DeleteClassTagTemplate.
+func (c *classServiceClient) DeleteClassTagTemplate(ctx context.Context, req *connect.Request[v1.DeleteClassTagTemplateRequest]) (*connect.Response[emptypb.Empty], error) {
+	return c.deleteClassTagTemplate.CallUnary(ctx, req)
+}
+
+// ListClassTagTemplates calls memos.api.v1.ClassService.ListClassTagTemplates.
+func (c *classServiceClient) ListClassTagTemplates(ctx context.Context, req *connect.Request[v1.ListClassTagTemplatesRequest]) (*connect.Response[v1.ListClassTagTemplatesResponse], error) {
+	return c.listClassTagTemplates.CallUnary(ctx, req)
+}
+
 // ClassServiceHandler is an implementation of the memos.api.v1.ClassService service.
 type ClassServiceHandler interface {
 	// CreateClass creates a new class.
@@ -154,6 +341,28 @@ type ClassServiceHandler interface {
 	UpdateClass(context.Context, *connect.Request[v1.UpdateClassRequest]) (*connect.Response[v1.Class], error)
 	// DeleteClass deletes a class.
 	DeleteClass(context.Context, *connect.Request[v1.DeleteClassRequest]) (*connect.Response[emptypb.Empty], error)
+	// AddClassMember adds a user as a member to a class.
+	AddClassMember(context.Context, *connect.Request[v1.AddClassMemberRequest]) (*connect.Response[v1.ClassMember], error)
+	// RemoveClassMember removes a member from a class.
+	RemoveClassMember(context.Context, *connect.Request[v1.RemoveClassMemberRequest]) (*connect.Response[emptypb.Empty], error)
+	// ListClassMembers lists members of a class.
+	ListClassMembers(context.Context, *connect.Request[v1.ListClassMembersRequest]) (*connect.Response[v1.ListClassMembersResponse], error)
+	// UpdateClassMemberRole updates the role of a class member.
+	UpdateClassMemberRole(context.Context, *connect.Request[v1.UpdateClassMemberRoleRequest]) (*connect.Response[v1.ClassMember], error)
+	// SetClassMemoVisibility sets visibility for a memo in a class.
+	SetClassMemoVisibility(context.Context, *connect.Request[v1.SetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error)
+	// GetClassMemoVisibility retrieves a memo visibility setting.
+	GetClassMemoVisibility(context.Context, *connect.Request[v1.GetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error)
+	// ListClassMemoVisibilities lists memo visibility settings for a class.
+	ListClassMemoVisibilities(context.Context, *connect.Request[v1.ListClassMemoVisibilitiesRequest]) (*connect.Response[v1.ListClassMemoVisibilitiesResponse], error)
+	// CreateClassTagTemplate creates a new tag template for a class.
+	CreateClassTagTemplate(context.Context, *connect.Request[v1.CreateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error)
+	// UpdateClassTagTemplate updates a tag template.
+	UpdateClassTagTemplate(context.Context, *connect.Request[v1.UpdateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error)
+	// DeleteClassTagTemplate deletes a tag template.
+	DeleteClassTagTemplate(context.Context, *connect.Request[v1.DeleteClassTagTemplateRequest]) (*connect.Response[emptypb.Empty], error)
+	// ListClassTagTemplates lists tag templates for a class.
+	ListClassTagTemplates(context.Context, *connect.Request[v1.ListClassTagTemplatesRequest]) (*connect.Response[v1.ListClassTagTemplatesResponse], error)
 }
 
 // NewClassServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -193,6 +402,72 @@ func NewClassServiceHandler(svc ClassServiceHandler, opts ...connect.HandlerOpti
 		connect.WithSchema(classServiceMethods.ByName("DeleteClass")),
 		connect.WithHandlerOptions(opts...),
 	)
+	classServiceAddClassMemberHandler := connect.NewUnaryHandler(
+		ClassServiceAddClassMemberProcedure,
+		svc.AddClassMember,
+		connect.WithSchema(classServiceMethods.ByName("AddClassMember")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceRemoveClassMemberHandler := connect.NewUnaryHandler(
+		ClassServiceRemoveClassMemberProcedure,
+		svc.RemoveClassMember,
+		connect.WithSchema(classServiceMethods.ByName("RemoveClassMember")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceListClassMembersHandler := connect.NewUnaryHandler(
+		ClassServiceListClassMembersProcedure,
+		svc.ListClassMembers,
+		connect.WithSchema(classServiceMethods.ByName("ListClassMembers")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceUpdateClassMemberRoleHandler := connect.NewUnaryHandler(
+		ClassServiceUpdateClassMemberRoleProcedure,
+		svc.UpdateClassMemberRole,
+		connect.WithSchema(classServiceMethods.ByName("UpdateClassMemberRole")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceSetClassMemoVisibilityHandler := connect.NewUnaryHandler(
+		ClassServiceSetClassMemoVisibilityProcedure,
+		svc.SetClassMemoVisibility,
+		connect.WithSchema(classServiceMethods.ByName("SetClassMemoVisibility")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceGetClassMemoVisibilityHandler := connect.NewUnaryHandler(
+		ClassServiceGetClassMemoVisibilityProcedure,
+		svc.GetClassMemoVisibility,
+		connect.WithSchema(classServiceMethods.ByName("GetClassMemoVisibility")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceListClassMemoVisibilitiesHandler := connect.NewUnaryHandler(
+		ClassServiceListClassMemoVisibilitiesProcedure,
+		svc.ListClassMemoVisibilities,
+		connect.WithSchema(classServiceMethods.ByName("ListClassMemoVisibilities")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceCreateClassTagTemplateHandler := connect.NewUnaryHandler(
+		ClassServiceCreateClassTagTemplateProcedure,
+		svc.CreateClassTagTemplate,
+		connect.WithSchema(classServiceMethods.ByName("CreateClassTagTemplate")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceUpdateClassTagTemplateHandler := connect.NewUnaryHandler(
+		ClassServiceUpdateClassTagTemplateProcedure,
+		svc.UpdateClassTagTemplate,
+		connect.WithSchema(classServiceMethods.ByName("UpdateClassTagTemplate")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceDeleteClassTagTemplateHandler := connect.NewUnaryHandler(
+		ClassServiceDeleteClassTagTemplateProcedure,
+		svc.DeleteClassTagTemplate,
+		connect.WithSchema(classServiceMethods.ByName("DeleteClassTagTemplate")),
+		connect.WithHandlerOptions(opts...),
+	)
+	classServiceListClassTagTemplatesHandler := connect.NewUnaryHandler(
+		ClassServiceListClassTagTemplatesProcedure,
+		svc.ListClassTagTemplates,
+		connect.WithSchema(classServiceMethods.ByName("ListClassTagTemplates")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/memos.api.v1.ClassService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ClassServiceCreateClassProcedure:
@@ -205,6 +480,28 @@ func NewClassServiceHandler(svc ClassServiceHandler, opts ...connect.HandlerOpti
 			classServiceUpdateClassHandler.ServeHTTP(w, r)
 		case ClassServiceDeleteClassProcedure:
 			classServiceDeleteClassHandler.ServeHTTP(w, r)
+		case ClassServiceAddClassMemberProcedure:
+			classServiceAddClassMemberHandler.ServeHTTP(w, r)
+		case ClassServiceRemoveClassMemberProcedure:
+			classServiceRemoveClassMemberHandler.ServeHTTP(w, r)
+		case ClassServiceListClassMembersProcedure:
+			classServiceListClassMembersHandler.ServeHTTP(w, r)
+		case ClassServiceUpdateClassMemberRoleProcedure:
+			classServiceUpdateClassMemberRoleHandler.ServeHTTP(w, r)
+		case ClassServiceSetClassMemoVisibilityProcedure:
+			classServiceSetClassMemoVisibilityHandler.ServeHTTP(w, r)
+		case ClassServiceGetClassMemoVisibilityProcedure:
+			classServiceGetClassMemoVisibilityHandler.ServeHTTP(w, r)
+		case ClassServiceListClassMemoVisibilitiesProcedure:
+			classServiceListClassMemoVisibilitiesHandler.ServeHTTP(w, r)
+		case ClassServiceCreateClassTagTemplateProcedure:
+			classServiceCreateClassTagTemplateHandler.ServeHTTP(w, r)
+		case ClassServiceUpdateClassTagTemplateProcedure:
+			classServiceUpdateClassTagTemplateHandler.ServeHTTP(w, r)
+		case ClassServiceDeleteClassTagTemplateProcedure:
+			classServiceDeleteClassTagTemplateHandler.ServeHTTP(w, r)
+		case ClassServiceListClassTagTemplatesProcedure:
+			classServiceListClassTagTemplatesHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -232,4 +529,48 @@ func (UnimplementedClassServiceHandler) UpdateClass(context.Context, *connect.Re
 
 func (UnimplementedClassServiceHandler) DeleteClass(context.Context, *connect.Request[v1.DeleteClassRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.DeleteClass is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) AddClassMember(context.Context, *connect.Request[v1.AddClassMemberRequest]) (*connect.Response[v1.ClassMember], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.AddClassMember is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) RemoveClassMember(context.Context, *connect.Request[v1.RemoveClassMemberRequest]) (*connect.Response[emptypb.Empty], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.RemoveClassMember is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) ListClassMembers(context.Context, *connect.Request[v1.ListClassMembersRequest]) (*connect.Response[v1.ListClassMembersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.ListClassMembers is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) UpdateClassMemberRole(context.Context, *connect.Request[v1.UpdateClassMemberRoleRequest]) (*connect.Response[v1.ClassMember], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.UpdateClassMemberRole is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) SetClassMemoVisibility(context.Context, *connect.Request[v1.SetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.SetClassMemoVisibility is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) GetClassMemoVisibility(context.Context, *connect.Request[v1.GetClassMemoVisibilityRequest]) (*connect.Response[v1.ClassMemoVisibility], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.GetClassMemoVisibility is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) ListClassMemoVisibilities(context.Context, *connect.Request[v1.ListClassMemoVisibilitiesRequest]) (*connect.Response[v1.ListClassMemoVisibilitiesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.ListClassMemoVisibilities is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) CreateClassTagTemplate(context.Context, *connect.Request[v1.CreateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.CreateClassTagTemplate is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) UpdateClassTagTemplate(context.Context, *connect.Request[v1.UpdateClassTagTemplateRequest]) (*connect.Response[v1.ClassTagTemplate], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.UpdateClassTagTemplate is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) DeleteClassTagTemplate(context.Context, *connect.Request[v1.DeleteClassTagTemplateRequest]) (*connect.Response[emptypb.Empty], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.DeleteClassTagTemplate is not implemented"))
+}
+
+func (UnimplementedClassServiceHandler) ListClassTagTemplates(context.Context, *connect.Request[v1.ListClassTagTemplatesRequest]) (*connect.Response[v1.ListClassTagTemplatesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.ClassService.ListClassTagTemplates is not implemented"))
 }
