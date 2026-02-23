@@ -111,14 +111,20 @@ CREATE TABLE `reaction` (
 -- class
 CREATE TABLE `class` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `uid` VARCHAR(256) NOT NULL UNIQUE,
   `name` VARCHAR(255) NOT NULL,
   `description` TEXT,
-  `invite_code` VARCHAR(50) UNIQUE NOT NULL,
+  `creator_id` INT NOT NULL,
+  `invite_code` VARCHAR(50) UNIQUE,
+  `visibility` VARCHAR(256) NOT NULL DEFAULT 'PUBLIC',
   `settings` JSON DEFAULT NULL,
-  `created_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_ts` BIGINT NOT NULL,
+  `updated_ts` BIGINT NOT NULL,
   INDEX `idx_class_invite_code` (`invite_code`),
-  INDEX `idx_class_created_ts` (`created_ts`)
+  INDEX `idx_class_created_ts` (`created_ts`),
+  INDEX `idx_class_uid` (`uid`),
+  INDEX `idx_class_creator_id` (`creator_id`),
+  INDEX `idx_class_visibility` (`visibility`)
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- class_member
@@ -127,13 +133,16 @@ CREATE TABLE `class_member` (
   `class_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   `role` ENUM('TEACHER', 'ASSISTANT', 'STUDENT', 'PARENT') NOT NULL DEFAULT 'STUDENT',
-  `joined_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `joined_ts` BIGINT NOT NULL,
+  `invited_by` INT,
   UNIQUE KEY `uk_class_member_user` (`class_id`, `user_id`),
   FOREIGN KEY (`class_id`) REFERENCES `class`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`invited_by`) REFERENCES `user`(`id`) ON DELETE SET NULL,
   INDEX `idx_class_member_class_id` (`class_id`),
   INDEX `idx_class_member_user_id` (`user_id`),
-  INDEX `idx_class_member_role` (`role`)
+  INDEX `idx_class_member_role` (`role`),
+  INDEX `idx_class_member_invited_by` (`invited_by`)
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- class_memo_visibility
@@ -141,14 +150,17 @@ CREATE TABLE `class_memo_visibility` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `class_id` INT NOT NULL,
   `memo_id` INT NOT NULL,
-  `visibility` ENUM('PUBLIC', 'ANONYMOUS', 'TEACHER_ONLY') NOT NULL DEFAULT 'PUBLIC',
-  `created_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `visibility` VARCHAR(256) NOT NULL DEFAULT 'PUBLIC',
+  `shared_by` INT NOT NULL,
+  `shared_ts` BIGINT NOT NULL,
+  `description` TEXT,
   UNIQUE KEY `uk_class_memo_visibility` (`class_id`, `memo_id`),
   FOREIGN KEY (`class_id`) REFERENCES `class`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`memo_id`) REFERENCES `memo`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`shared_by`) REFERENCES `user`(`id`) ON DELETE CASCADE,
   INDEX `idx_class_memo_visibility_class_id` (`class_id`),
-  INDEX `idx_class_memo_visibility_memo_id` (`memo_id`)
+  INDEX `idx_class_memo_visibility_memo_id` (`memo_id`),
+  INDEX `idx_class_memo_visibility_shared_by` (`shared_by`)
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- class_tag_template
@@ -157,8 +169,9 @@ CREATE TABLE `class_tag_template` (
   `class_id` INT NOT NULL,
   `name` VARCHAR(255) NOT NULL,
   `color` VARCHAR(20) DEFAULT '#808080',
-  `created_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `description` TEXT,
+  `created_ts` BIGINT NOT NULL,
+  `updated_ts` BIGINT NOT NULL,
   UNIQUE KEY `uk_class_tag_template` (`class_id`, `name`),
   FOREIGN KEY (`class_id`) REFERENCES `class`(`id`) ON DELETE CASCADE,
   INDEX `idx_class_tag_template_class_id` (`class_id`)

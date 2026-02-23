@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -36,7 +37,9 @@ func TestCreateClass(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, class1)
-	require.Equal(t, "test-class-1", class1.GetName())
+	// Name should be a resource name in format "classes/{uid}"
+	require.True(t, strings.HasPrefix(class1.GetName(), "classes/"), "expected name to start with 'classes/', got %s", class1.GetName())
+	require.NotEmpty(t, class1.GetUid())
 	require.Equal(t, "Test Class 1", class1.GetDisplayName())
 	require.Equal(t, "This is a test class", class1.GetDescription())
 	require.Equal(t, apiv1.ClassVisibility_CLASS_PUBLIC, class1.GetVisibility())
@@ -54,7 +57,9 @@ func TestCreateClass(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, class2)
-	require.Equal(t, "custom-class-id", class2.GetName())
+	// Name should be a resource name in format "classes/{uid}"
+	require.True(t, strings.HasPrefix(class2.GetName(), "classes/"), "expected name to start with 'classes/', got %s", class2.GetName())
+	require.NotEmpty(t, class2.GetUid())
 
 	// Test 3: Create class with settings
 	studentMemoVisibility := true
@@ -72,6 +77,9 @@ func TestCreateClass(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, class3)
+	// Name should be a resource name in format "classes/{uid}"
+	require.True(t, strings.HasPrefix(class3.GetName(), "classes/"), "expected name to start with 'classes/', got %s", class3.GetName())
+	require.NotEmpty(t, class3.GetUid())
 	require.Equal(t, apiv1.ClassVisibility_CLASS_PROTECTED, class3.GetVisibility())
 	require.NotNil(t, class3.GetSettings())
 	require.Equal(t, true, class3.GetSettings().GetStudentMemoVisibility())
@@ -89,6 +97,9 @@ func TestCreateClass(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, class4)
+	// Name should be a resource name in format "classes/{uid}"
+	require.True(t, strings.HasPrefix(class4.GetName(), "classes/"), "expected name to start with 'classes/', got %s", class4.GetName())
+	require.NotEmpty(t, class4.GetUid())
 	require.Equal(t, "INVITE123", class4.GetInviteCode())
 }
 
@@ -229,8 +240,8 @@ func TestUpdateClass(t *testing.T) {
 	require.Equal(t, "Updated Name", updatedClass.GetDisplayName())
 	require.Equal(t, "Original Description", updatedClass.GetDescription()) // Should remain unchanged
 
-	// Test 2: Update multiple fields
-	updateMask2 := []string{"display_name", "description", "visibility"}
+	// Test 2: Update multiple fields including settings
+	updateMask2 := []string{"display_name", "description", "visibility", "settings"}
 	studentMemoVisibility := false
 	updatedClass2, err := ts.Service.UpdateClass(adminCtx, &apiv1.UpdateClassRequest{
 		Class: &apiv1.Class{

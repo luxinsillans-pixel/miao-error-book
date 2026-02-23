@@ -105,3 +105,74 @@ CREATE TABLE reaction (
   reaction_type TEXT NOT NULL,
   UNIQUE(creator_id, content_id, reaction_type)
 );
+
+-- Class tables for miao-error-book feature
+
+-- class
+CREATE TABLE class (
+  id SERIAL PRIMARY KEY,
+  uid TEXT NOT NULL UNIQUE,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  creator_id INTEGER NOT NULL,
+  invite_code VARCHAR(50) UNIQUE,
+  visibility VARCHAR(256) NOT NULL DEFAULT 'PUBLIC',
+  settings JSONB DEFAULT NULL,
+  created_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
+  updated_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())
+);
+
+-- class_member
+CREATE TABLE class_member (
+  id SERIAL PRIMARY KEY,
+  class_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  role VARCHAR(20) NOT NULL DEFAULT 'STUDENT',
+  joined_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
+  invited_by INTEGER,
+  UNIQUE (class_id, user_id),
+  FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+  CHECK (role IN ('TEACHER', 'ASSISTANT', 'STUDENT', 'PARENT'))
+);
+
+-- class_memo_visibility
+CREATE TABLE class_memo_visibility (
+  id SERIAL PRIMARY KEY,
+  class_id INTEGER NOT NULL,
+  memo_id INTEGER NOT NULL,
+  visibility VARCHAR(20) NOT NULL DEFAULT 'PUBLIC',
+  shared_by INTEGER NOT NULL,
+  shared_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
+  description TEXT,
+  UNIQUE (class_id, memo_id),
+  FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE CASCADE,
+  FOREIGN KEY (memo_id) REFERENCES memo(id) ON DELETE CASCADE,
+  CHECK (visibility IN ('PUBLIC', 'ANONYMOUS', 'TEACHER_ONLY'))
+);
+
+-- class_tag_template
+CREATE TABLE class_tag_template (
+  id SERIAL PRIMARY KEY,
+  class_id INTEGER NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  color VARCHAR(20) DEFAULT '#808080',
+  description TEXT,
+  created_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
+  updated_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
+  UNIQUE (class_id, name),
+  FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE CASCADE
+);
+
+-- Create indexes for better performance
+CREATE INDEX idx_class_invite_code ON class (invite_code);
+CREATE INDEX idx_class_created_ts ON class (created_ts);
+CREATE INDEX idx_class_uid ON class (uid);
+CREATE INDEX idx_class_creator_id ON class (creator_id);
+CREATE INDEX idx_class_visibility ON class (visibility);
+CREATE INDEX idx_class_member_class_id ON class_member (class_id);
+CREATE INDEX idx_class_member_user_id ON class_member (user_id);
+CREATE INDEX idx_class_member_role ON class_member (role);
+CREATE INDEX idx_class_memo_visibility_class_id ON class_memo_visibility (class_id);
+CREATE INDEX idx_class_memo_visibility_memo_id ON class_memo_visibility (memo_id);
+CREATE INDEX idx_class_tag_template_class_id ON class_tag_template (class_id);

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -73,9 +74,23 @@ func (s *APIV1Service) CreateClass(ctx context.Context, request *v1pb.CreateClas
 	if request.Class.InviteCode != nil {
 		inviteCode = *request.Class.InviteCode
 	}
+	
+	// Generate a random invite code if not provided
+	if inviteCode == "" {
+		// Generate 8-character alphanumeric invite code
+		inviteCode = generateInviteCode(8)
+	}
+	
+	// Determine display name: use DisplayName if provided, otherwise fall back to Name
+	displayName := request.Class.DisplayName
+	if displayName == "" {
+		// If DisplayName is empty, use Name as fallback
+		displayName = request.Class.Name
+	}
+	
 	class := &store.Class{
 		UID:         classUID,
-		Name:        request.Class.Name,
+		Name:        displayName,  // Store display name in the Name field
 		Description: request.Class.Description,
 		CreatorID:   user.ID,
 		CreatedTs:   now,
@@ -279,10 +294,22 @@ func (s *APIV1Service) UpdateClass(ctx context.Context, request *v1pb.UpdateClas
 	for _, path := range request.UpdateMask.Paths {
 		switch path {
 		case "name":
-			if request.Class.Name == "" {
+			// For backward compatibility, treat "name" as display_name
+			// since store.Class.Name stores the display name
+			displayName := request.Class.DisplayName
+			if displayName == "" {
+				// Fallback to Name field if DisplayName is not set
+				displayName = request.Class.Name
+			}
+			if displayName == "" {
 				return nil, status.Errorf(codes.InvalidArgument, "class name cannot be empty")
 			}
-			update.Name = &request.Class.Name
+			update.Name = &displayName
+		case "display_name":
+			if request.Class.DisplayName == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "class display_name cannot be empty")
+			}
+			update.Name = &request.Class.DisplayName
 		case "description":
 			update.Description = &request.Class.Description
 		case "settings":
@@ -1893,4 +1920,17 @@ func (s *APIV1Service) convertClassTagTemplateFromStore(ctx context.Context, tem
 		Description: template.Description,
 		Color:       &template.Color,
 	}, nil
+}
+
+// generateInviteCode generates a random alphanumeric invite code.
+func generateInviteCode(length int) string {
+	const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+	// Use math/rand with time seed (not cryptographically secure but sufficient for invite codes)
+	// In production, consider using crypto/rand
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[r.Intn(len(charset))]
+	}
+	return string(b)
 }

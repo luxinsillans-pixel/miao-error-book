@@ -24,7 +24,8 @@ func (d *DB) CreateClass(ctx context.Context, create *store.Class) (*store.Class
 
 	fields := []string{"`uid`", "`name`", "`description`", "`creator_id`", "`visibility`", "`invite_code`", "`settings`"}
 	placeholder := []string{"?", "?", "?", "?", "?", "?", "?"}
-	args := []any{create.UID, create.Name, create.Description, create.CreatorID, create.Visibility, create.InviteCode, settingsString}
+	inviteCode := sql.NullString{String: create.InviteCode, Valid: create.InviteCode != ""}
+	args := []any{create.UID, create.Name, create.Description, create.CreatorID, create.Visibility, inviteCode, settingsString}
 
 	stmt := "INSERT INTO class (" + strings.Join(fields, ", ") + ") VALUES (" + strings.Join(placeholder, ", ") + ") RETURNING `id`, `created_ts`, `updated_ts`"
 	if err := d.db.QueryRowContext(ctx, stmt, args...).Scan(
@@ -80,7 +81,7 @@ func (d *DB) ListClasses(ctx context.Context, find *store.FindClass) ([]*store.C
 		orderBy = find.OrderBy
 	}
 
-	query := "SELECT `id`, `uid`, `name`, `description`, `creator_id`, `visibility`, `invite_code`, `settings`, `created_ts`, `updated_ts` FROM `class` WHERE " + strings.Join(where, " AND ") + " ORDER BY " + orderBy
+	query := "SELECT `id`, `uid`, `name`, `description`, `creator_id`, `visibility`, `invite_code`, `settings`, CAST(`created_ts` AS INTEGER), CAST(`updated_ts` AS INTEGER) FROM `class` WHERE " + strings.Join(where, " AND ") + " ORDER BY " + orderBy
 
 	if find.Limit != nil {
 		query += " LIMIT ?"
@@ -101,6 +102,7 @@ func (d *DB) ListClasses(ctx context.Context, find *store.FindClass) ([]*store.C
 	for rows.Next() {
 		class := &store.Class{}
 		var settingsBytes []byte
+		var inviteCode sql.NullString
 		if err := rows.Scan(
 			&class.ID,
 			&class.UID,
@@ -108,12 +110,17 @@ func (d *DB) ListClasses(ctx context.Context, find *store.FindClass) ([]*store.C
 			&class.Description,
 			&class.CreatorID,
 			&class.Visibility,
-			&class.InviteCode,
+			&inviteCode,
 			&settingsBytes,
 			&class.CreatedTs,
 			&class.UpdatedTs,
 		); err != nil {
 			return nil, err
+		}
+		if inviteCode.Valid {
+			class.InviteCode = inviteCode.String
+		} else {
+			class.InviteCode = ""
 		}
 
 		if len(settingsBytes) > 0 && string(settingsBytes) != "{}" {
@@ -149,7 +156,8 @@ func (d *DB) UpdateClass(ctx context.Context, update *store.UpdateClass) error {
 		set, args = append(set, "`visibility` = ?"), append(args, *update.Visibility)
 	}
 	if update.InviteCode != nil {
-		set, args = append(set, "`invite_code` = ?"), append(args, *update.InviteCode)
+		inviteCode := sql.NullString{String: *update.InviteCode, Valid: *update.InviteCode != ""}
+		set, args = append(set, "`invite_code` = ?"), append(args, inviteCode)
 	}
 	if update.Settings != nil {
 		bytes, err := protojson.Marshal(update.Settings)
@@ -247,7 +255,7 @@ func (d *DB) ListClassMembers(ctx context.Context, find *store.FindClassMember) 
 	}
 
 	orderBy := "`joined_ts` DESC"
-	query := "SELECT `id`, `class_id`, `user_id`, `role`, UNIX_TIMESTAMP(`joined_ts`) FROM `class_member` WHERE " + strings.Join(where, " AND ") + " ORDER BY " + orderBy
+	query := "SELECT `id`, `class_id`, `user_id`, `role`, `joined_ts` FROM `class_member` WHERE " + strings.Join(where, " AND ") + " ORDER BY " + orderBy
 
 	if find.Limit != nil {
 		query += " LIMIT ?"
