@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/types/known/fieldmaskpb"
+
 
 	apiv1 "github.com/usememos/memos/proto/gen/api/v1"
 )
@@ -417,16 +417,16 @@ func TestSetClassMemoVisibility(t *testing.T) {
 	visibility2, err := ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
 		Memo:  fmt.Sprintf("memos/%d", memo.ID),
-		Visibility: apiv1.ClassVisibility_CLASS_PRIVATE,
+		Visibility: apiv1.ClassMemoVisibility_CLASS_MEMO_HIDDEN,
 	})
 	require.NoError(t, err)
-	require.Equal(t, apiv1.ClassVisibility_CLASS_PRIVATE, visibility2.GetVisibility())
+	require.Equal(t, apiv1.ClassMemoVisibility_CLASS_MEMO_HIDDEN, visibility2.GetVisibility())
 
 	// Test 3: Set visibility for non-existent memo (should fail)
 	_, err = ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
 		Memo:  "memos/999999",
-		Visibility: apiv1.ClassVisibility_CLASS_PUBLIC,
+		Visibility: apiv1.ClassMemoVisibility_CLASS_MEMO_VISIBLE,
 	})
 	require.Error(t, err)
 
@@ -438,7 +438,7 @@ func TestSetClassMemoVisibility(t *testing.T) {
 	_, err = ts.Service.SetClassMemoVisibility(regularCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
 		Memo:  fmt.Sprintf("memos/%d", memo.ID),
-		Visibility: apiv1.ClassVisibility_CLASS_PUBLIC,
+		Visibility: apiv1.ClassMemoVisibility_CLASS_MEMO_VISIBLE,
 	})
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "permission denied")
@@ -471,7 +471,7 @@ func TestGetClassMemoVisibility(t *testing.T) {
 	visibility, err := ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
 		Memo:  fmt.Sprintf("memos/%d", memo.ID),
-		Visibility: apiv1.ClassVisibility_CLASS_PUBLIC,
+		Visibility: apiv1.ClassMemoVisibility_CLASS_MEMO_VISIBLE,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, visibility)
@@ -485,7 +485,7 @@ func TestGetClassMemoVisibility(t *testing.T) {
 	require.Equal(t, visibility.GetName(), gotVisibility.GetName())
 	require.Equal(t, createdClass.GetName(), gotVisibility.GetClass())
 	require.Equal(t, fmt.Sprintf("memos/%d", memo.ID), gotVisibility.GetMemo())
-	require.Equal(t, apiv1.ClassVisibility_CLASS_PUBLIC, gotVisibility.GetVisibility())
+	require.Equal(t, apiv1.ClassMemoVisibility_CLASS_MEMO_VISIBLE, gotVisibility.GetVisibility())
 
 	// Test 2: Get non-existent visibility (should fail)
 	_, err = ts.Service.GetClassMemoVisibility(teacherCtx, &apiv1.GetClassMemoVisibilityRequest{
@@ -510,7 +510,7 @@ func TestGetClassMemoVisibility(t *testing.T) {
 	updatedVisibility, err := ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
 		Memo:  fmt.Sprintf("memos/%d", memo.ID),
-		Visibility: apiv1.ClassVisibility_CLASS_PRIVATE,
+		Visibility: apiv1.ClassMemoVisibility_CLASS_MEMO_HIDDEN,
 	})
 	require.NoError(t, err)
 
@@ -518,7 +518,7 @@ func TestGetClassMemoVisibility(t *testing.T) {
 		Name: updatedVisibility.GetName(),
 	})
 	require.NoError(t, err)
-	require.Equal(t, apiv1.ClassVisibility_CLASS_PRIVATE, gotUpdatedVisibility.GetVisibility())
+	require.Equal(t, apiv1.ClassMemoVisibility_CLASS_MEMO_HIDDEN, gotUpdatedVisibility.GetVisibility())
 }
 
 func TestListClassMemoVisibilities(t *testing.T) {
@@ -543,16 +543,16 @@ func TestListClassMemoVisibilities(t *testing.T) {
 	// Create multiple memos and set visibilities
 	memoVisibilities := []struct {
 		content    string
-		visibility apiv1.ClassVisibility
+		visibility apiv1.ClassMemoVisibility
 	}{
-		{"Memo 1 content", apiv1.ClassVisibility_CLASS_PUBLIC},
-		{"Memo 2 content", apiv1.ClassVisibility_CLASS_PRIVATE},
-		{"Memo 3 content", apiv1.ClassVisibility_CLASS_PUBLIC},
-		{"Memo 4 content", apiv1.ClassVisibility_CLASS_PRIVATE},
-		{"Memo 5 content", apiv1.ClassVisibility_CLASS_PUBLIC},
+		{"Memo 1 content", apiv1.ClassMemoVisibility_CLASS_MEMO_VISIBLE},
+		{"Memo 2 content", apiv1.ClassMemoVisibility_CLASS_MEMO_HIDDEN},
+		{"Memo 3 content", apiv1.ClassMemoVisibility_CLASS_MEMO_VISIBLE},
+		{"Memo 4 content", apiv1.ClassMemoVisibility_CLASS_MEMO_HIDDEN},
+		{"Memo 5 content", apiv1.ClassMemoVisibility_CLASS_MEMO_VISIBLE},
 	}
 
-	for _, mv := range memoVisibilities {
+	for i, mv := range memoVisibilities {
 		memo, err := ts.CreateMemo(ctx, teacherUser.ID, mv.content)
 		require.NoError(t, err)
 
@@ -635,80 +635,83 @@ func TestCreateClassTagTemplate(t *testing.T) {
 	require.NoError(t, err)
 
 	// Test 1: Create tag template (success)
-	colorValue := "#FF5733"
 	tagTemplate, err := ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: createdClass.GetName(),
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "tag-template-1",
 			DisplayName: "Math Problems",
 			Description: "Template for math problems",
-			Color:       &colorValue,
+			Color:       "#FF5733",
+			Tags:        []string{"algebra", "geometry", "calculus"},
 		},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, tagTemplate)
 	require.Equal(t, createdClass.GetName(), tagTemplate.GetClass())
-	require.True(t, strings.HasPrefix(tagTemplate.GetName(), "classes/"))
-	require.True(t, strings.Contains(tagTemplate.GetName(), "/tagTemplates/"))
+	require.Equal(t, "tag-template-1", tagTemplate.GetName())
 	require.Equal(t, "Math Problems", tagTemplate.GetDisplayName())
 	require.Equal(t, "Template for math problems", tagTemplate.GetDescription())
 	require.Equal(t, "#FF5733", tagTemplate.GetColor())
+	require.ElementsMatch(t, []string{"algebra", "geometry", "calculus"}, tagTemplate.GetTags())
+	require.True(t, strings.HasPrefix(tagTemplate.GetName(), "classes/"))
+	require.True(t, strings.Contains(tagTemplate.GetName(), "/tagTemplates/"))
 
 	// Test 2: Create duplicate tag template name (should fail)
-	colorValue2 := "#33FF57"
 	_, err = ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: createdClass.GetName(),
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "tag-template-1",  // Same name
-			DisplayName: "Math Problems",   // Same display name - should trigger duplicate
+			DisplayName: "Another Math Template",
 			Description: "Another template",
-			Color:       &colorValue2,
+			Color:       "#33FF57",
+			Tags:        []string{"trigonometry"},
 		},
 	})
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "already exists")
 
-	// Test 3: Create with empty color (should succeed)
+	// Test 3: Create with empty tags (should succeed)
 	tagTemplate2, err := ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: createdClass.GetName(),
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "tag-template-2",
-			DisplayName: "Empty Color Template",
-			Description: "Template with no color",
-			Color:       nil,
+			DisplayName: "Empty Tags Template",
+			Description: "Template with no tags",
+			Color:       "#3357FF",
+			Tags:        []string{},
 		},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, tagTemplate2)
-	require.Empty(t, tagTemplate2.GetColor())
+	require.Empty(t, tagTemplate2.GetTags())
 
 	// Test 4: Regular user trying to create tag template (should fail)
 	regularUser, err := ts.CreateRegularUser(ctx, "regular")
 	require.NoError(t, err)
 	regularCtx := ts.CreateUserContext(ctx, regularUser.ID)
 
-	colorValue3 := "#FF33A1"
 	_, err = ts.Service.CreateClassTagTemplate(regularCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: createdClass.GetName(),
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "tag-template-3",
 			DisplayName: "Unauthorized Template",
 			Description: "Should fail",
-			Color:       &colorValue3,
+			Color:       "#FF33A1",
+			Tags:        []string{"test"},
 		},
 	})
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "permission denied")
 
 	// Test 5: Create in non-existent class (should fail)
-	colorValue4 := "#A133FF"
 	_, err = ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: "classes/999999999",
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "tag-template-4",
 			DisplayName: "Non-existent Class Template",
 			Description: "Should fail",
-			Color:       &colorValue4,
+			Color:       "#A133FF",
+			Tags:        []string{"test"},
 		},
 	})
 	require.Error(t, err)
@@ -734,63 +737,62 @@ func TestUpdateClassTagTemplate(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a tag template first
-	colorValue1 := "#FF5733"
 	tagTemplate, err := ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: createdClass.GetName(),
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "original-template",
 			DisplayName: "Original Template",
 			Description: "Original description",
-			Color:       &colorValue1,
+			Color:       "#FF5733",
+			Tags:        []string{"tag1", "tag2"},
 		},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, tagTemplate)
 
 	// Test 1: Update tag template (success)
-	colorValue2 := "#33FF57"
-	updateMask1 := &fieldmaskpb.FieldMask{Paths: []string{"display_name", "description", "color"}}
 	updatedTagTemplate, err := ts.Service.UpdateClassTagTemplate(teacherCtx, &apiv1.UpdateClassTagTemplateRequest{
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        tagTemplate.GetName(),
 			DisplayName: "Updated Template",
 			Description: "Updated description",
-			Color:       &colorValue2,
+			Color:       "#33FF57",
+			Tags:        []string{"updated-tag1", "updated-tag2", "updated-tag3"},
 		},
-		UpdateMask: updateMask1,
+		UpdateMask: []string{"display_name", "description", "color", "tags"},
 	})
 	require.NoError(t, err)
 	require.NotNil(t, updatedTagTemplate)
 	require.Equal(t, "Updated Template", updatedTagTemplate.GetDisplayName())
 	require.Equal(t, "Updated description", updatedTagTemplate.GetDescription())
 	require.Equal(t, "#33FF57", updatedTagTemplate.GetColor())
+	require.ElementsMatch(t, []string{"updated-tag1", "updated-tag2", "updated-tag3"}, updatedTagTemplate.GetTags())
 	require.Equal(t, tagTemplate.GetName(), updatedTagTemplate.GetName())
 	require.Equal(t, tagTemplate.GetClass(), updatedTagTemplate.GetClass())
 
 	// Test 2: Update non-existent tag template (should fail)
-	colorValue3 := "#000000"
-	updateMask2 := &fieldmaskpb.FieldMask{Paths: []string{"display_name"}}
 	_, err = ts.Service.UpdateClassTagTemplate(teacherCtx, &apiv1.UpdateClassTagTemplateRequest{
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "classes/999/tagTemplates/999",
 			DisplayName: "Non-existent",
 			Description: "Should fail",
-			Color:       &colorValue3,
+			Color:       "#000000",
+			Tags:        []string{"test"},
 		},
-		UpdateMask: updateMask2,
+		UpdateMask: []string{"display_name"},
 	})
 	require.Error(t, err)
 
 	// Test 3: Update with partial mask (only display_name)
-	updateMask3 := &fieldmaskpb.FieldMask{Paths: []string{"display_name"}}
 	updatedPartial, err := ts.Service.UpdateClassTagTemplate(teacherCtx, &apiv1.UpdateClassTagTemplateRequest{
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        tagTemplate.GetName(),
 			DisplayName: "Partially Updated",
 			Description: "Should not change",  // Not in update_mask
-			Color:       &colorValue3,         // Not in update_mask
+			Color:       "#000000",            // Not in update_mask
+			Tags:        []string{"should-not-change"},  // Not in update_mask
 		},
-		UpdateMask: updateMask3,
+		UpdateMask: []string{"display_name"},
 	})
 	require.NoError(t, err)
 	require.Equal(t, "Partially Updated", updatedPartial.GetDisplayName())
@@ -798,22 +800,23 @@ func TestUpdateClassTagTemplate(t *testing.T) {
 	require.Equal(t, "Updated description", updatedPartial.GetDescription())
 	// Color should remain "#33FF57"
 	require.Equal(t, "#33FF57", updatedPartial.GetColor())
+	// Tags should remain previous tags
+	require.ElementsMatch(t, []string{"updated-tag1", "updated-tag2", "updated-tag3"}, updatedPartial.GetTags())
 
 	// Test 4: Regular user trying to update tag template (should fail)
 	regularUser, err := ts.CreateRegularUser(ctx, "regular")
 	require.NoError(t, err)
 	regularCtx := ts.CreateUserContext(ctx, regularUser.ID)
 
-	colorValue4 := "#FF0000"
-	updateMask4 := &fieldmaskpb.FieldMask{Paths: []string{"display_name"}}
 	_, err = ts.Service.UpdateClassTagTemplate(regularCtx, &apiv1.UpdateClassTagTemplateRequest{
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        tagTemplate.GetName(),
 			DisplayName: "Unauthorized Update",
 			Description: "Should fail",
-			Color:       &colorValue4,
+			Color:       "#FF0000",
+			Tags:        []string{"unauthorized"},
 		},
-		UpdateMask: updateMask4,
+		UpdateMask: []string{"display_name"},
 	})
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "permission denied")
@@ -839,14 +842,14 @@ func TestDeleteClassTagTemplate(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a tag template first
-	colorValue1 := "#FF5733"
 	tagTemplate, err := ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: createdClass.GetName(),
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "template-to-delete",
 			DisplayName: "Template to Delete",
 			Description: "This will be deleted",
-			Color:       &colorValue1,
+			Color:       "#FF5733",
+			Tags:        []string{"tag1", "tag2"},
 		},
 	})
 	require.NoError(t, err)
@@ -873,14 +876,14 @@ func TestDeleteClassTagTemplate(t *testing.T) {
 
 	// Test 3: Regular user trying to delete tag template (should fail)
 	// Create another template
-	colorValue2 := "#33FF57"
 	tagTemplate2, err := ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 		Class: createdClass.GetName(),
 		TagTemplate: &apiv1.ClassTagTemplate{
 			Name:        "template-to-protect",
 			DisplayName: "Template to Protect",
 			Description: "Should not be deletable by regular user",
-			Color:       &colorValue2,
+			Color:       "#33FF57",
+			Tags:        []string{"protected"},
 		},
 	})
 	require.NoError(t, err)
@@ -927,23 +930,24 @@ func TestListClassTagTemplates(t *testing.T) {
 		displayName string
 		description string
 		color       string
+		tags        []string
 	}{
-		{"math-template", "Math Problems", "Template for math", "#FF5733"},
-		{"science-template", "Science Topics", "Template for science", "#33FF57"},
-		{"english-template", "English Literature", "Template for English", "#3357FF"},
-		{"history-template", "History Events", "Template for history", "#FF33A1"},
-		{"art-template", "Art Topics", "Template for art", "#A133FF"},
+		{"math-template", "Math Problems", "Template for math", "#FF5733", []string{"algebra", "geometry"}},
+		{"science-template", "Science Topics", "Template for science", "#33FF57", []string{"physics", "chemistry"}},
+		{"english-template", "English Literature", "Template for English", "#3357FF", []string{"poetry", "prose"}},
+		{"history-template", "History Events", "Template for history", "#FF33A1", []string{"ancient", "modern"}},
+		{"art-template", "Art Topics", "Template for art", "#A133FF", []string{"painting", "sculpture"}},
 	}
 
 	for _, tt := range tagTemplates {
-		colorPtr := tt.color
 		_, err := ts.Service.CreateClassTagTemplate(teacherCtx, &apiv1.CreateClassTagTemplateRequest{
 			Class: createdClass.GetName(),
 			TagTemplate: &apiv1.ClassTagTemplate{
 				Name:        tt.name,
 				DisplayName: tt.displayName,
 				Description: tt.description,
-				Color:       &colorPtr,
+				Color:       tt.color,
+				Tags:        tt.tags,
 			},
 		})
 		require.NoError(t, err)
@@ -957,13 +961,13 @@ func TestListClassTagTemplates(t *testing.T) {
 	require.NotNil(t, listResp)
 	require.Len(t, listResp.GetTagTemplates(), 5)
 
-	// Verify all templates are present by display name
-	foundDisplayNames := make(map[string]bool)
+	// Verify all templates are present
+	foundNames := make(map[string]bool)
 	for _, tt := range listResp.GetTagTemplates() {
-		foundDisplayNames[tt.GetDisplayName()] = true
+		foundNames[tt.GetName()] = true
 	}
 	for _, tt := range tagTemplates {
-		require.True(t, foundDisplayNames[tt.displayName], "Should find template: "+tt.displayName)
+		require.True(t, foundNames[tt.name], "Should find template: "+tt.name)
 	}
 
 	// Test 2: Pagination - limit to 3 templates

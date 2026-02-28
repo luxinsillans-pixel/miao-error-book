@@ -158,6 +158,7 @@ CREATE TABLE class_tag_template (
   class_id INTEGER NOT NULL,
   name TEXT NOT NULL,
   color TEXT DEFAULT '#808080',
+  description TEXT NOT NULL DEFAULT '',
   created_ts BIGINT NOT NULL DEFAULT (strftime('%s', 'now')),
   updated_ts BIGINT NOT NULL DEFAULT (strftime('%s', 'now')),
   UNIQUE (class_id, name),

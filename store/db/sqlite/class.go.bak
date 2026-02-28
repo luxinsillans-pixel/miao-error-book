@@ -334,34 +334,22 @@ func (d *DB) DeleteClassMember(ctx context.Context, delete *store.DeleteClassMem
 
 func (d *DB) CreateClassMemoVisibility(ctx context.Context, create *store.ClassMemoVisibility) (*store.ClassMemoVisibility, error) {
 	// Debug log - print detailed information about the visibility value
-	fmt.Println("🚨🚨🚨 DEBUG ENTER: CreateClassMemoVisibility called with visibility=", create.Visibility, "type:", fmt.Sprintf("%T", create.Visibility))
 	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG ENTER: CreateClassMemoVisibility called with visibility=%q (type: %T)\n", create.Visibility, create.Visibility)
 	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility raw value: %v, as string: %q\n", create.Visibility, string(create.Visibility))
 	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility length: %d\n", len(string(create.Visibility)))
 	
-	// Debug: print the raw visibility value
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility raw string: %q\n", string(create.Visibility))
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility bytes: %v\n", []byte(create.Visibility))
+	// Ensure visibility is uppercase and trimmed to match CHECK constraint
+	visibilityStr := strings.ToUpper(strings.TrimSpace(string(create.Visibility)))
+	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: CreateClassMemoVisibility after cleanup: visibility=%q\n", visibilityStr)
+	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: visibilityStr length: %d\n", len(visibilityStr))
 	
-	// Use the visibility value directly (should already be uppercase from store constants)
-	// The store constants are: "PUBLIC", "PROTECTED", "PRIVATE"
-	visibilityStr := string(create.Visibility)
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: Using visibilityStr=%q\n", visibilityStr)
-	
-	// Validate it's one of the allowed values
+	// Extra validation: Check if visibilityStr is one of the allowed values
 	allowed := map[string]bool{"PUBLIC": true, "PROTECTED": true, "PRIVATE": true}
 	if !allowed[visibilityStr] {
-		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG ERROR: visibilityStr=%q is not in allowed set\n", visibilityStr)
-		// Try to fix it by mapping common variations
-		upperVal := strings.ToUpper(strings.TrimSpace(visibilityStr))
-		if allowed[upperVal] {
-			fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: Fixed to %q\n", upperVal)
-			visibilityStr = upperVal
-		} else {
-			// Last resort: default to PUBLIC
-			fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: Defaulting to PUBLIC\n")
-			visibilityStr = "PUBLIC"
-		}
+		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG ERROR: visibilityStr=%q is not in allowed set: PUBLIC, PROTECTED, PRIVATE\n", visibilityStr)
+		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: Allowed values: PUBLIC, PROTECTED, PRIVATE\n")
+		// Debug: Print the actual bytes to see if there are hidden characters
+		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: visibilityStr bytes: %v\n", []byte(visibilityStr))
 	}
 	
 	fields := []string{"`class_id`", "`memo_id`", "`visibility`", "`shared_by`"}

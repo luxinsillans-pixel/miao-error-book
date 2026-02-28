@@ -20,7 +20,10 @@ func (d *DB) CreateClassTagTemplate(ctx context.Context, create *store.ClassTagT
 		placeholder = append(placeholder, "?")
 		args = append(args, create.Color)
 	}
-	// Description field not present in table
+	// Description field
+	fields = append(fields, "`description`")
+	placeholder = append(placeholder, "?")
+	args = append(args, create.Description)
 
 	stmt := "INSERT INTO `class_tag_template` (" + strings.Join(fields, ", ") + ") VALUES (" + strings.Join(placeholder, ", ") + ")"
 	result, err := d.db.ExecContext(ctx, stmt, args...)

@@ -2,7 +2,9 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/usememos/memos/internal/profile"
 	"github.com/usememos/memos/plugin/markdown"
@@ -83,4 +85,15 @@ func (ts *TestService) CreateRegularUser(ctx context.Context, username string) (
 func (*TestService) CreateUserContext(ctx context.Context, userID int32) context.Context {
 	// Use the context key from the auth package
 	return context.WithValue(ctx, auth.UserIDContextKey, userID)
+}
+
+// CreateMemo creates a memo for testing.
+func (ts *TestService) CreateMemo(ctx context.Context, creatorID int32, content string) (*store.Memo, error) {
+	// Generate a valid UID for the memo
+	uid := fmt.Sprintf("memo-%d-%d", creatorID, time.Now().UnixNano())
+	return ts.Store.CreateMemo(ctx, &store.Memo{
+		UID:       uid,
+		CreatorID: creatorID,
+		Content:   content,
+	})
 }

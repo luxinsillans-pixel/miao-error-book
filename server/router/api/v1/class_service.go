@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 
@@ -441,14 +442,19 @@ func (s *APIV1Service) convertClassFromStore(ctx context.Context, class *store.C
 
 // convertClassVisibilityToStore converts protobuf ClassVisibility to store.ClassVisibility.
 func convertClassVisibilityToStore(v v1pb.ClassVisibility) (store.ClassVisibility, error) {
+	fmt.Fprintf(os.Stderr, "DEBUG convertClassVisibilityToStore called with v=%v (int=%d, string=%s)\n", v, int32(v), v.String())
 	switch v {
 	case v1pb.ClassVisibility_CLASS_PUBLIC:
+		fmt.Fprintf(os.Stderr, "DEBUG Case CLASS_PUBLIC, returning store.ClassVisibilityPublic=%q\n", store.ClassVisibilityPublic)
 		return store.ClassVisibilityPublic, nil
 	case v1pb.ClassVisibility_CLASS_PROTECTED:
+		fmt.Fprintf(os.Stderr, "DEBUG Case CLASS_PROTECTED, returning store.ClassVisibilityProtected=%q\n", store.ClassVisibilityProtected)
 		return store.ClassVisibilityProtected, nil
 	case v1pb.ClassVisibility_CLASS_PRIVATE:
+		fmt.Fprintf(os.Stderr, "DEBUG Case CLASS_PRIVATE, returning store.ClassVisibilityPrivate=%q\n", store.ClassVisibilityPrivate)
 		return store.ClassVisibilityPrivate, nil
 	default:
+		fmt.Fprintf(os.Stderr, "DEBUG Default case, invalid visibility: %v\n", v)
 		return "", errors.Errorf("invalid visibility: %v", v)
 	}
 }
@@ -1050,6 +1056,8 @@ func (s *APIV1Service) UpdateClassMemberRole(ctx context.Context, request *v1pb.
 
 // SetClassMemoVisibility sets visibility of a memo within a class.
 func (s *APIV1Service) SetClassMemoVisibility(ctx context.Context, request *v1pb.SetClassMemoVisibilityRequest) (*v1pb.ClassMemoVisibility, error) {
+	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG SetClassMemoVisibility ENTER: class=%s, memo=%s, visibility=%v (%s, int=%d)\n", request.Class, request.Memo, request.Visibility, request.Visibility.String(), int32(request.Visibility))
+	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG Request: %+v\n", request)
 	// Extract class UID from class resource name
 	classUID, err := ExtractClassUIDFromName(request.Class)
 	if err != nil {
@@ -1111,6 +1119,30 @@ func (s *APIV1Service) SetClassMemoVisibility(ctx context.Context, request *v1pb
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid visibility: %v", err)
 	}
+	slog.Debug("Visibility conversion", 
+		slog.String("request", request.Visibility.String()),
+		slog.String("converted", string(visibility)))
+	// Extra debug logging
+	fmt.Fprintf(os.Stderr, "DEBUG SetClassMemoVisibility: request.Visibility=%v (%s), converted=%q (type: %T)\n", 
+		request.Visibility, request.Visibility.String(), visibility, visibility)
+	// Even more debug - print enum numeric value
+	fmt.Fprintf(os.Stderr, "DEBUG Enum numeric value: %d\n", int32(request.Visibility))
+	// Additional validation
+	if visibility == "" {
+		return nil, status.Errorf(codes.Internal, "converted visibility is empty")
+	}
+	// Check if it's a valid store.ClassVisibility value
+	validValues := map[store.ClassVisibility]bool{
+		store.ClassVisibilityPublic:    true,
+		store.ClassVisibilityProtected: true,
+		store.ClassVisibilityPrivate:   true,
+	}
+	if !validValues[visibility] {
+		return nil, status.Errorf(codes.Internal, "invalid converted visibility value: %q", visibility)
+	}
+	// Debug: Print the actual bytes of the visibility string
+	fmt.Fprintf(os.Stderr, "DEBUG visibility string bytes: %v\n", []byte(string(visibility)))
+	fmt.Fprintf(os.Stderr, "DEBUG visibility string length: %d\n", len(string(visibility)))
 	
 	// Check if visibility record already exists
 	existingVisibility, err := s.Store.GetClassMemoVisibility(ctx, &store.FindClassMemoVisibility{
@@ -1150,6 +1182,11 @@ func (s *APIV1Service) SetClassMemoVisibility(ctx context.Context, request *v1pb
 			SharedTs:    now,
 			Description: "", // Could be extended to accept description in request
 		}
+		
+		// DEBUG: Log the visibility value before creating
+		fmt.Printf("🚨🚨🚨 DEBUG Before CreateClassMemoVisibility: visibility=%q (type: %T)\n", visibilityRecord.Visibility, visibilityRecord.Visibility)
+		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG Before CreateClassMemoVisibility: visibility=%q (type: %T)\n", visibilityRecord.Visibility, visibilityRecord.Visibility)
+		slog.Debug("Before CreateClassMemoVisibility", slog.String("visibility", string(visibilityRecord.Visibility)))
 		
 		createdVisibility, err = s.Store.CreateClassMemoVisibility(ctx, visibilityRecord)
 		if err != nil {

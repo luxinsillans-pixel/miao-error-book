@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"os"
+	"log"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -333,40 +333,12 @@ func (d *DB) DeleteClassMember(ctx context.Context, delete *store.DeleteClassMem
 }
 
 func (d *DB) CreateClassMemoVisibility(ctx context.Context, create *store.ClassMemoVisibility) (*store.ClassMemoVisibility, error) {
-	// Debug log - print detailed information about the visibility value
-	fmt.Println("🚨🚨🚨 DEBUG ENTER: CreateClassMemoVisibility called with visibility=", create.Visibility, "type:", fmt.Sprintf("%T", create.Visibility))
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG ENTER: CreateClassMemoVisibility called with visibility=%q (type: %T)\n", create.Visibility, create.Visibility)
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility raw value: %v, as string: %q\n", create.Visibility, string(create.Visibility))
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility length: %d\n", len(string(create.Visibility)))
-	
-	// Debug: print the raw visibility value
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility raw string: %q\n", string(create.Visibility))
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: create.Visibility bytes: %v\n", []byte(create.Visibility))
-	
-	// Use the visibility value directly (should already be uppercase from store constants)
-	// The store constants are: "PUBLIC", "PROTECTED", "PRIVATE"
-	visibilityStr := string(create.Visibility)
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: Using visibilityStr=%q\n", visibilityStr)
-	
-	// Validate it's one of the allowed values
-	allowed := map[string]bool{"PUBLIC": true, "PROTECTED": true, "PRIVATE": true}
-	if !allowed[visibilityStr] {
-		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG ERROR: visibilityStr=%q is not in allowed set\n", visibilityStr)
-		// Try to fix it by mapping common variations
-		upperVal := strings.ToUpper(strings.TrimSpace(visibilityStr))
-		if allowed[upperVal] {
-			fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: Fixed to %q\n", upperVal)
-			visibilityStr = upperVal
-		} else {
-			// Last resort: default to PUBLIC
-			fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: Defaulting to PUBLIC\n")
-			visibilityStr = "PUBLIC"
-		}
-	}
-	
+	fmt.Printf("DEBUG ENTER: CreateClassMemoVisibility called with visibility=%q\n", create.Visibility)
+	// Debug log
+	log.Printf("DEBUG: CreateClassMemoVisibility: visibility=%q", create.Visibility)
 	fields := []string{"`class_id`", "`memo_id`", "`visibility`", "`shared_by`"}
 	placeholder := []string{"?", "?", "?", "?"}
-	args := []any{create.ClassID, create.MemoID, visibilityStr, create.SharedBy}
+	args := []any{create.ClassID, create.MemoID, create.Visibility, create.SharedBy}
 
 	// Optional description field
 	if create.Description != "" {
@@ -376,20 +348,9 @@ func (d *DB) CreateClassMemoVisibility(ctx context.Context, create *store.ClassM
 	}
 
 	stmt := "INSERT INTO `class_memo_visibility` (" + strings.Join(fields, ", ") + ") VALUES (" + strings.Join(placeholder, ", ") + ")"
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG SQL: %s\n", stmt)
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG Args: %v\n", args)
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: About to execute SQL with visibility=%q\n", visibilityStr)
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: visibilityStr value: %q, length: %d\n", visibilityStr, len(visibilityStr))
-	fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG: visibilityStr bytes: %v\n", []byte(visibilityStr))
-	
-	// Print each argument type and value
-	for i, arg := range args {
-		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG Arg[%d]: type=%T, value=%v\n", i, arg, arg)
-	}
-	
+	log.Printf("DEBUG SQL: %s, args: %v", stmt, args)
 	result, err := d.db.ExecContext(ctx, stmt, args...)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "🚨🚨🚨 DEBUG SQL ERROR: %v\n", err)
 		return nil, errors.Wrap(err, "failed to execute statement")
 	}
 
@@ -478,8 +439,7 @@ func (d *DB) ListClassMemoVisibilities(ctx context.Context, find *store.FindClas
 func (d *DB) UpdateClassMemoVisibility(ctx context.Context, update *store.UpdateClassMemoVisibility) error {
 	set, args := []string{}, []any{}
 	if update.Visibility != nil {
-		visibilityStr := strings.ToUpper(strings.TrimSpace(string(*update.Visibility)))
-		set, args = append(set, "`visibility` = ?"), append(args, visibilityStr)
+		set, args = append(set, "`visibility` = ?"), append(args, *update.Visibility)
 	}
 	if update.Description != nil {
 		set, args = append(set, "`description` = ?"), append(args, *update.Description)
