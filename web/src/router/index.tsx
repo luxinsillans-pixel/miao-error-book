@@ -18,6 +18,8 @@ const Setting = lazy(() => import("@/pages/Setting"));
 const SignIn = lazy(() => import("@/pages/SignIn"));
 const SignUp = lazy(() => import("@/pages/SignUp"));
 const UserProfile = lazy(() => import("@/pages/UserProfile"));
+const Classes = lazy(() => import("@/pages/Classes"));
+const ClassDetail = lazy(() => import("@/pages/ClassDetail"));
 
 import { ROUTES } from "./routes";
 
@@ -49,6 +51,7 @@ const router = createBrowserRouter([
               { path: "", element: <Home /> },
               { path: Routes.EXPLORE, element: <Explore /> },
               { path: Routes.ARCHIVED, element: <Archived /> },
+              { path: Routes.CLASSES, element: <Classes /> },
               { path: "u/:username", element: <UserProfile /> },
             ],
           },
@@ -56,6 +59,7 @@ const router = createBrowserRouter([
           { path: Routes.INBOX, element: <Inboxes /> },
           { path: Routes.SETTING, element: <Setting /> },
           { path: "memos/:uid", element: <MemoDetail /> },
+          { path: "classes/:classId", element: <ClassDetail /> },
           { path: "403", element: <PermissionDenied /> },
           { path: "404", element: <NotFound /> },
           { path: "*", element: <NotFound /> },
