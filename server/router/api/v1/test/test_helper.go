@@ -92,8 +92,9 @@ func (ts *TestService) CreateMemo(ctx context.Context, creatorID int32, content 
 	// Generate a valid UID for the memo
 	uid := fmt.Sprintf("memo-%d-%d", creatorID, time.Now().UnixNano())
 	return ts.Store.CreateMemo(ctx, &store.Memo{
-		UID:       uid,
-		CreatorID: creatorID,
-		Content:   content,
+		UID:        uid,
+		CreatorID:  creatorID,
+		Content:    content,
+		Visibility: store.Public,
 	})
 }

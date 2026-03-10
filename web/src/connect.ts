@@ -5,6 +5,7 @@ import { getAccessToken, setAccessToken } from "./auth-state";
 import { ActivityService } from "./types/proto/api/v1/activity_service_pb";
 import { AttachmentService } from "./types/proto/api/v1/attachment_service_pb";
 import { AuthService } from "./types/proto/api/v1/auth_service_pb";
+import { ClassService } from "./types/proto/api/v1/class_service_pb";
 import { IdentityProviderService } from "./types/proto/api/v1/idp_service_pb";
 import { InstanceService } from "./types/proto/api/v1/instance_service_pb";
 import { MemoService } from "./types/proto/api/v1/memo_service_pb";
@@ -153,3 +154,6 @@ export const activityServiceClient = createClient(ActivityService, transport);
 
 // Configuration service clients
 export const identityProviderServiceClient = createClient(IdentityProviderService, transport);
+
+// Class management service client
+export const classServiceClient = createClient(ClassService, transport);

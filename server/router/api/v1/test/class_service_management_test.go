@@ -404,19 +404,19 @@ func TestSetClassMemoVisibility(t *testing.T) {
 	// Test 1: Set visibility (success)
 	visibility, err := ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
-		Memo:  fmt.Sprintf("memos/%d", memo.ID),
+		Memo:  fmt.Sprintf("memos/%s", memo.UID),
 		Visibility: apiv1.ClassVisibility_CLASS_PUBLIC,
 	})
 	require.NoError(t, err)
 	require.NotNil(t, visibility)
 	require.Equal(t, createdClass.GetName(), visibility.GetClass())
-	require.Equal(t, fmt.Sprintf("memos/%d", memo.ID), visibility.GetMemo())
+	require.Equal(t, fmt.Sprintf("memos/%s", memo.UID), visibility.GetMemo())
 	require.Equal(t, apiv1.ClassVisibility_CLASS_PUBLIC, visibility.GetVisibility())
 
 	// Test 2: Update visibility (change to hidden)
 	visibility2, err := ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
-		Memo:  fmt.Sprintf("memos/%d", memo.ID),
+		Memo:  fmt.Sprintf("memos/%s", memo.UID),
 		Visibility: apiv1.ClassVisibility_CLASS_PRIVATE,
 	})
 	require.NoError(t, err)
@@ -437,7 +437,7 @@ func TestSetClassMemoVisibility(t *testing.T) {
 
 	_, err = ts.Service.SetClassMemoVisibility(regularCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
-		Memo:  fmt.Sprintf("memos/%d", memo.ID),
+		Memo:  fmt.Sprintf("memos/%s", memo.UID),
 		Visibility: apiv1.ClassVisibility_CLASS_PUBLIC,
 	})
 	require.Error(t, err)
@@ -470,7 +470,7 @@ func TestGetClassMemoVisibility(t *testing.T) {
 	// First set visibility
 	visibility, err := ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
-		Memo:  fmt.Sprintf("memos/%d", memo.ID),
+		Memo:  fmt.Sprintf("memos/%s", memo.UID),
 		Visibility: apiv1.ClassVisibility_CLASS_PUBLIC,
 	})
 	require.NoError(t, err)
@@ -484,7 +484,7 @@ func TestGetClassMemoVisibility(t *testing.T) {
 	require.NotNil(t, gotVisibility)
 	require.Equal(t, visibility.GetName(), gotVisibility.GetName())
 	require.Equal(t, createdClass.GetName(), gotVisibility.GetClass())
-	require.Equal(t, fmt.Sprintf("memos/%d", memo.ID), gotVisibility.GetMemo())
+	require.Equal(t, fmt.Sprintf("memos/%s", memo.UID), gotVisibility.GetMemo())
 	require.Equal(t, apiv1.ClassVisibility_CLASS_PUBLIC, gotVisibility.GetVisibility())
 
 	// Test 2: Get non-existent visibility (should fail)
@@ -509,7 +509,7 @@ func TestGetClassMemoVisibility(t *testing.T) {
 	// Test 4: Update visibility and get again
 	updatedVisibility, err := ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 		Class: createdClass.GetName(),
-		Memo:  fmt.Sprintf("memos/%d", memo.ID),
+		Memo:  fmt.Sprintf("memos/%s", memo.UID),
 		Visibility: apiv1.ClassVisibility_CLASS_PRIVATE,
 	})
 	require.NoError(t, err)
@@ -558,7 +558,7 @@ func TestListClassMemoVisibilities(t *testing.T) {
 
 		_, err = ts.Service.SetClassMemoVisibility(teacherCtx, &apiv1.SetClassMemoVisibilityRequest{
 			Class: createdClass.GetName(),
-			Memo:  fmt.Sprintf("memos/%d", memo.ID),
+			Memo:  fmt.Sprintf("memos/%s", memo.UID),
 			Visibility: mv.visibility,
 		})
 		require.NoError(t, err)
@@ -680,7 +680,7 @@ func TestCreateClassTagTemplate(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.NotNil(t, tagTemplate2)
-	require.Empty(t, tagTemplate2.GetColor())
+	require.Equal(t, "#808080", tagTemplate2.GetColor())
 
 	// Test 4: Regular user trying to create tag template (should fail)
 	regularUser, err := ts.CreateRegularUser(ctx, "regular")

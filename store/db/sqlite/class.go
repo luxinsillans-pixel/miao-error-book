@@ -425,7 +425,7 @@ func (d *DB) ListClassMemoVisibilities(ctx context.Context, find *store.FindClas
 		args = append(args, *find.UserID)
 	}
 
-	orderBy := "`created_ts` DESC"
+	orderBy := "`shared_ts` DESC"
 	query := "SELECT `id`, `class_id`, `memo_id`, `visibility`, `shared_by`, `shared_ts`, `description` FROM `class_memo_visibility` WHERE " + strings.Join(where, " AND ") + " ORDER BY " + orderBy
 
 	if find.Limit != nil {
@@ -490,7 +490,7 @@ func (d *DB) UpdateClassMemoVisibility(ctx context.Context, update *store.Update
 	}
 
 	args = append(args, update.ID)
-	stmt := "UPDATE `class_memo_visibility` SET " + strings.Join(set, ", ") + ", `updated_ts` = strftime('%s', 'now') WHERE `id` = ?"
+	stmt := "UPDATE `class_memo_visibility` SET " + strings.Join(set, ", ") + " WHERE `id` = ?"
 	_, err := d.db.ExecContext(ctx, stmt, args...)
 	if err != nil {
 		return errors.Wrap(err, "failed to execute statement")

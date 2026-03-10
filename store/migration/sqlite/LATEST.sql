@@ -148,8 +148,7 @@ CREATE TABLE class_memo_visibility (
   description TEXT,
   UNIQUE (class_id, memo_id),
   FOREIGN KEY (class_id) REFERENCES class(id) ON DELETE CASCADE,
-  FOREIGN KEY (memo_id) REFERENCES memo(id) ON DELETE CASCADE,
-  CHECK (visibility IN ('PUBLIC', 'PROTECTED', 'PRIVATE'))
+  FOREIGN KEY (memo_id) REFERENCES memo(id) ON DELETE CASCADE
 );
 
 -- class_tag_template

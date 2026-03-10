@@ -123,7 +123,7 @@ func (d *DB) UpdateClassMemoVisibility(ctx context.Context, update *store.Update
 	}
 
 	args = append(args, update.ID)
-	stmt := "UPDATE `class_memo_visibility` SET " + strings.Join(set, ", ") + ", `updated_ts` = CURRENT_TIMESTAMP WHERE `id` = ?"
+	stmt := "UPDATE `class_memo_visibility` SET " + strings.Join(set, ", ") + " WHERE `id` = ?"
 	_, err := d.db.ExecContext(ctx, stmt, args...)
 	if err != nil {
 		return errors.Wrap(err, "failed to execute statement")

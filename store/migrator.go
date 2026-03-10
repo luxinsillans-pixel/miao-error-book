@@ -41,6 +41,7 @@ import (
 // - LATEST.sql: Full schema for new installations (faster than incremental migrations)
 
 //go:embed migration
+// Trigger recompile
 var migrationFS embed.FS
 
 //go:embed seed
@@ -231,6 +232,8 @@ func (s *Store) preMigrate(ctx context.Context) error {
 		}
 		defer tx.Rollback()
 		slog.Info("initializing new database with latest schema", slog.String("file", filePath))
+		// DEBUG: Print file content
+		slog.Info("DEBUG: LATEST.sql content", slog.String("content", string(bytes)))
 		if err := s.execute(ctx, tx, string(bytes)); err != nil {
 			return errors.Errorf("failed to execute SQL file %s, err %s", filePath, err)
 		}
